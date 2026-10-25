@@ -1,0 +1,5 @@
+::kind(api)
+
+::meta{crate: stela-shelf-cli, dependencies: list(stela-shelf-assets), dependents: list()}
+
+=[stela-shelf-cli]
