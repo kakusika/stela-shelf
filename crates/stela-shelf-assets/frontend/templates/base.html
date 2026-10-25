@@ -1,0 +1,47 @@
+{% import "macros.html" as ui %}
+<!DOCTYPE html>
+<html lang="{{ lang | default('en') }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% if page_title %}{{ page_title }} | {% endif %}{{ site_title }}</title>
+    <script>
+      try {
+        const savedTheme = localStorage.getItem('stela-theme');
+        if (savedTheme === 'dark' || savedTheme === 'light') {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    </script>
+    <link rel="stylesheet" href="{{ clean_url_prefix }}/shelf.css?v={{ css_version }}" />
+    {% if custom_css %}
+    <link rel="stylesheet" href="{{ clean_url_prefix }}/{{ custom_css }}" />
+    {% endif %}
+    <script src="{{ clean_url_prefix }}/shelf.js?v={{ js_version }}" defer></script>
+  </head>
+  <body>
+    <div class="stela-shell">
+      <header class="stela-header">
+        <a href="{{ home_url }}" class="stela-logo">
+          <span>🏛️</span>
+          <span>{{ site_title }}</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <button type="button" class="theme-toggle" style="background: none; border: 1px solid var(--border); border-radius: 4px; padding: 6px 10px; cursor: pointer; color: var(--text); display: inline-flex; align-items: center; font-size: 0.875rem;" title="Toggle theme" aria-label="Toggle theme">
+            <span class="theme-toggle-icon">🌓</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="stela-main">
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="stela-footer">
+        <p>Built with <a href="https://github.com/tomet-lang/tomet-shelf" target="_blank" rel="noopener">stela-shelf & tomet-shelf</a></p>
+      </footer>
+    </div>
+  </body>
+</html>

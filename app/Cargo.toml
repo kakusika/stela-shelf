@@ -1,0 +1,21 @@
+[package]
+name = "stela-shelf-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description = "A stone-inspired book & wiki generator for Tomet"
+
+[[bin]]
+name = "stela-shelf"
+path = "src/main.rs"
+
+[dependencies]
+stela-shelf-assets = { workspace = true }
+tomet-shelf-headless = { workspace = true }
+
+#= Crates.io
+anyhow = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }

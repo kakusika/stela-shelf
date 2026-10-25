@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% import "macros.html" as ui %}
+
+{% block content %}
+<div class="stela-tablet" data-pagefind-body>
+  <div class="sr-only" data-pagefind-meta="title">{{ page_title }}</div>
+  <div class="sr-only" data-pagefind-meta="slug">{{ slug }}</div>
+  <div class="sr-only" data-pagefind-meta="rel_path">{{ rel_path }}</div>
+
+  <header style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem;">
+    {% if section %}
+    <div style="font-size: 0.875rem; color: var(--stela-accent); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 0.25rem;">
+      {{ section }}
+    </div>
+    {% endif %}
+    <h1 style="margin: 0;">{{ page_title }}</h1>
+
+    {% if hero_chips and hero_chips | length > 0 %}
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+      {% for chip in hero_chips %}
+      <span style="font-size: 0.8125rem; padding: 2px 8px; border-radius: 4px; background: var(--surface-subtle); border: 1px solid var(--border); color: var(--text);">
+        {% if chip.label %}<strong>{{ chip.label }}:</strong> {% endif %}{{ chip.value }}
+      </span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </header>
+
+  {% if toc and toc | length > 0 %}
+  <nav class="stela-toc" style="margin-bottom: 2rem; padding: 1rem 1.25rem; background: var(--surface-subtle); border: 1px solid var(--border-subtle); border-radius: 4px;" data-pagefind-ignore>
+    <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text);">Contents</div>
+    <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.9rem;">
+      {% for item in toc %}
+      <li style="margin-bottom: 0.25rem;">
+        <a href="#{{ item.id }}">{{ item.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  <article class="stela-content">
+    {{ body_html | safe }}
+  </article>
+
+  {% if backlinks and backlinks | length > 0 %}
+  <section style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);" data-pagefind-ignore>
+    <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem;">Backlinks</h3>
+    <ul style="padding-left: 1.25rem; font-size: 0.95rem;">
+      {% for bl in backlinks %}
+      <li>
+        <a href="{{ bl.url }}">{{ bl.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+[package]
+name = "stela-shelf-assets"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description = "Stone-inspired UI assets, stylesheets, and templates for stela-shelf"
+
+[dependencies]
+tomet-shelf-headless = { workspace = true }
+tomet-shelf-template = { workspace = true }
+
+#= Crates.io
+anyhow = { workspace = true }

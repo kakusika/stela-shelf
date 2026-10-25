@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import "macros.html" as ui %}
+
+{% block content %}
+<div class="stela-tablet" data-pagefind-ignore>
+  <header style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem;">
+    <h1 style="margin: 0 0 0.5rem 0;">{{ site_title }}</h1>
+    {% if description %}
+    <p style="color: var(--text-muted); margin: 0; font-size: 1.1rem;">{{ description }}</p>
+    {% endif %}
+  </header>
+
+  {% if sections and sections | length > 0 %}
+  <section style="margin-bottom: 2.5rem;">
+    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Sections</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+      {% for sec in sections %}
+      <div style="background: var(--surface-subtle); border: 1px solid var(--border); border-radius: 4px; padding: 1rem;">
+        <div style="font-weight: 600; font-size: 1rem; color: var(--text);">{{ sec.name }}</div>
+        <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">{{ sec.count }} notes</div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section>
+    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">All Documents ({{ entries | length }})</h2>
+    {{ ui.entry_list(entries) }}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+[book]
+title = "stela-shelf docs"
+lang = "en"
+dest = "dist"
+
+[build]
+base = "/stela-shelf"
+kinds = ["*", "!config", "!index"]
+routing = "id"
