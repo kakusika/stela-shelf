@@ -8,6 +8,7 @@ description = "HTML-First Askama & HTMX server-driven engine for stela-shelf"
 [dependencies]
 stela-shelf-core = { workspace = true }
 tomet-shelf-headless = { workspace = true }
+tomet-shelf-document = { workspace = true }
 
 #= Askama
 askama = { workspace = true }

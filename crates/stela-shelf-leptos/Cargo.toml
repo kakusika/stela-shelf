@@ -8,6 +8,7 @@ description = "Full-Rust Leptos SSR and static site engine for stela-shelf"
 [dependencies]
 stela-shelf-core = { workspace = true }
 tomet-shelf-headless = { workspace = true }
+tomet-shelf-document = { workspace = true }
 
 #= Leptos
 leptos = { workspace = true }

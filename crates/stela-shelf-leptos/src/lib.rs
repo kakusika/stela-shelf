@@ -10,10 +10,10 @@ use components::{CatalogView, DocumentView, HtmlDocument};
 use styles::LEPTOS_SHELF_CSS;
 
 use stela_shelf_core::{BuildContext, BuildReport, ServerContext, ShelfEngine};
-use tomet_shelf_headless::BookConfig;
+use tomet_shelf_document::ProcessedDoc;
 use tomet_shelf_headless::assets::StaticAsset;
-use tomet_shelf_headless::render::{
-    Backlink, EntrySummary, PageRenderer, ProcessedDoc, RendererFactory, SectionSummary,
+use tomet_shelf_headless::{
+    Backlink, BookConfig, EntrySummary, PageRenderer, RendererFactory, SectionSummary,
 };
 
 /// Static CSS asset for Leptos shelf.

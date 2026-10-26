@@ -1,29 +1,14 @@
 {% extends "base.html" %}
-
-{# The written index nests, so the panel does too. `here` marks the page being
-   read, which is the only thing this list knows that the catalog does not. #}
-{% macro index_list(items, here) %}
-<ul class="book-index-items">
-  {% for entry in items %}
-  <li class="book-index-item">
-    <a href="{{ entry.url | safe }}" class="book-index-link{% if entry.url == here %} is-here{% endif %}"{% if entry.url == here %} aria-current="page"{% endif %}>
-      <span class="book-index-title">{{ entry.title }}</span>
-    </a>
-    {% if entry.children %}{{ index_list(entry.children, here) }}{% endif %}
-  </li>
-  {% endfor %}
-</ul>
-{% endmacro %}
 {% import "macros.html" as ui %}
 
 {% block content %}
 <!-- ==================== 1. BOOK VIEW (DEFAULT) ==================== -->
 <div class="book-shell flex flex-row h-screen w-screen overflow-hidden bg-surface-subtle">
   <!-- Permanent Left Rail -->
-  <nav class="book-rail-nav w-[38px] min-w-[38px] max-w-[38px] h-screen flex flex-col items-center shrink-0 box-border p-0 z-50 select-none" id="book-rail-nav" data-pagefind-ignore aria-label="{{ t["nav.bar"] }}">
+  <nav class="book-rail-nav w-[38px] min-w-[38px] max-w-[38px] h-screen flex flex-col items-center shrink-0 box-border p-0 z-50 select-none" id="book-rail-nav" data-pagefind-ignore aria-label="{{ self.t("nav.bar", "ナビゲーション") }}">
     <!-- Brand / Home Header -->
     <div class="rail-brand w-full flex flex-col items-center border-b border-shell-border box-border">
-      <a href="{{ home_url | safe }}" class="rail-tab rail-tab-title flex flex-col items-center justify-center w-full py-3.5 bg-transparent border-0 box-border text-shell-text font-bold no-underline! cursor-pointer" id="btn-rail-home" title="{{ site_title }} {{ t["nav.home_title"] }}">
+      <a href="{{ home_url }}" class="rail-tab rail-tab-title flex flex-col items-center justify-center w-full py-3.5 bg-transparent border-0 box-border text-shell-text font-bold no-underline! cursor-pointer" id="btn-rail-home" title="{{ site_title }} {{ self.t("nav.home_title", "ホーム") }}">
         <span class="rail-letters rail-letters-brand flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em] font-bold lowercase">
           {% for ch in rail_letters %}
           <span>{{ ch }}</span>
@@ -34,34 +19,34 @@
 
     <!-- Navigation / Tools -->
     <div class="rail-tools w-full flex flex-col items-center box-border">
-      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav is-active" id="btn-rail-toc" data-panel="toc" title="{{ t["pane.toc"] }}" aria-label="{{ t["pane.toc"] }}">
-        {{ ui.dsd_btn_shadow(title=t["pane.toc"], aria_label=t["pane.toc"]) }}
+      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav is-active" id="btn-rail-toc" data-panel="toc" title="{{ self.t("pane.toc", "目次") }}" aria-label="{{ self.t("pane.toc", "目次") }}">
+        {{ ui::dsd_btn_shadow(self.t("pane.toc", "目次"), self.t("pane.toc", "目次"), false, "button") }}
         <span class="rail-letters flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em]">
-          {% for ch in t["pane.toc_short"] | default(t["pane.toc"]) %}<span>{{ ch }}</span>{% endfor %}
+          {% for ch in self.t("pane.toc_short", "目次").chars() %}<span>{{ ch }}</span>{% endfor %}
         </span>
       </tmt-btn>
-      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav" id="btn-rail-links" data-panel="links" title="{{ t["pane.links"] }}" aria-label="{{ t["pane.links"] }}">
-        {{ ui.dsd_btn_shadow(title=t["pane.links"], aria_label=t["pane.links"]) }}
+      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav" id="btn-rail-links" data-panel="links" title="{{ self.t("pane.links", "被リンク") }}" aria-label="{{ self.t("pane.links", "被リンク") }}">
+        {{ ui::dsd_btn_shadow(self.t("pane.links", "被リンク"), self.t("pane.links", "被リンク"), false, "button") }}
         <span class="rail-letters flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em]">
-          {% for ch in t["pane.links_short"] | default(t["pane.links"]) %}<span>{{ ch }}</span>{% endfor %}
+          {% for ch in self.t("pane.links_short", "リンク").chars() %}<span>{{ ch }}</span>{% endfor %}
         </span>
       </tmt-btn>
-      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav" id="btn-rail-index" data-panel="index" title="{{ t["pane.index"] }}" aria-label="{{ t["pane.index"] }}">
-        {{ ui.dsd_btn_shadow(title=t["pane.index"], aria_label=t["pane.index"]) }}
+      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav" id="btn-rail-index" data-panel="index" title="{{ self.t("pane.index", "索引") }}" aria-label="{{ self.t("pane.index", "索引") }}">
+        {{ ui::dsd_btn_shadow(self.t("pane.index", "索引"), self.t("pane.index", "索引"), false, "button") }}
         <span class="rail-letters flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em]">
-          {% for ch in t["pane.index_short"] | default(t["pane.index"]) %}<span>{{ ch }}</span>{% endfor %}
+          {% for ch in self.t("pane.index_short", "索引").chars() %}<span>{{ ch }}</span>{% endfor %}
         </span>
       </tmt-btn>
-      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav" id="btn-rail-lookup" data-panel="lookup" title="{{ t["pane.lookup"] }}" aria-label="{{ t["pane.lookup"] }}">
-        {{ ui.dsd_btn_shadow(title=t["pane.lookup"], aria_label=t["pane.lookup"]) }}
+      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav" id="btn-rail-lookup" data-panel="lookup" title="{{ self.t("pane.lookup", "検索") }}" aria-label="{{ self.t("pane.lookup", "検索") }}">
+        {{ ui::dsd_btn_shadow(self.t("pane.lookup", "検索"), self.t("pane.lookup", "検索"), false, "button") }}
         <span class="rail-letters flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em]">
-          {% for ch in t["pane.lookup_short"] | default(t["pane.lookup"]) %}<span>{{ ch }}</span>{% endfor %}
+          {% for ch in self.t("pane.lookup_short", "検索").chars() %}<span>{{ ch }}</span>{% endfor %}
         </span>
       </tmt-btn>
-      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav" id="btn-rail-graph" data-panel="graph" title="{{ t["pane.graph"] }}" aria-label="{{ t["pane.graph"] }}">
-        {{ ui.dsd_btn_shadow(title=t["pane.graph"], aria_label=t["pane.graph"]) }}
+      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-nav" id="btn-rail-graph" data-panel="graph" title="{{ self.t("pane.graph", "グラフ") }}" aria-label="{{ self.t("pane.graph", "グラフ") }}">
+        {{ ui::dsd_btn_shadow(self.t("pane.graph", "グラフ"), self.t("pane.graph", "グラフ"), false, "button") }}
         <span class="rail-letters flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em]">
-          {% for ch in t["pane.graph_short"] | default(t["pane.graph"]) %}<span>{{ ch }}</span>{% endfor %}
+          {% for ch in self.t("pane.graph_short", "グラフ").chars() %}<span>{{ ch }}</span>{% endfor %}
         </span>
       </tmt-btn>
     </div>
@@ -69,8 +54,8 @@
     <!-- Bottom Footer (Theme Switcher & Shell Palette) -->
     <div class="rail-footer mt-auto w-full flex flex-col items-center border-t border-shell-border box-border">
       <div class="rail-palette-container relative w-full">
-        <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-palette" id="btn-rail-palette" title="{{ t["theme.shell_toggle"] }}" aria-label="{{ t["theme.shell_toggle"] }}" aria-haspopup="true" aria-expanded="false">
-          {{ ui.dsd_btn_shadow(title=t["theme.shell_toggle"], aria_label=t["theme.shell_toggle"]) }}
+        <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-palette" id="btn-rail-palette" title="{{ self.t("theme.shell_toggle", "装丁設定") }}" aria-label="{{ self.t("theme.shell_toggle", "装丁設定") }}" aria-haspopup="true" aria-expanded="false">
+          {{ ui::dsd_btn_shadow(self.t("theme.shell_toggle", "装丁設定"), self.t("theme.shell_toggle", "装丁設定"), false, "button") }}
           <svg class="icon-palette" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
             <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
@@ -82,83 +67,83 @@
         <div class="shell-palette-popover absolute left-[calc(100%+8px)] bottom-0 z-[1050] p-2 w-[232px] flex flex-col gap-1.5 box-border" id="shell-palette-popover" hidden data-pagefind-ignore>
           <div class="palette-section flex flex-col gap-[3px]">
             <div class="palette-header text-[0.68rem] font-bold uppercase tracking-[0.06em] text-text-muted px-0.5 pb-0.5">
-              <span>{{ t["theme.shell.color_label"] | default('カラー') }}</span>
+              <span>{{ self.t("theme.shell.color_label", "カラー") }}</span>
             </div>
-            <div class="palette-swatches color-swatches grid grid-cols-2 gap-[3px]" role="radiogroup" aria-label="{{ t["theme.shell.color_label"] | default('カラー') }}">
-              <tmt-swatch class="color-btn" data-shell-color="slate" title="{{ t["theme.shell.color_slate"] | default('スレート') }} (Slate)">
-                {{ ui.dsd_swatch_shadow() }}
+            <div class="palette-swatches color-swatches grid grid-cols-2 gap-[3px]" role="radiogroup" aria-label="{{ self.t("theme.shell.color_label", "カラー") }}">
+              <tmt-swatch class="color-btn" data-shell-color="slate" title="{{ self.t("theme.shell.color_slate", "スレート") }} (Slate)">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="swatch-dot swatch-slate w-3 h-3 rounded-full border border-[rgba(0,0,0,0.2)] shrink-0 box-border"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.color_slate"] | default('スレート') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.color_slate", "スレート") }}</span>
               </tmt-swatch>
-              <tmt-swatch class="color-btn" data-shell-color="violet" title="{{ t["theme.shell.color_violet"] | default('バイオレット') }} (Violet)">
-                {{ ui.dsd_swatch_shadow() }}
+              <tmt-swatch class="color-btn" data-shell-color="violet" title="{{ self.t("theme.shell.color_violet", "バイオレット") }} (Violet)">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="swatch-dot swatch-violet w-3 h-3 rounded-full border border-[rgba(0,0,0,0.2)] shrink-0 box-border"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.color_violet"] | default('バイオレット') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.color_violet", "バイオレット") }}</span>
               </tmt-swatch>
-              <tmt-swatch class="color-btn" data-shell-color="indigo" title="{{ t["theme.shell.color_indigo"] | default('インディゴ') }} (Indigo)">
-                {{ ui.dsd_swatch_shadow() }}
+              <tmt-swatch class="color-btn" data-shell-color="indigo" title="{{ self.t("theme.shell.color_indigo", "インディゴ") }} (Indigo)">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="swatch-dot swatch-indigo w-3 h-3 rounded-full border border-[rgba(0,0,0,0.2)] shrink-0 box-border"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.color_indigo"] | default('インディゴ') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.color_indigo", "インディゴ") }}</span>
               </tmt-swatch>
-              <tmt-swatch class="color-btn" data-shell-color="olive" title="{{ t["theme.shell.color_olive"] | default('オリーブ') }} (Olive)">
-                {{ ui.dsd_swatch_shadow() }}
+              <tmt-swatch class="color-btn" data-shell-color="olive" title="{{ self.t("theme.shell.color_olive", "オリーブ") }} (Olive)">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="swatch-dot swatch-olive w-3 h-3 rounded-full border border-[rgba(0,0,0,0.2)] shrink-0 box-border"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.color_olive"] | default('オリーブ') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.color_olive", "オリーブ") }}</span>
               </tmt-swatch>
             </div>
           </div>
 
           <div class="palette-section flex flex-col gap-[3px]">
             <div class="palette-header text-[0.68rem] font-bold uppercase tracking-[0.06em] text-text-muted px-0.5 pb-0.5">
-              <span>{{ t["theme.shell.pattern_label"] | default('模様') }}</span>
+              <span>{{ self.t("theme.shell.pattern_label", "模様") }}</span>
             </div>
-            <div class="palette-swatches pattern-swatches grid grid-cols-2 gap-[3px]" role="radiogroup" aria-label="{{ t["theme.shell.pattern_label"] | default('模様') }}">
-              <tmt-swatch class="pattern-btn" data-shell-pattern="marble" title="{{ t["theme.shell.pattern_marble"] | default('マーブル') }}">
-                {{ ui.dsd_swatch_shadow() }}
+            <div class="palette-swatches pattern-swatches grid grid-cols-2 gap-[3px]" role="radiogroup" aria-label="{{ self.t("theme.shell.pattern_label", "模様") }}">
+              <tmt-swatch class="pattern-btn" data-shell-pattern="marble" title="{{ self.t("theme.shell.pattern_marble", "マーブル") }}">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="pattern-preview preview-marble"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.pattern_marble"] | default('マーブル') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.pattern_marble", "マーブル") }}</span>
               </tmt-swatch>
-              <tmt-swatch class="pattern-btn" data-shell-pattern="cloud" title="{{ t["theme.shell.pattern_cloud"] | default('クラウド') }}">
-                {{ ui.dsd_swatch_shadow() }}
+              <tmt-swatch class="pattern-btn" data-shell-pattern="cloud" title="{{ self.t("theme.shell.pattern_cloud", "クラウド") }}">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="pattern-preview preview-cloud"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.pattern_cloud"] | default('クラウド') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.pattern_cloud", "クラウド") }}</span>
               </tmt-swatch>
-              <tmt-swatch class="pattern-btn" data-shell-pattern="seigaiha" title="{{ t["theme.shell.pattern_seigaiha"] | default('青海波') }}">
-                {{ ui.dsd_swatch_shadow() }}
+              <tmt-swatch class="pattern-btn" data-shell-pattern="seigaiha" title="{{ self.t("theme.shell.pattern_seigaiha", "青海波") }}">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="pattern-preview preview-seigaiha"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.pattern_seigaiha"] | default('青海波') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.pattern_seigaiha", "青海波") }}</span>
               </tmt-swatch>
-              <tmt-swatch class="pattern-btn" data-shell-pattern="flourish" title="{{ t["theme.shell.pattern_flourish"] | default('古書装丁') }}">
-                {{ ui.dsd_swatch_shadow() }}
+              <tmt-swatch class="pattern-btn" data-shell-pattern="flourish" title="{{ self.t("theme.shell.pattern_flourish", "古書装丁") }}">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="pattern-preview preview-flourish"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.pattern_flourish"] | default('古書装丁') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.pattern_flourish", "古書装丁") }}</span>
               </tmt-swatch>
-              <tmt-swatch class="pattern-btn" data-shell-pattern="mesh" title="{{ t["theme.shell.pattern_mesh"] | default('メッシュ') }}">
-                {{ ui.dsd_swatch_shadow() }}
+              <tmt-swatch class="pattern-btn" data-shell-pattern="mesh" title="{{ self.t("theme.shell.pattern_mesh", "メッシュ") }}">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="pattern-preview preview-mesh"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.pattern_mesh"] | default('メッシュ') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.pattern_mesh", "メッシュ") }}</span>
               </tmt-swatch>
-              <tmt-swatch class="pattern-btn" data-shell-pattern="none" title="{{ t["theme.shell.pattern_none"] | default('なし') }}">
-                {{ ui.dsd_swatch_shadow() }}
+              <tmt-swatch class="pattern-btn" data-shell-pattern="none" title="{{ self.t("theme.shell.pattern_none", "なし") }}">
+                {{ ui::dsd_swatch_shadow() }}
                 <span slot="preview" class="pattern-preview preview-none"></span>
-                <span class="tmt-swatch-name">{{ t["theme.shell.pattern_none"] | default('なし') }}</span>
+                <span class="tmt-swatch-name">{{ self.t("theme.shell.pattern_none", "なし") }}</span>
               </tmt-swatch>
             </div>
           </div>
 
           <div class="palette-section palette-contrast-section flex flex-col gap-[3px]">
             <div class="palette-header text-[0.68rem] font-bold uppercase tracking-[0.06em] text-text-muted px-0.5 pb-0.5">
-              <span>{{ t["theme.shell.contrast_label"] | default('コントラスト') }}</span>
+              <span>{{ self.t("theme.shell.contrast_label", "コントラスト") }}</span>
             </div>
-            <tmt-switch id="shell-contrast-toggle" role="switch" aria-checked="false" aria-label="{{ t["theme.shell.contrast_high"] | default('ハイコントラスト') }}">
-              {{ ui.dsd_switch_shadow() }}
-              {{ t["theme.shell.contrast_high"] | default('ハイコントラスト') }}
+            <tmt-switch id="shell-contrast-toggle" role="switch" aria-checked="false" aria-label="{{ self.t("theme.shell.contrast_high", "ハイコントラスト") }}">
+              {{ ui::dsd_switch_shadow() }}
+              {{ self.t("theme.shell.contrast_high", "ハイコントラスト") }}
             </tmt-switch>
           </div>
         </div>
       </div>
-      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-theme theme-toggle-btn" id="btn-rail-theme" title="{{ t["theme.toggle"] }}" aria-label="{{ t["theme.toggle_label"] }}">
-        {{ ui.dsd_btn_shadow(title=t["theme.toggle"], aria_label=t["theme.toggle_label"]) }}
+      <tmt-btn variant="ghost" shape="column" class="rail-tab rail-tab-theme theme-toggle-btn" id="btn-rail-theme" title="{{ self.t("theme.toggle", "テーマ切替") }}" aria-label="{{ self.t("theme.toggle_label", "テーマ切替") }}">
+        {{ ui::dsd_btn_shadow(self.t("theme.toggle", "テーマ切替"), self.t("theme.toggle_label", "テーマ切替"), false, "button") }}
         <svg class="icon-theme icon-sun" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="4"></circle>
           <path d="M12 2v2"></path>
@@ -179,40 +164,34 @@
 
   <div class="book-view flex-1 min-w-0 flex flex-row h-screen overflow-x-auto overflow-y-hidden bg-surface-subtle [scroll-snap-type:x_proximity] [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]" id="wiki-book-view">
 
-  <!-- Search's tag-chip section names live in their own lookup/manifest.json
-       (written once per build, see build_book in mod.rs) and are fetched by
-       39-lookup-pane.js -- not inlined here, since every page inlining the
-       same whole-vault list once made output size grow with the square of
-       the page count. page_url is cheap (one string) and stays inline. -->
   <script>
-    window.tmtPageUrl = {{ page_url | tojson }};
+    window.tmtPageUrl = {{ self.page_url_json()|safe }};
   </script>
 
-  <!-- Mobile nav drawer backdrop overlay -->
   <div class="pane-backdrop" id="pane-nav-backdrop" aria-hidden="true"></div>
 
   <!-- Pane 1: navigation and tools -->
   <aside class="book-pane pane-nav" id="pane-nav" data-pagefind-ignore>
-    <div class="pane-header pane-header-collapsible" id="header-collapse-nav" title="{{ t["pane.collapse"] }}" role="button" tabindex="0">
-      <span class="pane-title" id="pane-nav-title">{{ t["pane.toc"] }}</span>
+    <div class="pane-header pane-header-collapsible" id="header-collapse-nav" title="{{ self.t("pane.collapse", "折りたたむ") }}" role="button" tabindex="0">
+      <span class="pane-title" id="pane-nav-title">{{ self.t("pane.toc", "目次") }}</span>
       <span class="pane-collapse-arrow">◀</span>
     </div>
     <div class="pane-scroll flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]">
       <!-- 1. TOC Panel View -->
       <div class="pane-panel-view is-active" id="pane-panel-toc">
         <nav class="nav-breadcrumbs py-[10px] px-3.5 border-b border-border-subtle shadow-[0_2px_3px_-2px_rgba(0,0,0,0.12)] relative flex flex-col gap-1 text-xs">
-          <a href="{{ home_url | safe }}" class="nav-crumb-home text-link font-bold">{{ t["nav.home"] }}</a>
-          {% if section %}
+          <a href="{{ home_url }}" class="nav-crumb-home text-link font-bold">{{ self.t("nav.home", "Home") }}</a>
+          {% if let Some(sec) = section %}
           <div class="nav-crumb-section flex gap-1 text-text-muted">
-            <span class="crumb-label">{{ t["nav.section"] }}</span>
-            <span class="crumb-val" data-pagefind-filter="section">{{ section }}</span>
+            <span class="crumb-label">{{ self.t("nav.section", "セクション") }}</span>
+            <span class="crumb-val" data-pagefind-filter="section">{{ sec }}</span>
           </div>
           {% endif %}
         </nav>
 
-        {% if toc and toc | length > 0 %}
+        {% if !toc.is_empty() %}
         <div class="pane-toc">
-          <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ t["toc.heading"] }}</div>
+          <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ self.t("toc.heading", "目次") }}</div>
           <ul class="toc-items list-none m-0 p-0">
             {% for item in toc %}
             <li class="toc-item my-1 leading-[1.35]" style="margin-left: {{ (item.level - 1) * 10 }}px">
@@ -227,44 +206,41 @@
       <!-- 2. Backlinks Panel View -->
       <div class="pane-panel-view" id="pane-panel-links" hidden>
         <div class="pane-tab-inner p-3.5">
-          <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ t["backlinks.heading"] }} ({{ backlinks | length }})</div>
-          {% if backlinks and backlinks | length > 0 %}
+          <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ self.t("backlinks.heading", "被リンク") }} ({{ backlinks.len() }})</div>
+          {% if !backlinks.is_empty() %}
           <ul class="backlink-items list-none m-0 p-0">
             {% for link in backlinks %}
             <li class="backlink-item m-0">
               <a href="{{ link.url }}" class="backlink-link block px-2 py-1.5 text-text-muted no-underline! border-l-2 border-transparent transition-colors duration-[120ms]">
                 <span class="backlink-title block text-[0.82rem] overflow-hidden text-ellipsis whitespace-nowrap">{{ link.title }}</span>
-                {% if link.section %}<span class="backlink-section block mt-px text-[0.68rem] text-text-muted opacity-75 overflow-hidden text-ellipsis whitespace-nowrap">{{ link.section }}</span>{% endif %}
+                {% if let Some(sec) = link.section %}<span class="backlink-section block mt-px text-[0.68rem] text-text-muted opacity-75 overflow-hidden text-ellipsis whitespace-nowrap">{{ sec }}</span>{% endif %}
               </a>
             </li>
             {% endfor %}
           </ul>
           {% else %}
           <div class="pane-placeholder-box">
-            <span class="placeholder-text">{{ t["backlinks.empty"] }}</span>
+            <span class="placeholder-text">{{ self.t("backlinks.empty", "参照しているノートはありません") }}</span>
           </div>
           {% endif %}
         </div>
       </div>
 
-      <!-- 3. Local Graph Panel View -->
-      <!-- 3. Book index: the reading order the vault wrote down -->
+      <!-- 3. Book index -->
       <div class="pane-panel-view" id="pane-panel-index" hidden>
         <div class="pane-tab-inner p-3.5">
-          <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ t["pane.index"] }}</div>
-          {% if book_index and book_index | length > 0 %}
-          {{ index_list(book_index, page_url) }}
+          <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ self.t("pane.index", "索引") }}</div>
+          {% if !book_index.is_empty() %}
+          {{ self.book_index_html()|safe }}
           {% else %}
           <div class="pane-placeholder-box">
-            <span class="placeholder-text">{{ t["index.empty"] }}</span>
+            <span class="placeholder-text">{{ self.t("index.empty", "索引はありません") }}</span>
           </div>
           {% endif %}
         </div>
       </div>
 
-      <!-- 4. Lookup: Pagefind search, paginated from the first render (an
-           empty query with no tags still lists every note, just paged) --
-           see 39-lookup-pane.js's setupLookupPane. -->
+      <!-- 4. Lookup -->
       <div class="pane-panel-view" id="pane-panel-lookup" hidden>
         <div class="pane-tab-inner p-3.5">
           <div class="lookup-controls pt-[10px] px-[10px] pb-2 flex flex-col gap-2 border-b border-border-subtle shadow-[0_2px_3px_-2px_rgba(0,0,0,0.12)] relative">
@@ -272,7 +248,7 @@
               type="search"
               id="lookup-filter-input"
               class="lookup-filter-input w-full box-border py-1.5 px-2 text-[0.8rem] text-text bg-surface border border-border rounded-none"
-              placeholder="{{ t["lookup.placeholder"] }}"
+              placeholder="{{ self.t("lookup.placeholder", "ノートを検索...") }}"
               autocomplete="off"
               spellcheck="false"
             />
@@ -280,10 +256,6 @@
           </div>
           <div class="lookup-results pt-[10px] px-[10px] pb-[26px]" id="lookup-results"></div>
 
-          <!-- Template for each result row above. 39-lookup-pane.js clones
-               this rather than building the row from an HTML string, so the
-               shape lives in exactly one place instead of a parallel copy in
-               JS. -->
           <template id="book-index-item-template">
             <li class="book-index-item">
               <a class="book-index-link">
@@ -302,9 +274,10 @@
         </div>
       </div>
 
+      <!-- 5. Graph -->
       <div class="pane-panel-view" id="pane-panel-graph" hidden>
         <div class="pane-tab-inner p-3.5">
-          <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ t["graph.heading"] }}</div>
+          <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ self.t("graph.heading", "グラフ") }}</div>
           <div class="pane-placeholder-box pane-graph-box flex items-center justify-center gap-1.5 min-h-[70px]">
             <svg class="placeholder-svg-icon" viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="18" cy="5" r="3"></circle>
@@ -313,21 +286,16 @@
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
             </svg>
-            <span class="placeholder-text">{{ t["graph.placeholder"] }}</span>
+            <span class="placeholder-text">{{ self.t("graph.placeholder", "グラフを読み込み中...") }}</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Pinned below pane-scroll rather than inside any one panel view, so
-         it stays visible under whichever tab the rail has open. -->
     <div class="pane-recent shrink-0 p-0 border-t border-border-subtle shadow-[0_2px_3px_-2px_rgba(0,0,0,0.12)] relative" id="pane-recent-section" hidden>
-      <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ t["recent.heading"] }}<span class="recent-heading-dir" aria-hidden="true">← ・</span></div>
+      <div class="toc-heading text-xs font-bold text-text-muted uppercase tracking-[0.08em] mb-2">{{ self.t("recent.heading", "最近開いたノート") }}<span class="recent-heading-dir" aria-hidden="true">← ・</span></div>
       <ul class="recent-items" id="pane-recent-list"></ul>
 
-      <!-- Template for each row above. 38-recent-notes.js clones this rather
-           than building the row from an HTML string, so the shape lives in
-           exactly one place instead of a parallel copy in JS. -->
       <template id="recent-note-item-template">
         <li>
           <a class="recent-link">
@@ -341,34 +309,34 @@
   <!-- Pane 2: data profile -->
   {% if has_data %}
   <aside class="book-pane pane-data" id="pane-data">
-    <div class="pane-header pane-header-collapsible" id="header-collapse-data" title="{{ t["pane.data_collapse"] }}" role="button" tabindex="0" data-pagefind-ignore>
-      <span class="pane-title">{{ t["pane.data"] }}</span>
+    <div class="pane-header pane-header-collapsible" id="header-collapse-data" title="{{ self.t("pane.data_collapse", "データを閉じる") }}" role="button" tabindex="0" data-pagefind-ignore>
+      <span class="pane-title">{{ self.t("pane.data", "データ") }}</span>
       <span class="pane-collapse-arrow">◀</span>
     </div>
-    <div class="pane-collapsed-bar" id="bar-expand-data" title="{{ t["pane.data_expand"] }}" role="button" tabindex="0" data-pagefind-ignore>
+    <div class="pane-collapsed-bar" id="bar-expand-data" title="{{ self.t("pane.data_expand", "データを開く") }}" role="button" tabindex="0" data-pagefind-ignore>
       <span class="collapsed-icon text-[0.9rem]">📊</span>
-      <span class="collapsed-label [writing-mode:vertical-rl] tracking-[0.18em] text-xs font-bold">{{ t["pane.data_short"] }}</span>
+      <span class="collapsed-label [writing-mode:vertical-rl] tracking-[0.18em] text-xs font-bold">{{ self.t("pane.data_short", "データ") }}</span>
       <span class="collapsed-arrow text-[0.65rem] mt-1">▶</span>
     </div>
     <div class="pane-scroll pane-scroll-data flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]">
       <div class="infobox" data-pagefind-body>
-        <div class="infobox-title bg-surface-subtle py-[10px] px-3 text-[1.05rem] font-bold text-center border-t-[3px] border-t-link border-b border-border flex items-center justify-center gap-2" data-pagefind-ignore {% if primary_color %}style="border-top: 3px solid #{{ primary_color }};"{% endif %}>
-          {% if icon %}<span class="infobox-icon">{{ icon | safe }}</span>{% endif %}
+        <div class="infobox-title bg-surface-subtle py-[10px] px-3 text-[1.05rem] font-bold text-center border-t-[3px] border-t-link border-b border-border flex items-center justify-center gap-2" data-pagefind-ignore {% if let Some(color) = primary_color %}style="border-top: 3px solid #{{ color }};"{% endif %}>
+          {% if let Some(ic) = icon %}<span class="infobox-icon">{{ ic|safe }}</span>{% endif %}
           <span>{{ page_title }}</span>
         </div>
-        {% if images and images | length > 0 %}
-{{ ui.costume_switcher(images, page_title, t, original_images) }}
+        {% if !images.is_empty() %}
+        {{ ui::costume_switcher(images, page_title, original_images) }}
         {% endif %}
-        {% if infobox_rows and infobox_rows | length > 0 %}
+        {% if !infobox_rows.is_empty() %}
         <table class="infobox-table w-full border-collapse" data-pagefind-weight="6.0">
           <tbody>
             {% for row in infobox_rows %}
-            <tr {% if row.label == "別名 / 愛称" or row.label == "aliases" or row.label == "愛称" or row.label == "別名" or row.label == "Aliases / Nicknames" or row.label == "Aliases" %}data-pagefind-weight="9.0"{% endif %}>
+            <tr {% if row.label == "別名 / 愛称" || row.label == "aliases" || row.label == "愛称" || row.label == "別名" || row.label == "Aliases / Nicknames" || row.label == "Aliases" %}data-pagefind-weight="9.0"{% endif %}>
               <th class="infobox-label w-[36%] py-[7px] px-[10px] font-semibold text-text-muted bg-transparent border-t border-border-subtle text-left align-middle text-[0.78rem] tracking-[0.02em]">{{ row.label }}</th>
-              <td class="infobox-data relative py-[7px] pr-7 pl-[10px] border-t border-border-subtle align-middle break-words text-[0.82rem] text-text" {% if row.label == "別名 / 愛称" or row.label == "aliases" or row.label == "愛称" or row.label == "別名" or row.label == "Aliases / Nicknames" or row.label == "Aliases" %}data-pagefind-meta="aliases"{% endif %}>
-                <span class="infobox-data-val inline">{{ row.value | safe }}</span>
-                <tmt-btn variant="ghost" size="xs" shape="square" class="infobox-copy-btn" title="{{ t["infobox.copy"] }}" aria-label="{{ t["infobox.copy"] }}" data-pagefind-ignore>
-                  {{ ui.dsd_btn_shadow(title=t["infobox.copy"], aria_label=t["infobox.copy"]) }}
+              <td class="infobox-data relative py-[7px] pr-7 pl-[10px] border-t border-border-subtle align-middle break-words text-[0.82rem] text-text" {% if row.label == "別名 / 愛称" || row.label == "aliases" || row.label == "愛称" || row.label == "別名" || row.label == "Aliases / Nicknames" || row.label == "Aliases" %}data-pagefind-meta="aliases"{% endif %}>
+                <span class="infobox-data-val inline">{{ row.value|safe }}</span>
+                <tmt-btn variant="ghost" size="xs" shape="square" class="infobox-copy-btn" title="{{ self.t("infobox.copy", "コピー") }}" aria-label="{{ self.t("infobox.copy", "コピー") }}" data-pagefind-ignore>
+                  {{ ui::dsd_btn_shadow(self.t("infobox.copy", "コピー"), self.t("infobox.copy", "コピー"), false, "button") }}
                   <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
                     <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
@@ -388,54 +356,54 @@
   <!-- Pane 3: the text itself -->
   <main class="book-pane pane-content" data-pagefind-body>
     <div class="pane-header pane-content-header" data-pagefind-ignore>
-      {% if section_tabs and section_tabs | length > 0 %}
-      {{ ui.sticky_edge_btn("top", t, "btn-sticky-top") }}
-      <nav class="sticky-tabs-bar" id="sticky-tabs-bar" aria-label="{{ t["sticky.label"] }}" data-pagefind-ignore>
-{{ ui.sticky_tabs_tree(section_tabs) }}
+      {% if !section_tabs.is_empty() %}
+      {{ ui::sticky_edge_btn("top", "btn-sticky-top") }}
+      <nav class="sticky-tabs-bar" id="sticky-tabs-bar" aria-label="{{ self.t("sticky.label", "目次タブ") }}" data-pagefind-ignore>
+        {{ ui::sticky_tabs_tree(section_tabs) }}
       </nav>
-      {{ ui.sticky_edge_btn("bottom", t, "btn-sticky-bottom") }}
+      {{ ui::sticky_edge_btn("bottom", "btn-sticky-bottom") }}
       {% endif %}
     </div>
     <div class="pane-scroll pane-scroll-content flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]" id="book-content-scroll">
       <div class="pane-article-container">
-        {% if not images or images | length == 0 %}
-          {% if icon_image_url %}
-        <img src="{{ icon_image_url }}" data-pagefind-meta="image[src]" alt="" hidden />
-          {% elif banner_url %}
-        <img src="{{ banner_url }}" data-pagefind-meta="image[src]" alt="" hidden />
+        {% if images.is_empty() %}
+          {% if let Some(url) = icon_image_url %}
+          <img src="{{ url }}" data-pagefind-meta="image[src]" alt="" hidden />
+          {% else if let Some(url) = banner_url %}
+          <img src="{{ url }}" data-pagefind-meta="image[src]" alt="" hidden />
           {% endif %}
         {% endif %}
-        {% if slug %}
-        <span class="sr-only" data-pagefind-meta="path" data-pagefind-weight="10.0">{{ slug | safe }}</span>
+        {% if !slug.is_empty() %}
+        <span class="sr-only" data-pagefind-meta="path" data-pagefind-weight="10.0">{{ slug }}</span>
         {% endif %}
-        {% if rel_path and rel_path != slug %}
-        <span class="sr-only" data-pagefind-weight="10.0">{{ rel_path | safe }}</span>
+        {% if !rel_path.is_empty() && rel_path != slug %}
+        <span class="sr-only" data-pagefind-weight="10.0">{{ rel_path }}</span>
         {% endif %}
-        {% if banner_url or icon or (hero_chips and hero_chips | length > 0) %}
+        {% if banner_url.is_some() || icon.is_some() || !hero_chips.is_empty() %}
         <div class="book-hero-section relative bg-surface border border-border -mt-6 -mx-8 mb-7 overflow-visible z-10">
-          {% if banner_url %}
-{{ ui.hero_banner(banner_url, banner_y, page_title, t, banner_original_url) }}
+          {% if let Some(b_url) = banner_url %}
+          {{ ui::hero_banner(b_url, banner_y, page_title, banner_original_url) }}
           {% endif %}
-          <div class="hero-content relative flex items-end gap-4 border-b-2 border-border py-4 px-6" {% if primary_color %}style="border-bottom-color: #{{ primary_color }};"{% endif %}>
-            {% if icon %}
-            <div class="hero-avatar flex items-center justify-center shrink-0 overflow-hidden w-[68px] h-[68px] border-2 border-border bg-surface text-[2.2rem] shadow-[0_4px_12px_rgba(0,0,0,0.12)] -mt-9 z-[2]" data-pagefind-ignore {% if primary_color %}style="border-color: #{{ primary_color }};"{% endif %}>
-              <span class="avatar-icon w-full h-full flex items-center justify-center">{{ icon | safe }}</span>
+          <div class="hero-content relative flex items-end gap-4 border-b-2 border-border py-4 px-6" {% if let Some(color) = primary_color %}style="border-bottom-color: #{{ color }};"{% endif %}>
+            {% if let Some(ic) = icon %}
+            <div class="hero-avatar flex items-center justify-center shrink-0 overflow-hidden w-[68px] h-[68px] border-2 border-border bg-surface text-[2.2rem] shadow-[0_4px_12px_rgba(0,0,0,0.12)] -mt-9 z-[2]" data-pagefind-ignore {% if let Some(color) = primary_color %}style="border-color: #{{ color }};"{% endif %}>
+              <span class="avatar-icon w-full h-full flex items-center justify-center">{{ ic|safe }}</span>
             </div>
             {% endif %}
             <div class="hero-title-area flex-1 min-w-0">
               <div class="hero-title-row flex items-baseline gap-2.5 flex-wrap">
                 <h1 class="content-title m-0 text-[1.85rem] font-bold leading-tight tracking-[-0.01em] text-text" data-pagefind-meta="title" data-pagefind-weight="10">{{ page_title }}</h1>
-                {% if kind %}
-                <span class="kind-tag kind-{{ kind }} inline-block px-2 py-0.5 text-xs font-medium capitalize whitespace-nowrap" data-pagefind-filter="kind">{{ kind }}</span>
+                {% if let Some(k) = kind %}
+                <span class="kind-tag kind-{{ k }} inline-block px-2 py-0.5 text-xs font-medium capitalize whitespace-nowrap" data-pagefind-filter="kind">{{ k }}</span>
                 {% endif %}
               </div>
-              {% if hero_chips and hero_chips | length > 0 %}
-{{ ui.hero_chips(hero_chips) }}
+              {% if !hero_chips.is_empty() %}
+              {{ ui::hero_chips(hero_chips, "") }}
               {% endif %}
             </div>
-            {% if source_path and is_dev %}
+            {% if !source_path.is_empty() && is_dev %}
             <div class="hero-actions absolute top-3.5 right-4 flex items-center gap-2 z-50" data-pagefind-ignore>
-{{ ui.edit_menu(source_path, t) }}
+              {{ ui::edit_menu(source_path) }}
             </div>
             {% endif %}
           </div>
@@ -444,23 +412,23 @@
         <header class="article-header" style="margin-bottom: 24px;">
           <div class="title-row" style="display: flex; align-items: baseline; gap: 10px;">
             <h1 class="content-title m-0 text-[1.85rem] font-bold leading-tight tracking-[-0.01em] text-text" data-pagefind-meta="title" data-pagefind-weight="10">{{ page_title }}</h1>
-            {% if kind %}
-            <span class="kind-tag kind-{{ kind }} inline-block px-2 py-0.5 text-xs font-medium capitalize whitespace-nowrap" data-pagefind-filter="kind">{{ kind }}</span>
+            {% if let Some(k) = kind %}
+            <span class="kind-tag kind-{{ k }} inline-block px-2 py-0.5 text-xs font-medium capitalize whitespace-nowrap" data-pagefind-filter="kind">{{ k }}</span>
             {% endif %}
           </div>
-          {% if hero_chips and hero_chips | length > 0 %}
-{{ ui.hero_chips(hero_chips, 'margin-top: 8px;') }}
+          {% if !hero_chips.is_empty() %}
+          {{ ui::hero_chips(hero_chips, "margin-top: 8px;") }}
           {% endif %}
-          {% if source_path and is_dev %}
+          {% if !source_path.is_empty() && is_dev %}
           <div class="hero-actions absolute top-3.5 right-4 flex items-center gap-2 z-50" data-pagefind-ignore>
-{{ ui.edit_menu(source_path, t) }}
+            {{ ui::edit_menu(source_path) }}
           </div>
           {% endif %}
         </header>
         {% endif %}
 
         <article>
-          {{ body_html | safe }}
+          {{ body_html|safe }}
         </article>
       </div>
     </div>
@@ -470,21 +438,21 @@
 
 <!-- ==================== 2. CLASSIC VIEW (single column) ==================== -->
 <div class="classic-view" id="wiki-classic-view" data-pagefind-ignore>
-  {% if section_tabs and section_tabs | length > 0 %}
-  <aside class="classic-sticky-tabs" id="classic-sticky-tabs" aria-label="{{ t["sticky.label"] }}" data-pagefind-ignore>
-    {{ ui.sticky_edge_btn("top", t) }}
+  {% if !section_tabs.is_empty() %}
+  <aside class="classic-sticky-tabs" id="classic-sticky-tabs" aria-label="{{ self.t("sticky.label", "目次タブ") }}" data-pagefind-ignore>
+    {{ ui::sticky_edge_btn("top", "") }}
     <nav class="sticky-tabs-bar" id="classic-sticky-tabs-bar">
-{{ ui.sticky_tabs_tree(section_tabs) }}
+      {{ ui::sticky_tabs_tree(section_tabs) }}
     </nav>
-    {{ ui.sticky_edge_btn("bottom", t) }}
+    {{ ui::sticky_edge_btn("bottom", "") }}
   </aside>
   {% endif %}
   <nav class="breadcrumb breadcrumb-classic text-[0.875rem] text-text-muted mb-4 pb-2 border-b border-border-subtle flex justify-between items-center">
     <div>
-      <a href="{{ home_url | safe }}">← Home</a>{% if section %} / <span class="breadcrumb-section text-text-muted">{{ section }}</span>{% endif %} / <span>{{ page_title }}</span>
+      <a href="{{ home_url }}">← Home</a>{% if let Some(sec) = section %} / <span class="breadcrumb-section text-text-muted">{{ sec }}</span>{% endif %} / <span>{{ page_title }}</span>
     </div>
-    <tmt-btn variant="ghost" size="sm" shape="square" class="theme-toggle-btn" title="{{ t["theme.toggle"] }}" aria-label="{{ t["theme.toggle_label"] }}">
-      {{ ui.dsd_btn_shadow(title=t["theme.toggle"], aria_label=t["theme.toggle_label"]) }}
+    <tmt-btn variant="ghost" size="sm" shape="square" class="theme-toggle-btn" title="{{ self.t("theme.toggle", "テーマ切替") }}" aria-label="{{ self.t("theme.toggle_label", "テーマ切替") }}">
+      {{ ui::dsd_btn_shadow(self.t("theme.toggle", "テーマ切替"), self.t("theme.toggle_label", "テーマ切替"), false, "button") }}
       <svg class="icon-theme icon-sun" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="4"></circle>
         <path d="M12 2v2"></path>
@@ -502,57 +470,57 @@
     </tmt-btn>
   </nav>
 
-  {% if banner_url %}
+  {% if let Some(b_url) = banner_url %}
   <div
     class="hero-section relative z-[1] mb-6 border border-border bg-surface"
-    {% if primary_color %}style="border-bottom: 3px solid #{{ primary_color }};"{% endif %}
+    {% if let Some(color) = primary_color %}style="border-bottom: 3px solid #{{ color }};"{% endif %}
   >
-{{ ui.hero_banner(banner_url, banner_y, page_title, t, banner_original_url) }}
+    {{ ui::hero_banner(b_url, banner_y, page_title, banner_original_url) }}
 
     <div class="hero-content relative flex items-start gap-4 border-b-2 border-border px-5 pb-4">
-      {% if icon %}
+      {% if let Some(ic) = icon %}
       <div
         class="hero-avatar relative z-[3] flex items-center justify-center shrink-0 w-[56px] h-[56px] -mt-7 border-2 border-border bg-surface shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
-        {% if primary_color %}style="box-shadow: 0 4px 16px #{{ primary_color }}40; border-color: #{{ primary_color }};"{% endif %}
+        {% if let Some(color) = primary_color %}style="box-shadow: 0 4px 16px #{{ color }}40; border-color: #{{ color }};"{% endif %}
       >
-        <span class="avatar-icon w-full h-full flex items-center justify-center text-[2rem] leading-none">{{ icon | safe }}</span>
+        <span class="avatar-icon w-full h-full flex items-center justify-center text-[2rem] leading-none">{{ ic|safe }}</span>
       </div>
       {% endif %}
       <div class="hero-title-area flex-1 min-w-0">
         <div class="hero-title-row flex items-baseline gap-2.5 flex-wrap">
           <h1>{{ page_title }}</h1>
-          {% if kind %}
-          <span class="kind-tag kind-{{ kind }} inline-block px-2 py-0.5 text-xs font-medium capitalize whitespace-nowrap">{{ kind }}</span>
+          {% if let Some(k) = kind %}
+          <span class="kind-tag kind-{{ k }} inline-block px-2 py-0.5 text-xs font-medium capitalize whitespace-nowrap">{{ k }}</span>
           {% endif %}
         </div>
-        {% if hero_chips and hero_chips | length > 0 %}
-{{ ui.hero_chips(hero_chips) }}
+        {% if !hero_chips.is_empty() %}
+        {{ ui::hero_chips(hero_chips, "") }}
         {% endif %}
       </div>
-      {% if source_path and is_dev %}
+      {% if !source_path.is_empty() && is_dev %}
       <div class="hero-actions absolute top-3.5 right-4 flex items-center gap-2 z-50">
-{{ ui.edit_menu(source_path, t) }}
+        {{ ui::edit_menu(source_path) }}
       </div>
       {% endif %}
     </div>
   </div>
   {% else %}
-  <header class="article-header" {% if primary_color %}style="border-bottom: 3px solid #{{ primary_color }};"{% endif %}>
+  <header class="article-header" {% if let Some(color) = primary_color %}style="border-bottom: 3px solid #{{ color }};"{% endif %}>
     <div class="title-row">
       <h1>
-        {% if icon %}<span class="title-inline-icon">{{ icon | safe }}</span>{% endif %}
+        {% if let Some(ic) = icon %}<span class="title-inline-icon">{{ ic|safe }}</span>{% endif %}
         {{ page_title }}
       </h1>
-      {% if kind %}
-      <span class="kind-tag kind-{{ kind }} inline-block px-2 py-0.5 text-xs font-medium capitalize whitespace-nowrap">{{ kind }}</span>
+      {% if let Some(k) = kind %}
+      <span class="kind-tag kind-{{ k }} inline-block px-2 py-0.5 text-xs font-medium capitalize whitespace-nowrap">{{ k }}</span>
       {% endif %}
     </div>
-    {% if hero_chips and hero_chips | length > 0 %}
-{{ ui.hero_chips(hero_chips, 'margin-top: 8px;') }}
+    {% if !hero_chips.is_empty() %}
+    {{ ui::hero_chips(hero_chips, "margin-top: 8px;") }}
     {% endif %}
-    {% if source_path and is_dev %}
+    {% if !source_path.is_empty() && is_dev %}
     <div class="hero-actions absolute top-3.5 right-4 flex items-center gap-2 z-50">
-{{ ui.edit_menu(source_path, t) }}
+      {{ ui::edit_menu(source_path) }}
     </div>
     {% endif %}
   </header>
@@ -560,26 +528,26 @@
 
   {% if has_data %}
   <aside
-    class="infobox{% if kind %} infobox-{{ kind }}{% endif %}"
-    {% if primary_color %}style="border-top: 3px solid #{{ primary_color }};"{% endif %}
+    class="infobox{% if let Some(k) = kind %} infobox-{{ k }}{% endif %}"
+    {% if let Some(color) = primary_color %}style="border-top: 3px solid #{{ color }};"{% endif %}
   >
     <div class="infobox-title bg-surface-subtle py-[10px] px-3 text-[1.05rem] font-bold text-center border-t-[3px] border-t-link border-b border-border flex items-center justify-center gap-2">
-      {% if icon %}<span class="infobox-icon">{{ icon | safe }}</span>{% endif %}
+      {% if let Some(ic) = icon %}<span class="infobox-icon">{{ ic|safe }}</span>{% endif %}
       <span>{{ page_title }}</span>
     </div>
-    {% if images and images | length > 0 %}
-{{ ui.costume_switcher(images, page_title, t, original_images) }}
+    {% if !images.is_empty() %}
+    {{ ui::costume_switcher(images, page_title, original_images) }}
     {% endif %}
-    {% if infobox_rows and infobox_rows | length > 0 %}
+    {% if !infobox_rows.is_empty() %}
     <table class="infobox-table w-full border-collapse">
       <tbody>
         {% for row in infobox_rows %}
         <tr>
           <th class="infobox-label w-[36%] py-[7px] px-[10px] font-semibold text-text-muted bg-transparent border-t border-border-subtle text-left align-middle text-[0.78rem] tracking-[0.02em]">{{ row.label }}</th>
           <td class="infobox-data relative py-[7px] pr-7 pl-[10px] border-t border-border-subtle align-middle break-words text-[0.82rem] text-text">
-            <span class="infobox-data-val inline">{{ row.value | safe }}</span>
-            <tmt-btn variant="ghost" size="xs" shape="square" class="infobox-copy-btn" title="{{ t["infobox.copy"] }}" aria-label="{{ t["infobox.copy"] }}" data-pagefind-ignore>
-              {{ ui.dsd_btn_shadow(title=t["infobox.copy"], aria_label=t["infobox.copy"]) }}
+            <span class="infobox-data-val inline">{{ row.value|safe }}</span>
+            <tmt-btn variant="ghost" size="xs" shape="square" class="infobox-copy-btn" title="{{ self.t("infobox.copy", "コピー") }}" aria-label="{{ self.t("infobox.copy", "コピー") }}" data-pagefind-ignore>
+              {{ ui::dsd_btn_shadow(self.t("infobox.copy", "コピー"), self.t("infobox.copy", "コピー"), false, "button") }}
               <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
                 <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
@@ -594,12 +562,12 @@
   </aside>
   {% endif %}
 
-  {% if toc and toc | length > 0 %}
+  {% if !toc.is_empty() %}
   <aside class="toc">
     <h2>Table of Contents</h2>
     <ul>
       {% for item in toc %}
-      <li style="margin-left: {{ (item.level - 1) * 0.75 }}rem">
+      <li style="margin-left: {{ (item.level - 1) * 10 }}px">
         <a href="#{{ item.id }}" class="classic-toc-link">{{ item.text }}</a>
       </li>
       {% endfor %}
@@ -609,7 +577,7 @@
 
   <main>
     <article>
-      {{ body_html | safe }}
+      {{ body_html|safe }}
     </article>
   </main>
 </div>

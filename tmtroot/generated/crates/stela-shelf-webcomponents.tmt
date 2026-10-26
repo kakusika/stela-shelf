@@ -6,6 +6,14 @@
 
 ==[Structs]
 
+===[struct PageTemplate]
+
+===[struct IndexTemplate]
+
+===[struct WebComponentsRenderer]
+
+===[struct WebComponentsRendererFactory]
+
 ===[struct WebComponentsEngine]
 
 Web Components & Tailwind CSS engine implementation for stela-shelf.
@@ -45,20 +53,6 @@ Web Components & Tailwind CSS engine implementation for stela-shelf.
 ===[const TMT_SWITCH_CSS_VERSION]
 
 ===[const COMPONENT_ASSETS]
-
-===[const COMPONENT_VERSIONS]
-
-===[const BASE_HTML]
-
-===[const PAGE_HTML]
-
-===[const INDEX_HTML]
-
-===[const MACROS_HTML]
-
-===[const ASSETS]
-
-Official `stela-shelf` UI template and asset bundle.
 
 ===[const CSS_VERSION]
 

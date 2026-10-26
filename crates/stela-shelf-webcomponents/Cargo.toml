@@ -8,8 +8,14 @@ description = "Web Components & Tailwind engine variant for stela-shelf"
 [dependencies]
 stela-shelf-core = { workspace = true }
 tomet-shelf-headless = { workspace = true }
-tomet-shelf-template = { workspace = true }
+tomet-shelf-document = { workspace = true }
+tomet-shelf-icons = { workspace = true }
+tomet-shelf-render = { workspace = true }
 
 #= Crates.io
 anyhow = { workspace = true }
+askama = { workspace = true }
 async-trait = { workspace = true }
+serde_json = { workspace = true }
+
+

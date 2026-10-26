@@ -8,6 +8,7 @@ description = "Islands Architecture Svelte engine for stela-shelf"
 [dependencies]
 stela-shelf-core = { workspace = true }
 tomet-shelf-headless = { workspace = true }
+tomet-shelf-document = { workspace = true }
 
 #= Crates.io
 anyhow = { workspace = true }

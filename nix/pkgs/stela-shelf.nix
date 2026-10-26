@@ -13,6 +13,7 @@ let
     fileset = lib.fileset.unions [
       (craneLib.fileset.commonCargoSources root)
       (root + "/crates/stela-shelf-webcomponents/frontend")
+      (root + "/crates/stela-shelf-webcomponents/templates")
       (root + "/crates/stela-shelf-htmx/assets")
       (root + "/crates/stela-shelf-htmx/templates")
       (root + "/crates/stela-shelf-svelte/assets")

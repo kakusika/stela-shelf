@@ -2546,12 +2546,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 
 [[package]]
-name = "memo-map"
-version = "0.3.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5449c8c750f1a07ea702bbd212bd999fceece9b3d1508b17023b3e174583124b"
-
-[[package]]
 name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2594,17 +2588,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14f1541610994bba178cb36757e102d06a52a2d9612aa6d34c64b3b377c5d943"
 dependencies = [
  "clap",
-]
-
-[[package]]
-name = "minijinja"
-version = "2.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86886cf6dbf4e614b19c9a1eec9775f021869d7eadde0fc73921a81b90c9b4c9"
-dependencies = [
- "memo-map",
- "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -4024,6 +4007,7 @@ dependencies = [
  "serde",
  "stela-shelf-core",
  "tokio",
+ "tomet-shelf-document",
  "tomet-shelf-headless",
  "tracing",
 ]
@@ -4040,6 +4024,7 @@ dependencies = [
  "serde",
  "stela-shelf-core",
  "tokio",
+ "tomet-shelf-document",
  "tomet-shelf-headless",
  "tracing",
 ]
@@ -4055,6 +4040,7 @@ dependencies = [
  "serde",
  "stela-shelf-core",
  "tokio",
+ "tomet-shelf-document",
  "tomet-shelf-headless",
  "tracing",
 ]
@@ -4070,6 +4056,7 @@ dependencies = [
  "serde",
  "stela-shelf-core",
  "tokio",
+ "tomet-shelf-document",
  "tomet-shelf-headless",
  "tracing",
 ]
@@ -4079,10 +4066,14 @@ name = "stela-shelf-webcomponents"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "askama",
  "async-trait",
+ "serde_json",
  "stela-shelf-core",
+ "tomet-shelf-document",
  "tomet-shelf-headless",
- "tomet-shelf-template",
+ "tomet-shelf-icons",
+ "tomet-shelf-render",
 ]
 
 [[package]]
@@ -4675,7 +4666,7 @@ dependencies = [
 [[package]]
 name = "tomet-shelf-config"
 version = "0.1.0"
-source = "git+https://github.com/tomet-lang/tomet-shelf.git#431a97b722a9d433e5de33f6022b1220edca60c9"
+source = "git+https://github.com/tomet-lang/tomet-shelf.git#6a8b10839c472ef950759b21c6227ba39306da2f"
 dependencies = [
  "anyhow",
  "serde",
@@ -4683,9 +4674,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "tomet-shelf-document"
+version = "0.1.0"
+source = "git+https://github.com/tomet-lang/tomet-shelf.git#6a8b10839c472ef950759b21c6227ba39306da2f"
+dependencies = [
+ "anyhow",
+ "image",
+ "percent-encoding",
+ "regex",
+ "serde",
+ "serde_json",
+ "tomet",
+ "tomet-shelf-config",
+ "tomet-shelf-route",
+ "tomet-shelf-search",
+ "tracing",
+ "unicode-segmentation",
+]
+
+[[package]]
 name = "tomet-shelf-headless"
 version = "0.1.0"
-source = "git+https://github.com/tomet-lang/tomet-shelf.git#431a97b722a9d433e5de33f6022b1220edca60c9"
+source = "git+https://github.com/tomet-lang/tomet-shelf.git#6a8b10839c472ef950759b21c6227ba39306da2f"
 dependencies = [
  "anyhow",
  "image",
@@ -4699,6 +4709,8 @@ dependencies = [
  "tokio",
  "tomet",
  "tomet-shelf-config",
+ "tomet-shelf-document",
+ "tomet-shelf-icons",
  "tomet-shelf-render",
  "tomet-shelf-route",
  "tomet-shelf-search",
@@ -4711,20 +4723,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "tomet-shelf-icons"
+version = "0.1.0"
+source = "git+https://github.com/tomet-lang/tomet-shelf.git#6a8b10839c472ef950759b21c6227ba39306da2f"
+dependencies = [
+ "tomet",
+]
+
+[[package]]
 name = "tomet-shelf-render"
 version = "0.1.0"
-source = "git+https://github.com/tomet-lang/tomet-shelf.git#431a97b722a9d433e5de33f6022b1220edca60c9"
+source = "git+https://github.com/tomet-lang/tomet-shelf.git#6a8b10839c472ef950759b21c6227ba39306da2f"
 dependencies = [
  "anyhow",
- "image",
- "percent-encoding",
  "regex",
  "serde",
  "serde_json",
  "tomet",
  "tomet-shelf-config",
- "tomet-shelf-route",
- "tomet-shelf-search",
+ "tomet-shelf-document",
+ "tomet-shelf-icons",
  "tracing",
  "unicode-segmentation",
 ]
@@ -4732,7 +4750,7 @@ dependencies = [
 [[package]]
 name = "tomet-shelf-route"
 version = "0.1.0"
-source = "git+https://github.com/tomet-lang/tomet-shelf.git#431a97b722a9d433e5de33f6022b1220edca60c9"
+source = "git+https://github.com/tomet-lang/tomet-shelf.git#6a8b10839c472ef950759b21c6227ba39306da2f"
 dependencies = [
  "anyhow",
  "serde_json",
@@ -4743,7 +4761,7 @@ dependencies = [
 [[package]]
 name = "tomet-shelf-search"
 version = "0.1.0"
-source = "git+https://github.com/tomet-lang/tomet-shelf.git#431a97b722a9d433e5de33f6022b1220edca60c9"
+source = "git+https://github.com/tomet-lang/tomet-shelf.git#6a8b10839c472ef950759b21c6227ba39306da2f"
 dependencies = [
  "serde",
  "serde_json",
@@ -4752,7 +4770,7 @@ dependencies = [
 [[package]]
 name = "tomet-shelf-serve"
 version = "0.1.0"
-source = "git+https://github.com/tomet-lang/tomet-shelf.git#431a97b722a9d433e5de33f6022b1220edca60c9"
+source = "git+https://github.com/tomet-lang/tomet-shelf.git#6a8b10839c472ef950759b21c6227ba39306da2f"
 dependencies = [
  "anyhow",
  "axum",
@@ -4762,18 +4780,6 @@ dependencies = [
  "tokio",
  "tower-http 0.5.2",
  "tracing",
-]
-
-[[package]]
-name = "tomet-shelf-template"
-version = "0.1.0"
-source = "git+https://github.com/tomet-lang/tomet-shelf.git#431a97b722a9d433e5de33f6022b1220edca60c9"
-dependencies = [
- "anyhow",
- "minijinja",
- "serde",
- "tomet-shelf-config",
- "tomet-shelf-render",
 ]
 
 [[package]]
