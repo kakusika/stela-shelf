@@ -28,7 +28,9 @@
     </script>
     <link rel="stylesheet" href="{% if base_path.is_empty() %}/shelf.css{% else %}{{ base_path }}/shelf.css{% endif %}?v={{ css_version }}" />
     <link rel="stylesheet" href="{% if base_path.is_empty() %}/island.css{% else %}{{ base_path }}/island.css{% endif %}" />
+    <script src="{% if base_path.is_empty() %}/stela-shell.js{% else %}{{ base_path }}/stela-shell.js{% endif %}?v={{ stela_shell_js_version }}" defer></script>
     <script type="module">
+
       {{ island_js|safe }}
     </script>
     {% block head_extra %}{% endblock %}

@@ -7,9 +7,9 @@ pub mod components;
 pub mod styles;
 
 use components::{CatalogView, DocumentView, HtmlDocument};
-use styles::LEPTOS_SHELF_CSS;
 
-use stela_shelf_assets::COMPONENT_ASSETS;
+
+use stela_shelf_assets::stela_static_assets;
 use stela_shelf_core::{BuildContext, BuildReport, ServerContext, ShelfEngine};
 use tomet_shelf_document::ProcessedDoc;
 use tomet_shelf_headless::assets::StaticAsset;
@@ -17,16 +17,8 @@ use tomet_shelf_headless::{
     Backlink, BookConfig, EntrySummary, PageRenderer, RendererFactory, SectionSummary,
 };
 
-pub static LEPTOS_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(|| {
-    let mut assets = Vec::with_capacity(1 + COMPONENT_ASSETS.len());
-    assets.push(StaticAsset {
-        path: "shelf.css",
-        mime: "text/css; charset=utf-8",
-        content: LEPTOS_SHELF_CSS,
-    });
-    assets.extend_from_slice(COMPONENT_ASSETS);
-    assets
-});
+pub static LEPTOS_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(stela_static_assets);
+
 
 /// Leptos-based page renderer implementing `tomet_shelf_headless::PageRenderer`.
 pub struct LeptosPageRenderer {

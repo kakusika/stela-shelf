@@ -145,4 +145,31 @@ fn main() {
         fs::write(out_path.join(format!("{name}.min.css")), comp_res.code)
             .unwrap_or_else(|e| panic!("failed to write {name}.min.css: {e}"));
     }
+
+    // 4. Bundle core Stela shell JavaScript with esbuild
+    let shell_ts_path = root.join("frontend/scripts/stela-shell.ts");
+    let js_output_path = out_path.join("stela-shell.min.js");
+
+    let esbuild_status = Command::new("esbuild")
+        .current_dir(root)
+        .args([
+            shell_ts_path.to_str().expect("valid UTF-8 path"),
+            "--bundle",
+            "--minify",
+            &format!(
+                "--outfile={}",
+                js_output_path.to_str().expect("OUT_DIR is not valid UTF-8")
+            ),
+        ])
+        .status();
+
+    match esbuild_status {
+        Ok(s) if s.success() => {}
+        Ok(s) => panic!("`esbuild` exited with {s}"),
+        Err(e) => panic!(
+            "failed to run `esbuild` ({e}). It's provided by the nix dev shell \
+             (nix/dev.nix) -- run this build from inside `nix develop` / direnv."
+        ),
+    }
 }
+

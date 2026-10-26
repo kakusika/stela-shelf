@@ -9,9 +9,18 @@ pub const STELA_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/shelf.min.cs
 
 pub static STELA_CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(STELA_CSS));
 
+//==============================================================================
+// Core Stela Shell JavaScript
+//==============================================================================
+
+pub const STELA_SHELL_JS: &str = include_str!(concat!(env!("OUT_DIR"), "/stela-shell.min.js"));
+pub static STELA_SHELL_JS_VERSION: LazyLock<String> =
+    LazyLock::new(|| content_version(STELA_SHELL_JS));
+
 // Backward compatibility alias
 pub const BOOK_CSS: &str = STELA_CSS;
 pub static CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(STELA_CSS));
+
 
 //==============================================================================
 // Web Component Shadow DOM Stylesheets
@@ -62,14 +71,20 @@ pub const COMPONENT_ASSETS: &[StaticAsset] = &[
     },
 ];
 
-/// Get all core static assets for Stela Shelf (CSS and components).
+/// Get all core static assets for Stela Shelf (CSS, JS, and components).
 pub fn stela_static_assets() -> Vec<StaticAsset> {
-    let mut assets = Vec::with_capacity(1 + COMPONENT_ASSETS.len());
+    let mut assets = Vec::with_capacity(2 + COMPONENT_ASSETS.len());
     assets.push(StaticAsset {
         path: "shelf.css",
         mime: "text/css; charset=utf-8",
         content: STELA_CSS,
     });
+    assets.push(StaticAsset {
+        path: "stela-shell.js",
+        mime: "application/javascript; charset=utf-8",
+        content: STELA_SHELL_JS,
+    });
     assets.extend_from_slice(COMPONENT_ASSETS);
     assets
 }
+

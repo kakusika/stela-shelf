@@ -313,18 +313,12 @@ impl WebComponentsRenderer {
             full_url_prefix.clone()
         };
 
-        let mut static_assets = Vec::with_capacity(2 + COMPONENT_ASSETS.len());
-        static_assets.push(StaticAsset {
-            path: "shelf.css",
-            mime: "text/css; charset=utf-8",
-            content: BOOK_CSS,
-        });
+        let mut static_assets = stela_shelf_assets::stela_static_assets();
         static_assets.push(StaticAsset {
             path: "shelf.js",
             mime: "application/javascript; charset=utf-8",
             content: BOOK_JS,
         });
-        static_assets.extend_from_slice(COMPONENT_ASSETS);
 
         Ok(Self {
             config: config.clone(),
@@ -516,7 +510,12 @@ impl RendererFactory for WebComponentsRendererFactory {
 
 pub fn write_static_assets(out_dir: &Path, src_dir: &Path, config: &BookConfig) -> Result<()> {
     let renderer = WebComponentsRenderer::new(config, false)?;
-    tomet_shelf_headless::assets::write_static_assets(out_dir, src_dir, config, renderer.static_assets())
+    tomet_shelf_headless::assets::write_static_assets(
+        out_dir,
+        src_dir,
+        config,
+        renderer.static_assets(),
+    )
 }
 
 /// Web Components & Tailwind CSS engine implementation for stela-shelf.

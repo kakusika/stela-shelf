@@ -8,13 +8,17 @@
 
 ===[fn stela_static_assets]
 
-Get all core static assets for Stela Shelf (CSS and components).
+Get all core static assets for Stela Shelf (CSS, JS, and components).
 
 ==[Constants]
 
 ===[const STELA_CSS]
 
 ===[const STELA_CSS_VERSION]
+
+===[const STELA_SHELL_JS]
+
+===[const STELA_SHELL_JS_VERSION]
 
 ===[const BOOK_CSS]
 

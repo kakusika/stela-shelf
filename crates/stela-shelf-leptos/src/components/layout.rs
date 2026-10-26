@@ -12,6 +12,11 @@ pub fn HtmlDocument(
     } else {
         format!("{}/shelf.css", base_path.trim_end_matches('/'))
     };
+    let js_path = if base_path.is_empty() {
+        "/stela-shell.js".to_string()
+    } else {
+        format!("{}/stela-shell.js", base_path.trim_end_matches('/'))
+    };
 
     view! {
         <!DOCTYPE html>
@@ -42,7 +47,9 @@ pub fn HtmlDocument(
                   } catch {}
                 "/>
                 <link rel="stylesheet" href=css_path/>
+                <script src=js_path defer=""></script>
             </head>
+
             <body class="is-fluid">
                 {children()}
             </body>

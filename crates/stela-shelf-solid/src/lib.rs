@@ -4,9 +4,8 @@ use async_trait::async_trait;
 use std::sync::{Arc, LazyLock};
 
 use stela_shelf_assets::{
-    COMPONENT_ASSETS, STELA_CSS, STELA_CSS_VERSION,
-    TMT_BADGE_CSS_VERSION, TMT_BTN_CSS_VERSION, TMT_ICON_CSS_VERSION, TMT_SWATCH_CSS_VERSION,
-    TMT_SWITCH_CSS_VERSION,
+    STELA_CSS_VERSION, STELA_SHELL_JS_VERSION, TMT_BADGE_CSS_VERSION, TMT_BTN_CSS_VERSION,
+    TMT_ICON_CSS_VERSION, TMT_SWATCH_CSS_VERSION, TMT_SWITCH_CSS_VERSION, stela_static_assets,
 };
 use stela_shelf_core::{BuildContext, BuildReport, ServerContext, ShelfEngine};
 use tomet_shelf_document::{ProcessedDoc, SectionTab};
@@ -22,12 +21,7 @@ pub const ISLAND_CSS: &str = include_str!("../assets/island.css");
 pub const ISLAND_JS: &str = include_str!("../assets/island.js");
 
 pub static SOLID_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(|| {
-    let mut assets = Vec::with_capacity(3 + COMPONENT_ASSETS.len());
-    assets.push(StaticAsset {
-        path: "shelf.css",
-        mime: "text/css; charset=utf-8",
-        content: STELA_CSS,
-    });
+    let mut assets = stela_static_assets();
     assets.push(StaticAsset {
         path: "island.css",
         mime: "text/css; charset=utf-8",
@@ -38,9 +32,9 @@ pub static SOLID_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(|| {
         mime: "application/javascript; charset=utf-8",
         content: ISLAND_JS,
     });
-    assets.extend_from_slice(COMPONENT_ASSETS);
     assets
 });
+
 
 #[derive(Clone, Debug)]
 pub struct EntryView {
@@ -72,9 +66,11 @@ pub struct PageTemplate<'a> {
     pub tmt_icon_css_version: &'a str,
     pub tmt_swatch_css_version: &'a str,
     pub tmt_switch_css_version: &'a str,
+    pub stela_shell_js_version: &'a str,
 }
 
 impl<'a> PageTemplate<'a> {
+
     pub fn t(&self, _key: &str, default: &'a str) -> &'a str {
         default
     }
@@ -114,9 +110,11 @@ pub struct IndexTemplate<'a> {
     pub tmt_icon_css_version: &'a str,
     pub tmt_swatch_css_version: &'a str,
     pub tmt_switch_css_version: &'a str,
+    pub stela_shell_js_version: &'a str,
 }
 
 impl<'a> IndexTemplate<'a> {
+
     pub fn t(&self, _key: &str, default: &'a str) -> &'a str {
         default
     }
@@ -202,6 +200,7 @@ impl PageRenderer for SolidPageRenderer {
             tmt_icon_css_version: &TMT_ICON_CSS_VERSION,
             tmt_swatch_css_version: &TMT_SWATCH_CSS_VERSION,
             tmt_switch_css_version: &TMT_SWITCH_CSS_VERSION,
+            stela_shell_js_version: &STELA_SHELL_JS_VERSION,
         };
 
         template.render().map_err(Into::into)
@@ -242,7 +241,9 @@ impl PageRenderer for SolidPageRenderer {
             tmt_icon_css_version: &TMT_ICON_CSS_VERSION,
             tmt_swatch_css_version: &TMT_SWATCH_CSS_VERSION,
             tmt_switch_css_version: &TMT_SWITCH_CSS_VERSION,
+            stela_shell_js_version: &STELA_SHELL_JS_VERSION,
         };
+
 
         template.render().map_err(Into::into)
     }
