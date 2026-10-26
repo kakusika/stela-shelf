@@ -1,15 +1,14 @@
 use anyhow::{Context, Result};
 use clap::Parser;
 use std::fs;
-use std::sync::Arc;
+use std::path::Path;
 use tracing::info;
 use tracing_subscriber::{EnvFilter, fmt};
 
 mod cli;
 
 use cli::{Cli, Commands};
-use stela_shelf_assets::ASSETS;
-use tomet_shelf_headless::book;
+use stela_shelf_core::{BuildContext, ServerContext, ShelfEngine};
 use tomet_shelf_headless::config::BookConfig;
 
 #[tokio::main]
@@ -23,10 +22,28 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Build { dir, dest, strict } => {
+        Commands::Build {
+            dir,
+            dest,
+            strict,
+            engine,
+        } => {
             let (src_dir, out_dir, config) = resolve_build_paths(&dir, dest)?;
+            let engine = resolve_engine(engine.as_deref(), &src_dir)?;
+            info!(
+                "Building static book with engine '{}' ({})",
+                engine.name(),
+                engine.description()
+            );
 
-            let report = book::build_book(&src_dir, &out_dir, &config, &ASSETS, false)?;
+            let ctx = BuildContext {
+                src_dir: &src_dir,
+                out_dir: &out_dir,
+                config: &config,
+                strict,
+            };
+
+            let report = engine.build(&ctx)?;
 
             if strict && !report.failures.is_empty() {
                 for failure in &report.failures {
@@ -43,18 +60,25 @@ async fn main() -> Result<()> {
             dest,
             host,
             port,
+            engine,
         } => {
             let (src_dir, out_dir, config) = resolve_build_paths(&dir, dest)?;
+            let engine = resolve_engine(engine.as_deref(), &src_dir)?;
+            info!(
+                "Starting server with engine '{}' ({})",
+                engine.name(),
+                engine.description()
+            );
 
-            tomet_shelf_headless::run_dev_server(
-                src_dir,
-                out_dir,
-                config,
-                Arc::new(ASSETS),
+            let ctx = ServerContext {
+                src_dir: &src_dir,
+                out_dir: &out_dir,
+                config: &config,
                 host,
                 port,
-            )
-            .await?;
+            };
+
+            engine.serve(&ctx).await?;
         }
         Commands::Init { dir, title } => {
             let target_file = dir.join("shelf.toml");
@@ -120,4 +144,72 @@ fn resolve_build_paths(
         .context("Failed to find source directory")?;
     let out_dir = dest.unwrap_or_else(|| src_dir.join(&config.book.dest));
     Ok((src_dir, out_dir, config))
+}
+
+fn resolve_engine(name: Option<&str>, src_dir: &Path) -> Result<Box<dyn ShelfEngine>> {
+    let chosen = if let Some(n) = name {
+        n.to_string()
+    } else if let Ok(content) = fs::read_to_string(src_dir.join("shelf.toml")) {
+        let val: toml::Value =
+            toml::from_str(&content).unwrap_or(toml::Value::Table(Default::default()));
+        val.get("engine")
+            .and_then(|v| v.as_str())
+            .or_else(|| {
+                val.get("shelf")
+                    .and_then(|s| s.get("engine"))
+                    .and_then(|v| v.as_str())
+            })
+            .unwrap_or("webcomponents")
+            .to_string()
+    } else {
+        "webcomponents".to_string()
+    };
+
+    match chosen.as_str() {
+        "webcomponents" => {
+            #[cfg(feature = "webcomponents")]
+            {
+                Ok(Box::new(stela_shelf_webcomponents::WebComponentsEngine))
+            }
+            #[cfg(not(feature = "webcomponents"))]
+            {
+                anyhow::bail!(
+                    "Engine 'webcomponents' is disabled. Rebuild with `--features webcomponents`."
+                );
+            }
+        }
+        "leptos" => {
+            #[cfg(feature = "leptos")]
+            {
+                anyhow::bail!("Engine 'leptos' is not yet implemented.");
+            }
+            #[cfg(not(feature = "leptos"))]
+            {
+                anyhow::bail!("Engine 'leptos' is disabled. Rebuild with `--features leptos`.");
+            }
+        }
+        "htmx" => {
+            #[cfg(feature = "htmx")]
+            {
+                anyhow::bail!("Engine 'htmx' is not yet implemented.");
+            }
+            #[cfg(not(feature = "htmx"))]
+            {
+                anyhow::bail!("Engine 'htmx' is disabled. Rebuild with `--features htmx`.");
+            }
+        }
+        "islands" => {
+            #[cfg(feature = "islands")]
+            {
+                anyhow::bail!("Engine 'islands' is not yet implemented.");
+            }
+            #[cfg(not(feature = "islands"))]
+            {
+                anyhow::bail!("Engine 'islands' is disabled. Rebuild with `--features islands`.");
+            }
+        }
+        other => anyhow::bail!(
+            "Unknown shelf engine: '{other}'. Available engines: webcomponents, leptos, htmx, islands"
+        ),
+    }
 }

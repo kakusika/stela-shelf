@@ -111,6 +111,41 @@ pub fn write_static_assets(out_dir: &Path, src_dir: &Path, config: &BookConfig) 
     write_render_assets(out_dir, src_dir, config, renderer.static_assets())
 }
 
+use async_trait::async_trait;
+use std::sync::Arc;
+use stela_shelf_core::{BuildContext, BuildReport, ServerContext, ShelfEngine};
+
+/// Web Components & Tailwind CSS engine implementation for stela-shelf.
+#[derive(Debug, Default, Clone, Copy)]
+pub struct WebComponentsEngine;
+
+#[async_trait]
+impl ShelfEngine for WebComponentsEngine {
+    fn name(&self) -> &'static str {
+        "webcomponents"
+    }
+
+    fn description(&self) -> &'static str {
+        "Web Components (Custom Elements) + Tailwind CSS engine"
+    }
+
+    fn build(&self, ctx: &BuildContext) -> Result<BuildReport> {
+        tomet_shelf_headless::book::build_book(ctx.src_dir, ctx.out_dir, ctx.config, &ASSETS, false)
+    }
+
+    async fn serve(&self, ctx: &ServerContext) -> Result<()> {
+        tomet_shelf_headless::run_dev_server(
+            ctx.src_dir.to_path_buf(),
+            ctx.out_dir.to_path_buf(),
+            ctx.config.clone(),
+            Arc::new(ASSETS),
+            ctx.host,
+            ctx.port,
+        )
+        .await
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

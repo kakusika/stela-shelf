@@ -1,0 +1,14 @@
+[package]
+name = "stela-shelf-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description = "Core abstraction and engine traits for stela-shelf"
+
+[dependencies]
+tomet-shelf-headless = { workspace = true }
+
+#= Crates.io
+anyhow = { workspace = true }
+async-trait = { workspace = true }
+tokio = { workspace = true }

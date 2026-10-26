@@ -29,7 +29,7 @@ test:
 
 # Type-check TypeScript without producing output
 check-ui:
-    tsc --project crates/stela-shelf-assets/frontend/tsconfig.json --noEmit
+    tsc --project crates/stela-shelf-webcomponents/frontend/tsconfig.json --noEmit
 
 # Type-check without producing a binary
 check: check-ui

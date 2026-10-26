@@ -25,6 +25,10 @@ pub enum Commands {
         /// Fail the build if any document could not be rendered
         #[arg(long)]
         strict: bool,
+
+        /// Shelf engine to use (e.g. "webcomponents", "leptos", "htmx", "islands")
+        #[arg(short = 'e', long)]
+        engine: Option<String>,
     },
 
     /// Run the local development server with LiveReload
@@ -45,6 +49,10 @@ pub enum Commands {
         /// Port to bind the server on
         #[arg(short, long, default_value_t = 3000)]
         port: u16,
+
+        /// Shelf engine to use (e.g. "webcomponents", "leptos", "htmx", "islands")
+        #[arg(short = 'e', long)]
+        engine: Option<String>,
     },
 
     /// Initialize a new shelf.toml configuration in the directory
