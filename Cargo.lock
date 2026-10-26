@@ -3952,6 +3952,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 
 [[package]]
+name = "stela-shelf-assets"
+version = "0.1.0"
+dependencies = [
+ "tomet-shelf-headless",
+]
+
+[[package]]
 name = "stela-shelf-benches"
 version = "0.1.0"
 dependencies = [
@@ -4005,6 +4012,7 @@ dependencies = [
  "async-trait",
  "axum",
  "serde",
+ "stela-shelf-assets",
  "stela-shelf-core",
  "tokio",
  "tomet-shelf-document",
@@ -4022,6 +4030,7 @@ dependencies = [
  "leptos",
  "leptos_axum",
  "serde",
+ "stela-shelf-assets",
  "stela-shelf-core",
  "tokio",
  "tomet-shelf-document",
@@ -4038,6 +4047,7 @@ dependencies = [
  "async-trait",
  "axum",
  "serde",
+ "stela-shelf-assets",
  "stela-shelf-core",
  "tokio",
  "tomet-shelf-document",
@@ -4054,6 +4064,7 @@ dependencies = [
  "async-trait",
  "axum",
  "serde",
+ "stela-shelf-assets",
  "stela-shelf-core",
  "tokio",
  "tomet-shelf-document",
@@ -4069,6 +4080,7 @@ dependencies = [
  "askama",
  "async-trait",
  "serde_json",
+ "stela-shelf-assets",
  "stela-shelf-core",
  "tomet-shelf-document",
  "tomet-shelf-headless",

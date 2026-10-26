@@ -1,11 +1,102 @@
 {% extends "base.html" %}
+{% import "macros.html" as ui %}
 
-{% block title %}{{ doc_title }} — {{ book_title }}{% endblock %}
+{% block title %}{{ doc_title }} | {{ book_title }}{% endblock %}
 
 {% block content %}
-  {% include "fragments/article.html" %}
-{% endblock %}
+<div class="book-shell flex flex-row h-screen w-screen overflow-hidden bg-surface-subtle">
+  <!-- Permanent Left Rail -->
+  <nav class="book-rail-nav w-[38px] min-w-[38px] max-w-[38px] h-screen flex flex-col items-center shrink-0 box-border p-0 z-50 select-none" id="book-rail-nav" aria-label="ナビゲーション">
+    <div class="rail-brand w-full flex flex-col items-center border-b border-shell-border box-border">
+      <a href="{% if base_path.is_empty() %}/{% else %}{{ base_path }}/{% endif %}" class="rail-tab rail-tab-title flex flex-col items-center justify-center w-full py-3.5 bg-transparent border-0 box-border text-shell-text font-bold no-underline! cursor-pointer" title="{{ book_title }}">
+        <span class="rail-letters rail-letters-brand flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em] font-bold lowercase">
+          {% for ch in rail_letters %}
+          <span>{{ ch }}</span>
+          {% endfor %}
+        </span>
+      </a>
+    </div>
 
-{% block toc %}
-  {% include "fragments/toc.html" %}
+    <div class="rail-tools w-full flex flex-col items-center box-border">
+      <a href="{% if base_path.is_empty() %}/{% else %}{{ base_path }}/{% endif %}" class="rail-tab rail-tab-nav is-active flex flex-col items-center py-2.5 text-shell-text no-underline!" title="目次">
+        <span class="rail-letters flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em]">
+          <span>目</span><span>次</span>
+        </span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Left Navigation Pane (TOC / Entries / Search Island) -->
+  <aside class="book-pane pane-nav" id="pane-nav">
+    <div class="pane-header">
+      <span class="pane-title text-[0.75rem] font-bold tracking-wider uppercase text-text-muted">Document Catalog</span>
+      <span class="text-[0.65rem] font-semibold px-1.5 py-0.5 rounded bg-surface border border-border text-text-muted">Svelte</span>
+    </div>
+
+    <!-- Svelte Search Island Mount Point -->
+    <div class="p-3 pb-0">
+      <div id="search-island" data-index-url="{% if base_path.is_empty() %}/search-index.json{% else %}{{ base_path }}/search-index.json{% endif %}"></div>
+    </div>
+
+    <div class="pane-scroll flex-1 overflow-y-auto p-3 pt-2">
+      <ul class="flex flex-col gap-1 list-none p-0 m-0">
+        {% for entry in entries %}
+        <li>
+          <a
+            href="{{ entry.url }}"
+            class="flex items-center px-2.5 py-1.5 text-sm rounded no-underline text-text hover:bg-surface-subtle transition-colors{% if entry.title == current_title %} font-bold text-link bg-surface{% endif %}"
+          >
+            {{ entry.title }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Content Pane with Sticky Tabs -->
+  <main class="book-pane pane-content flex-1 flex flex-col h-full bg-bg overflow-hidden" id="pane-content">
+    <header class="pane-header pane-content-header" id="pane-content-header">
+      <div class="sticky-tabs-bar" id="sticky-tabs-bar">
+        {{ ui::sticky_tabs_tree(section_tabs) }}
+      </div>
+    </header>
+
+    <div class="pane-scroll flex-1 overflow-y-auto px-8 py-6" id="pane-article-scroll">
+      <article class="prose max-w-4xl mx-auto">
+        <h1 class="text-3xl font-extrabold mb-4 pb-2 border-b border-border-subtle">{{ doc_title }}</h1>
+
+        {% if !hero_chips.is_empty() %}
+        <div class="flex flex-wrap gap-2 mb-6">
+          {% for chip in hero_chips %}
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-surface-subtle border border-border text-text-muted">
+            {% if !chip.0.is_empty() %}<span class="font-semibold">{{ chip.0 }}:</span>{% endif %}
+            <span>{{ chip.1 }}</span>
+          </span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="content-body leading-relaxed text-text">
+          {{ content_html|safe }}
+        </div>
+
+        {% if !backlinks.is_empty() %}
+        <section class="mt-12 pt-6 border-t border-border-subtle">
+          <h2 class="text-lg font-bold mb-3 text-text-muted">Backlinks</h2>
+          <ul class="flex flex-col gap-1 list-none p-0 m-0">
+            {% for bl in backlinks %}
+            <li>
+              <a href="{{ bl.url }}" class="text-sm text-link hover:underline">
+                {{ bl.title }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+      </article>
+    </div>
+  </main>
+</div>
 {% endblock %}

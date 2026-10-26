@@ -11,6 +11,7 @@ rust-version = "1.85"
 
 [workspace.dependencies]
 stela-shelf-core = { path = "crates/stela-shelf-core" }
+stela-shelf-assets = { path = "crates/stela-shelf-assets" }
 stela-shelf-webcomponents = { path = "crates/stela-shelf-webcomponents" }
 stela-shelf-leptos = { path = "crates/stela-shelf-leptos" }
 stela-shelf-htmx = { path = "crates/stela-shelf-htmx" }

@@ -1,6 +1,6 @@
 ::kind(api)
 
-::meta{crate: stela-shelf-webcomponents, dependencies: list(stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
+::meta{crate: stela-shelf-webcomponents, dependencies: list(stela-shelf-assets, stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
 
 =[stela-shelf-webcomponents]
 
@@ -24,36 +24,8 @@ Web Components & Tailwind CSS engine implementation for stela-shelf.
 
 ==[Constants]
 
-===[const BOOK_CSS]
-
 ===[const BOOK_JS]
 
-===[const STELA_CSS]
-
 ===[const STELA_JS]
-
-===[const TMT_BTN_CSS]
-
-===[const TMT_BADGE_CSS]
-
-===[const TMT_ICON_CSS]
-
-===[const TMT_SWATCH_CSS]
-
-===[const TMT_SWITCH_CSS]
-
-===[const TMT_BTN_CSS_VERSION]
-
-===[const TMT_BADGE_CSS_VERSION]
-
-===[const TMT_ICON_CSS_VERSION]
-
-===[const TMT_SWATCH_CSS_VERSION]
-
-===[const TMT_SWITCH_CSS_VERSION]
-
-===[const COMPONENT_ASSETS]
-
-===[const CSS_VERSION]
 
 ===[const JS_VERSION]

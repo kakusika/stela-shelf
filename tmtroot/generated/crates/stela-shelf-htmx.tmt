@@ -1,6 +1,6 @@
 ::kind(api)
 
-::meta{crate: stela-shelf-htmx, dependencies: list(stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
+::meta{crate: stela-shelf-htmx, dependencies: list(stela-shelf-assets, stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
 
 =[stela-shelf-htmx]
 
@@ -29,10 +29,6 @@ Renderer factory for HTMX shelf.
 HTML-First HTMX engine variant for stela-shelf.
 
 ==[Constants]
-
-===[const SHELF_CSS]
-
-Bundled CSS stylesheet for HTMX engine.
 
 ===[const HTMX_JS]
 

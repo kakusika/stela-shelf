@@ -1,33 +1,38 @@
 use anyhow::Result;
 use askama::Template;
 use async_trait::async_trait;
-use std::sync::Arc;
+use std::sync::{Arc, LazyLock};
 
+use stela_shelf_assets::{
+    COMPONENT_ASSETS, STELA_CSS, STELA_CSS_VERSION,
+    TMT_BADGE_CSS_VERSION, TMT_BTN_CSS_VERSION, TMT_ICON_CSS_VERSION, TMT_SWATCH_CSS_VERSION,
+    TMT_SWITCH_CSS_VERSION,
+};
 use stela_shelf_core::{BuildContext, BuildReport, ServerContext, ShelfEngine};
-use tomet_shelf_document::ProcessedDoc;
+use tomet_shelf_document::{ProcessedDoc, SectionTab};
 use tomet_shelf_headless::assets::StaticAsset;
 use tomet_shelf_headless::{
     Backlink, BookConfig, EntrySummary, PageRenderer, RendererFactory, SectionSummary,
 };
 
-/// Bundled CSS stylesheet for HTMX engine.
-pub const SHELF_CSS: &str = include_str!("../assets/shelf.css");
-
 /// Bundled HTMX JavaScript library.
 pub const HTMX_JS: &str = include_str!("../assets/htmx.min.js");
 
-pub const HTMX_STATIC_ASSETS: &[StaticAsset] = &[
-    StaticAsset {
+pub static HTMX_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(|| {
+    let mut assets = Vec::with_capacity(2 + COMPONENT_ASSETS.len());
+    assets.push(StaticAsset {
         path: "shelf.css",
         mime: "text/css; charset=utf-8",
-        content: SHELF_CSS,
-    },
-    StaticAsset {
+        content: STELA_CSS,
+    });
+    assets.push(StaticAsset {
         path: "htmx.min.js",
         mime: "application/javascript; charset=utf-8",
         content: HTMX_JS,
-    },
-];
+    });
+    assets.extend_from_slice(COMPONENT_ASSETS);
+    assets
+});
 
 #[derive(Clone, Debug)]
 pub struct EntryView {
@@ -44,12 +49,25 @@ pub struct PageTemplate<'a> {
     pub current_title: &'a str,
     pub content_html: &'a str,
     pub base_path: &'a str,
-    pub shelf_css: &'a str,
-    pub htmx_js: &'a str,
+    pub css_version: &'a str,
     pub hero_chips: &'a [(String, String)],
     pub toc_items: &'a [(String, String, f32)],
+    pub section_tabs: &'a [SectionTab],
     pub entries: &'a [EntryView],
     pub backlinks: &'a [EntryView],
+    pub rail_letters: &'a [String],
+
+    pub tmt_btn_css_version: &'a str,
+    pub tmt_badge_css_version: &'a str,
+    pub tmt_icon_css_version: &'a str,
+    pub tmt_swatch_css_version: &'a str,
+    pub tmt_switch_css_version: &'a str,
+}
+
+impl<'a> PageTemplate<'a> {
+    pub fn t(&self, _key: &str, default: &'a str) -> &'a str {
+        default
+    }
 }
 
 #[derive(Template)]
@@ -75,20 +93,39 @@ pub struct IndexTemplate<'a> {
     pub book_title: &'a str,
     pub current_title: &'a str,
     pub base_path: &'a str,
-    pub shelf_css: &'a str,
-    pub htmx_js: &'a str,
+    pub css_version: &'a str,
     pub sections: &'a [(String, usize)],
     pub entries: &'a [EntryView],
+    pub rail_letters: &'a [String],
+
+    pub tmt_btn_css_version: &'a str,
+    pub tmt_badge_css_version: &'a str,
+    pub tmt_icon_css_version: &'a str,
+    pub tmt_swatch_css_version: &'a str,
+    pub tmt_switch_css_version: &'a str,
+}
+
+impl<'a> IndexTemplate<'a> {
+    pub fn t(&self, _key: &str, default: &'a str) -> &'a str {
+        default
+    }
 }
 
 /// Askama + HTMX page renderer implementing `tomet_shelf_headless::PageRenderer`.
 pub struct HtmxPageRenderer {
     config: BookConfig,
+    rail_letters: Vec<String>,
 }
 
 impl HtmxPageRenderer {
     pub fn new(config: BookConfig) -> Self {
-        Self { config }
+        let rail_title = config
+            .ui
+            .rail_title
+            .as_deref()
+            .unwrap_or(&config.book.title);
+        let rail_letters: Vec<String> = rail_title.chars().map(|c| c.to_string()).collect();
+        Self { config, rail_letters }
     }
 }
 
@@ -139,12 +176,19 @@ impl PageRenderer for HtmxPageRenderer {
             current_title: &doc.title,
             content_html: &doc.body_html,
             base_path,
-            shelf_css: SHELF_CSS,
-            htmx_js: HTMX_JS,
+            css_version: &STELA_CSS_VERSION,
             hero_chips: &hero_chips,
             toc_items: &toc_items,
+            section_tabs: &doc.section_tabs,
             entries: &entries,
             backlinks: &bl_items,
+            rail_letters: &self.rail_letters,
+
+            tmt_btn_css_version: &TMT_BTN_CSS_VERSION,
+            tmt_badge_css_version: &TMT_BADGE_CSS_VERSION,
+            tmt_icon_css_version: &TMT_ICON_CSS_VERSION,
+            tmt_swatch_css_version: &TMT_SWATCH_CSS_VERSION,
+            tmt_switch_css_version: &TMT_SWITCH_CSS_VERSION,
         };
 
         template.render().map_err(Into::into)
@@ -173,17 +217,23 @@ impl PageRenderer for HtmxPageRenderer {
             book_title: &self.config.book.title,
             current_title: "",
             base_path,
-            shelf_css: SHELF_CSS,
-            htmx_js: HTMX_JS,
+            css_version: &STELA_CSS_VERSION,
             sections: &sec_items,
             entries: &ent_items,
+            rail_letters: &self.rail_letters,
+
+            tmt_btn_css_version: &TMT_BTN_CSS_VERSION,
+            tmt_badge_css_version: &TMT_BADGE_CSS_VERSION,
+            tmt_icon_css_version: &TMT_ICON_CSS_VERSION,
+            tmt_swatch_css_version: &TMT_SWATCH_CSS_VERSION,
+            tmt_switch_css_version: &TMT_SWITCH_CSS_VERSION,
         };
 
         template.render().map_err(Into::into)
     }
 
     fn static_assets(&self) -> &[StaticAsset] {
-        HTMX_STATIC_ASSETS
+        &HTMX_STATIC_ASSETS
     }
 }
 

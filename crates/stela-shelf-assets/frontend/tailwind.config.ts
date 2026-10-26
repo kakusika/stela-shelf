@@ -1,7 +1,13 @@
 import type { Config } from 'tailwindcss';
 
 export default {
-  content: ['./frontend/templates/**/*.html', './frontend/src/**/*.ts'],
+  content: [
+    './frontend/styles/**/*.css',
+    './templates/**/*.html',
+    '../../crates/**/templates/**/*.html',
+    '../../crates/**/src/**/*.rs',
+    '../../crates/**/src/**/*.ts',
+  ],
   // The app already switches look via `[data-theme="dark"]` on <html> (see
   // 10-theme.js); match that instead of Tailwind's default `.dark` class or
   // `prefers-color-scheme` strategy.

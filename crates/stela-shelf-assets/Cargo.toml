@@ -1,0 +1,8 @@
+[package]
+name = "stela-shelf-assets"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+tomet-shelf-headless = { workspace = true }

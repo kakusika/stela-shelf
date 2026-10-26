@@ -1,6 +1,6 @@
 ::kind(api)
 
-::meta{crate: stela-shelf-solid, dependencies: list(stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
+::meta{crate: stela-shelf-solid, dependencies: list(stela-shelf-assets, stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
 
 =[stela-shelf-solid]
 
@@ -10,21 +10,25 @@
 
 ===[struct PageTemplate]
 
+===[struct ArticleFragmentTemplate]
+
+===[struct TocFragmentTemplate]
+
 ===[struct IndexTemplate]
 
 ===[struct SolidPageRenderer]
 
+Askama + SolidJS page renderer.
+
 ===[struct SolidRendererFactory]
+
+Renderer factory for SolidJS shelf.
 
 ===[struct SolidEngine]
 
-SolidJS Islands architecture engine for stela-shelf.
+Islands-architecture SolidJS engine variant for stela-shelf.
 
 ==[Constants]
-
-===[const SHELF_CSS]
-
-Bundled CSS stylesheet for SolidJS shelf.
 
 ===[const ISLAND_CSS]
 

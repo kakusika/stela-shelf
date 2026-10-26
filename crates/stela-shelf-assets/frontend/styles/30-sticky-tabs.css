@@ -1032,3 +1032,16 @@ html[data-view="classic"] .classic-sticky-tabs .sticky-tab-node:not(.is-active):
   height: auto;
 }
 
+/* High Contrast Sticky Tabs Outlines */
+:root[data-shell-contrast="high"] .pane-content-header {
+  border-bottom: 1px solid var(--border);
+}
+:root[data-shell-contrast="high"] .sticky-tab-btn {
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+:root[data-shell-contrast="high"] .sticky-edge-btn {
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+

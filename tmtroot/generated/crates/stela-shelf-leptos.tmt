@@ -1,6 +1,6 @@
 ::kind(api)
 
-::meta{crate: stela-shelf-leptos, dependencies: list(stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
+::meta{crate: stela-shelf-leptos, dependencies: list(stela-shelf-assets, stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
 
 =[stela-shelf-leptos]
 
@@ -30,7 +30,7 @@
 
 ====[const LEPTOS_SHELF_CSS]
 
-Stone & Stela inspired modern stylesheet for stela-shelf-leptos.
+Stela unified stylesheet for stela-shelf-leptos.
 
 ==[Structs]
 
@@ -44,10 +44,8 @@ Renderer factory for Leptos shelf.
 
 ===[struct LeptosEngine]
 
-Full-Rust Leptos engine variant for stela-shelf.
+Fully reactive Full-Rust Leptos engine variant for stela-shelf.
 
 ==[Constants]
 
-===[const LEPTOS_SHELF_ASSET]
-
-Static CSS asset for Leptos shelf.
+===[const LEPTOS_STATIC_ASSETS]

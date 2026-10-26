@@ -1,7 +1,7 @@
 use anyhow::Result;
 use async_trait::async_trait;
 use leptos::prelude::*;
-use std::sync::Arc;
+use std::sync::{Arc, LazyLock};
 
 pub mod components;
 pub mod styles;
@@ -9,6 +9,7 @@ pub mod styles;
 use components::{CatalogView, DocumentView, HtmlDocument};
 use styles::LEPTOS_SHELF_CSS;
 
+use stela_shelf_assets::COMPONENT_ASSETS;
 use stela_shelf_core::{BuildContext, BuildReport, ServerContext, ShelfEngine};
 use tomet_shelf_document::ProcessedDoc;
 use tomet_shelf_headless::assets::StaticAsset;
@@ -16,21 +17,32 @@ use tomet_shelf_headless::{
     Backlink, BookConfig, EntrySummary, PageRenderer, RendererFactory, SectionSummary,
 };
 
-/// Static CSS asset for Leptos shelf.
-pub const LEPTOS_SHELF_ASSET: StaticAsset = StaticAsset {
-    path: "shelf.css",
-    mime: "text/css; charset=utf-8",
-    content: LEPTOS_SHELF_CSS,
-};
+pub static LEPTOS_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(|| {
+    let mut assets = Vec::with_capacity(1 + COMPONENT_ASSETS.len());
+    assets.push(StaticAsset {
+        path: "shelf.css",
+        mime: "text/css; charset=utf-8",
+        content: LEPTOS_SHELF_CSS,
+    });
+    assets.extend_from_slice(COMPONENT_ASSETS);
+    assets
+});
 
 /// Leptos-based page renderer implementing `tomet_shelf_headless::PageRenderer`.
 pub struct LeptosPageRenderer {
     config: BookConfig,
+    rail_letters: Vec<String>,
 }
 
 impl LeptosPageRenderer {
     pub fn new(config: BookConfig) -> Self {
-        Self { config }
+        let rail_title = config
+            .ui
+            .rail_title
+            .as_deref()
+            .unwrap_or(&config.book.title);
+        let rail_letters: Vec<String> = rail_title.chars().map(|c| c.to_string()).collect();
+        Self { config, rail_letters }
     }
 }
 
@@ -71,6 +83,9 @@ impl PageRenderer for LeptosPageRenderer {
             .map(|b| (b.url.clone(), b.title.clone()))
             .collect();
 
+        let section_tabs = doc.section_tabs.clone();
+        let rail_letters = self.rail_letters.clone();
+
         let html = view! {
             <HtmlDocument title=title lang=lang base_path=base_path>
                 <DocumentView
@@ -79,9 +94,11 @@ impl PageRenderer for LeptosPageRenderer {
                     content_html=content_html
                     hero_chips=hero_chips
                     toc_items=toc_items
+                    section_tabs=section_tabs
                     entries=entries
                     backlinks=bl_items
                     base_path=url_prefix
+                    rail_letters=rail_letters
                 />
             </HtmlDocument>
         }
@@ -109,6 +126,8 @@ impl PageRenderer for LeptosPageRenderer {
             .map(|e| (e.url.clone(), e.title.clone()))
             .collect();
 
+        let rail_letters = self.rail_letters.clone();
+
         let html = view! {
             <HtmlDocument title=title lang=lang base_path=base_path>
                 <CatalogView
@@ -116,6 +135,7 @@ impl PageRenderer for LeptosPageRenderer {
                     sections=sec_items
                     entries=ent_items
                     base_path=url_prefix
+                    rail_letters=rail_letters
                 />
             </HtmlDocument>
         }
@@ -125,7 +145,7 @@ impl PageRenderer for LeptosPageRenderer {
     }
 
     fn static_assets(&self) -> &[StaticAsset] {
-        std::slice::from_ref(&LEPTOS_SHELF_ASSET)
+        &LEPTOS_STATIC_ASSETS
     }
 }
 
@@ -139,7 +159,7 @@ impl RendererFactory for LeptosRendererFactory {
     }
 }
 
-/// Full-Rust Leptos engine variant for stela-shelf.
+/// Fully reactive Full-Rust Leptos engine variant for stela-shelf.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct LeptosEngine;
 
@@ -150,7 +170,7 @@ impl ShelfEngine for LeptosEngine {
     }
 
     fn description(&self) -> &'static str {
-        "Full-Rust Leptos SSR & static site engine"
+        "Fully reactive Full-Rust Leptos engine"
     }
 
     fn build(&self, ctx: &BuildContext) -> Result<BuildReport> {

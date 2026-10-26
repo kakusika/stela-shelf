@@ -1,0 +1,43 @@
+::kind(api)
+
+::meta{crate: stela-shelf-assets, dependencies: list(), dependents: list(stela-shelf-htmx, stela-shelf-leptos, stela-shelf-solid, stela-shelf-svelte, stela-shelf-webcomponents)}
+
+=[stela-shelf-assets]
+
+==[Functions]
+
+===[fn stela_static_assets]
+
+Get all core static assets for Stela Shelf (CSS and components).
+
+==[Constants]
+
+===[const STELA_CSS]
+
+===[const STELA_CSS_VERSION]
+
+===[const BOOK_CSS]
+
+===[const CSS_VERSION]
+
+===[const TMT_BTN_CSS]
+
+===[const TMT_BADGE_CSS]
+
+===[const TMT_ICON_CSS]
+
+===[const TMT_SWATCH_CSS]
+
+===[const TMT_SWITCH_CSS]
+
+===[const TMT_BTN_CSS_VERSION]
+
+===[const TMT_BADGE_CSS_VERSION]
+
+===[const TMT_ICON_CSS_VERSION]
+
+===[const TMT_SWATCH_CSS_VERSION]
+
+===[const TMT_SWITCH_CSS_VERSION]
+
+===[const COMPONENT_ASSETS]

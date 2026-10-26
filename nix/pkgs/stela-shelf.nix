@@ -12,6 +12,8 @@ let
     inherit root;
     fileset = lib.fileset.unions [
       (craneLib.fileset.commonCargoSources root)
+      (root + "/crates/stela-shelf-assets/frontend")
+      (root + "/crates/stela-shelf-assets/templates")
       (root + "/crates/stela-shelf-webcomponents/frontend")
       (root + "/crates/stela-shelf-webcomponents/templates")
       (root + "/crates/stela-shelf-htmx/assets")

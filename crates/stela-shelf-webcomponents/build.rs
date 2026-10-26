@@ -6,32 +6,9 @@ fn main() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set");
     let root = Path::new(&manifest_dir);
 
-    println!("cargo:rerun-if-changed={}", root.join("frontend").display());
+    println!("cargo:rerun-if-changed={}", root.join("frontend/src").display());
 
     let out_dir = env::var("OUT_DIR").expect("OUT_DIR not set by cargo");
-    let output_path = Path::new(&out_dir).join("tailwind.css");
-
-    let status = Command::new("tailwindcss")
-        .current_dir(root)
-        .args([
-            "-c",
-            "frontend/tailwind.config.ts",
-            "-i",
-            "frontend/styles/tailwind-input.css",
-            "-o",
-            output_path.to_str().expect("OUT_DIR is not valid UTF-8"),
-            "--minify",
-        ])
-        .status();
-
-    match status {
-        Ok(s) if s.success() => {}
-        Ok(s) => panic!("`tailwindcss` exited with {s}"),
-        Err(e) => panic!(
-            "failed to run `tailwindcss` ({e}). It's provided by the nix dev shell \
-             (nix/dev.nix) -- run this build from inside `nix develop` / direnv."
-        ),
-    }
 
     let js_output_path = Path::new(&out_dir).join("shelf.js");
     let esbuild_status = Command::new("esbuild")

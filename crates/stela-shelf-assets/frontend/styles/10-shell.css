@@ -233,12 +233,21 @@ html[data-view="classic"] .classic-view {
   flex-direction: column;
   height: 100%;
   background: var(--surface);
-  border-right: 1px solid var(--border);
+  border-right: none;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
   flex-shrink: 0;
   box-sizing: border-box;
   scroll-snap-align: start;
   position: relative;
   overflow: hidden;
+}
+
+[data-theme="dark"] .book-pane {
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-shell-contrast="high"] .book-pane {
+  border-right: 1px solid var(--border);
 }
 
 .book-view.is-ready .book-pane {
@@ -251,10 +260,9 @@ html[data-view="classic"] .classic-view {
 .pane-header {
   height: 41px;
   background: #dfe3e8; /* Darker header background to distinctly separate from sticky tabs */
-  border-bottom: 1px solid var(--border);
-  /* Shelf-edge ledge: a hairline plus a soft shadow falling onto the panel
-     below reads as a physical shelf lip, without a wood texture. */
-  box-shadow: 0 2px 3px -2px rgba(0, 0, 0, 0.18);
+  border-bottom: none;
+  /* Shelf-edge ledge: a soft shadow falling onto the panel below reads as a physical shelf lip */
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.14);
   padding: 0 10px;
   display: flex;
   align-items: center;
@@ -272,6 +280,11 @@ html[data-view="classic"] .classic-view {
 
 [data-theme="dark"] .pane-header {
   background: #16191d; /* Darker header background for dark theme */
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-shell-contrast="high"] .pane-header {
+  border-bottom: 1px solid var(--border);
 }
 
 .pane-header-collapsible {
@@ -304,12 +317,22 @@ html[data-view="classic"] .classic-view {
   background-position: var(--shell-grain-position, 0 0);
   background-repeat: var(--shell-grain-repeat, repeat);
   background-attachment: var(--shell-grain-attachment, scroll);
-  border-right: 1px solid var(--shell-border);
-  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.12),
+  border-right: none;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.08),
+              inset -1px 0 0 rgba(255, 255, 255, 0.12),
               inset 1px 0 0 rgba(255, 255, 255, 0.08);
   color: var(--shell-text);
   --text: var(--shell-text);
   --text-muted: var(--shell-text-muted);
+}
+
+[data-theme="dark"] .book-rail-nav {
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.35),
+              inset -1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+:root[data-shell-contrast="high"] .book-rail-nav {
+  border-right: 1px solid var(--shell-border);
 }
 
 /* 1. Brand Section (Top: Logo / Home Link) and

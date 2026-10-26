@@ -7,6 +7,7 @@ description = "Web Components & Tailwind engine variant for stela-shelf"
 
 [dependencies]
 stela-shelf-core = { workspace = true }
+stela-shelf-assets = { workspace = true }
 tomet-shelf-headless = { workspace = true }
 tomet-shelf-document = { workspace = true }
 tomet-shelf-icons = { workspace = true }
