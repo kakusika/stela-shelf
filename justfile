@@ -21,6 +21,11 @@ release:
 package:
     nix build
 
+# Compile SolidJS & Svelte search islands
+islands:
+    deno run --node-modules-dir=auto -A crates/stela-shelf-solid/build-island.ts
+    deno run --node-modules-dir=auto -A crates/stela-shelf-svelte/build-island.ts
+
 #[ Test & lint ]
 
 # Run the test suite
@@ -35,6 +40,10 @@ bench *args:
 check-ui:
     tsc --project crates/stela-shelf-webcomponents/frontend/tsconfig.json --noEmit
 
+# Verify search island bundles are up to date with their sources
+islands-check: islands
+    git diff --exit-code crates/stela-shelf-solid/assets/ crates/stela-shelf-svelte/assets/
+
 # Type-check without producing a binary
 check: check-ui
     cargo check --all-targets
@@ -48,10 +57,12 @@ fmt:
     nix fmt
 
 # Everything a CI job would run. Formatting is verified, not applied.
-ci: check test
+ci: check test islands-check docs-check
     nix fmt -- --ci
     cargo clippy --all-targets -- -D warnings
     git diff --exit-code Cargo.lock
+
+
 
 #[ Run ]
 
