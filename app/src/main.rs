@@ -181,7 +181,7 @@ fn resolve_engine(name: Option<&str>, src_dir: &Path) -> Result<Box<dyn ShelfEng
         "leptos" => {
             #[cfg(feature = "leptos")]
             {
-                anyhow::bail!("Engine 'leptos' is not yet implemented.");
+                Ok(Box::new(stela_shelf_leptos::LeptosEngine))
             }
             #[cfg(not(feature = "leptos"))]
             {

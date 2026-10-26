@@ -12,6 +12,7 @@ path = "src/main.rs"
 [dependencies]
 stela-shelf-core = { workspace = true }
 stela-shelf-webcomponents = { workspace = true, optional = true }
+stela-shelf-leptos = { workspace = true, optional = true }
 tomet-shelf-headless = { workspace = true }
 
 #= Crates.io
@@ -24,9 +25,9 @@ tracing-subscriber = { workspace = true }
 
 [features]
 default = ["all"]
-all = ["webcomponents"]
+all = ["webcomponents", "leptos"]
 webcomponents = ["dep:stela-shelf-webcomponents"]
-leptos = []
+leptos = ["dep:stela-shelf-leptos"]
 htmx = []
 islands = []
 embedded-search = ["tomet-shelf-headless/embedded-search"]

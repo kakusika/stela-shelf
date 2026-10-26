@@ -23,7 +23,15 @@
 - [x] 8. Verify tests and builds (`cargo test --workspace`, `cargo check`).
 - [x] 9. Verify SSG build and dev server with `tmtroot/`.
 
-### Phase 4+: Subsequent Engines Implementation
-- [ ] 10. Implement `stela-shelf-leptos` (Full-Rust: Leptos SSG + Axum SSR).
-- [ ] 11. Implement `stela-shelf-htmx` (HTML-First: Askama + HTMX).
-- [ ] 12. Implement `stela-shelf-islands` (Islands: Preact/Astro + Pagefind).
+### Phase 4: Full-Rust Leptos Engine (`stela-shelf-leptos`)
+- [x] 10. Create `crates/stela-shelf-leptos` crate with Leptos and Axum dependencies.
+- [x] 11. Design Leptos SSR components (`App`, `Shell`, `NavPane`, `ContentPane`, `TocPane`).
+- [x] 12. Implement `ShelfEngine` for `LeptosEngine`:
+  - `build(&self, ctx: &BuildContext)`: Static HTML generation for vault documents.
+  - `serve(&self, ctx: &ServerContext)`: Axum server with on-demand Leptos SSR.
+- [x] 13. Integrate `stela-shelf-leptos` into `app` with `leptos` feature flag.
+- [x] 14. Verify build and dev server with `tmtroot/` using `--engine leptos`.
+
+### Phase 5+: Remaining Engines Implementation
+- [ ] 15. Implement `stela-shelf-htmx` (HTML-First: Askama + HTMX).
+- [ ] 16. Implement `stela-shelf-islands` (Islands: Preact/Astro + Pagefind).

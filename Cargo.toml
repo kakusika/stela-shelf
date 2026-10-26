@@ -11,6 +11,7 @@ rust-version = "1.85"
 [workspace.dependencies]
 stela-shelf-core = { path = "crates/stela-shelf-core" }
 stela-shelf-webcomponents = { path = "crates/stela-shelf-webcomponents" }
+stela-shelf-leptos = { path = "crates/stela-shelf-leptos" }
 
 #= Tomet Shelf (Headless Engine & Template)
 tomet-shelf-headless = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
@@ -19,7 +20,10 @@ tomet-shelf-template = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
 #= Crates.io
 anyhow = "1.0"
 async-trait = "0.1"
+axum = "0.7.9"
 clap = { version = "4.5", features = ["derive"] }
+leptos = { version = "0.7.8", default-features = false, features = ["ssr"] }
+leptos_axum = "0.7.8"
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.42", features = ["full"] }
 toml = "0.8"

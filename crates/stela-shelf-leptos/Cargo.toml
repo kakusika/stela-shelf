@@ -1,0 +1,22 @@
+[package]
+name = "stela-shelf-leptos"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description = "Full-Rust Leptos SSR and static site engine for stela-shelf"
+
+[dependencies]
+stela-shelf-core = { workspace = true }
+tomet-shelf-headless = { workspace = true }
+
+#= Leptos
+leptos = { workspace = true }
+leptos_axum = { workspace = true }
+
+#= Crates.io
+anyhow = { workspace = true }
+async-trait = { workspace = true }
+axum = { workspace = true }
+serde = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
