@@ -6,7 +6,10 @@ fn main() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set");
     let root = Path::new(&manifest_dir);
 
-    println!("cargo:rerun-if-changed={}", root.join("frontend/src").display());
+    println!(
+        "cargo:rerun-if-changed={}",
+        root.join("frontend/src").display()
+    );
 
     let out_dir = env::var("OUT_DIR").expect("OUT_DIR not set by cargo");
 

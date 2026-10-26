@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}{{ book_title }}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem("tmt_theme");
+          if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch {}
+      })();
+    </script>
+    <link rel="stylesheet" href="{% if base_path.is_empty() %}/shelf.css{% else %}{{ base_path }}/shelf.css{% endif %}?v={{ css_version }}" />
+    <script src="{% if base_path.is_empty() %}/stela-shell.js{% else %}{{ base_path }}/stela-shell.js{% endif %}?v={{ stela_shell_js_version }}" defer></script>
+    {% block head_engine %}{% endblock %}
+    {% block head_extra %}{% endblock %}
+  </head>
+  <body{% block body_attrs %} class="is-fluid"{% endblock %}>
+    {% block content %}{% endblock %}
+  </body>
+</html>

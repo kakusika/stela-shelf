@@ -1,0 +1,8 @@
+{% extends "shell_base.html" %}
+
+{% block head_engine %}
+<link rel="stylesheet" href="{% if base_path.is_empty() %}/island.css{% else %}{{ base_path }}/island.css{% endif %}" />
+<script type="module">
+  {{ island_js|safe }}
+</script>
+{% endblock %}

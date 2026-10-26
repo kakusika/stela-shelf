@@ -12,7 +12,10 @@ fn main() {
     let root = Path::new(&manifest_dir);
 
     println!("cargo:rerun-if-changed={}", root.join("frontend").display());
-    println!("cargo:rerun-if-changed={}", root.join("templates").display());
+    println!(
+        "cargo:rerun-if-changed={}",
+        root.join("templates").display()
+    );
 
     let out_dir = env::var("OUT_DIR").expect("OUT_DIR not set by cargo");
     let out_path = Path::new(&out_dir);
@@ -80,8 +83,6 @@ fn main() {
     );
 
     fs::write(&bundle_entry, entry_content).expect("failed to write shelf-entry.css");
-
-
 
     let fs_provider = FileProvider::new();
     let mut bundler = Bundler::new(&fs_provider, None, ParserOptions::default());
@@ -172,4 +173,3 @@ fn main() {
         ),
     }
 }
-

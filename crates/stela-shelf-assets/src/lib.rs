@@ -21,7 +21,6 @@ pub static STELA_SHELL_JS_VERSION: LazyLock<String> =
 pub const BOOK_CSS: &str = STELA_CSS;
 pub static CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(STELA_CSS));
 
-
 //==============================================================================
 // Web Component Shadow DOM Stylesheets
 //==============================================================================
@@ -32,12 +31,10 @@ pub const TMT_ICON_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-icon.
 pub const TMT_SWATCH_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-swatch.min.css"));
 pub const TMT_SWITCH_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-switch.min.css"));
 
-
 pub static TMT_BTN_CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(TMT_BTN_CSS));
 pub static TMT_BADGE_CSS_VERSION: LazyLock<String> =
     LazyLock::new(|| content_version(TMT_BADGE_CSS));
-pub static TMT_ICON_CSS_VERSION: LazyLock<String> =
-    LazyLock::new(|| content_version(TMT_ICON_CSS));
+pub static TMT_ICON_CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(TMT_ICON_CSS));
 pub static TMT_SWATCH_CSS_VERSION: LazyLock<String> =
     LazyLock::new(|| content_version(TMT_SWATCH_CSS));
 pub static TMT_SWITCH_CSS_VERSION: LazyLock<String> =
@@ -87,4 +84,3 @@ pub fn stela_static_assets() -> Vec<StaticAsset> {
     assets.extend_from_slice(COMPONENT_ASSETS);
     assets
 }
-

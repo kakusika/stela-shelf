@@ -8,7 +8,6 @@ pub mod styles;
 
 use components::{CatalogView, DocumentView, HtmlDocument};
 
-
 use stela_shelf_assets::stela_static_assets;
 use stela_shelf_core::{BuildContext, BuildReport, ServerContext, ShelfEngine};
 use tomet_shelf_document::ProcessedDoc;
@@ -18,7 +17,6 @@ use tomet_shelf_headless::{
 };
 
 pub static LEPTOS_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(stela_static_assets);
-
 
 /// Leptos-based page renderer implementing `tomet_shelf_headless::PageRenderer`.
 pub struct LeptosPageRenderer {
@@ -34,7 +32,10 @@ impl LeptosPageRenderer {
             .as_deref()
             .unwrap_or(&config.book.title);
         let rail_letters: Vec<String> = rail_title.chars().map(|c| c.to_string()).collect();
-        Self { config, rail_letters }
+        Self {
+            config,
+            rail_letters,
+        }
     }
 }
 

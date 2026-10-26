@@ -1,0 +1,2 @@
+[general]
+dirs = ["templates", "../stela-shelf-assets/templates"]

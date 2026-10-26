@@ -28,7 +28,6 @@ pub static HTMX_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(|| {
     assets
 });
 
-
 #[derive(Clone, Debug)]
 pub struct EntryView {
     pub url: String,
@@ -61,7 +60,6 @@ pub struct PageTemplate<'a> {
 }
 
 impl<'a> PageTemplate<'a> {
-
     pub fn t(&self, _key: &str, default: &'a str) -> &'a str {
         default
     }
@@ -104,7 +102,6 @@ pub struct IndexTemplate<'a> {
 }
 
 impl<'a> IndexTemplate<'a> {
-
     pub fn t(&self, _key: &str, default: &'a str) -> &'a str {
         default
     }
@@ -124,7 +121,10 @@ impl HtmxPageRenderer {
             .as_deref()
             .unwrap_or(&config.book.title);
         let rail_letters: Vec<String> = rail_title.chars().map(|c| c.to_string()).collect();
-        Self { config, rail_letters }
+        Self {
+            config,
+            rail_letters,
+        }
     }
 }
 
@@ -229,7 +229,6 @@ impl PageRenderer for HtmxPageRenderer {
             tmt_switch_css_version: &TMT_SWITCH_CSS_VERSION,
             stela_shell_js_version: &STELA_SHELL_JS_VERSION,
         };
-
 
         template.render().map_err(Into::into)
     }
