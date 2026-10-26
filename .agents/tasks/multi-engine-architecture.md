@@ -32,6 +32,13 @@
 - [x] 13. Integrate `stela-shelf-leptos` into `app` with `leptos` feature flag.
 - [x] 14. Verify build and dev server with `tmtroot/` using `--engine leptos`.
 
-### Phase 5+: Remaining Engines Implementation
-- [ ] 15. Implement `stela-shelf-htmx` (HTML-First: Askama + HTMX).
-- [ ] 16. Implement `stela-shelf-islands` (Islands: Preact/Astro + Pagefind).
+### Phase 5: HTML-First HTMX Engine (`stela-shelf-htmx`)
+- [x] 15. Create `crates/stela-shelf-htmx` crate with Askama and Axum dependencies.
+- [x] 16. Prepare HTMX asset and modern CSS styling.
+- [x] 17. Implement Askama templates (base, page, index, and HTML fragments).
+- [x] 18. Implement `HtmxEngine` implementing `ShelfEngine` (SSG build + Axum server with HTMX routing).
+- [x] 19. Integrate `stela-shelf-htmx` into `app` with `htmx` feature flag.
+- [x] 20. Verify build and dev server with `tmtroot/` using `--engine htmx` (fixed nested page swap by utilizing `hx-boost` for seamless body navigation without embedding full pages).
+
+### Phase 6: Islands Architecture Engine (`stela-shelf-islands`)
+- [ ] 21. Implement `stela-shelf-islands` (Astro / Svelte / SolidJS Islands + Pagefind).

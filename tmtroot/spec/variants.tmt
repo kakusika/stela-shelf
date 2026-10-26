@@ -1,7 +1,27 @@
-=[ Leptos ]
+@card(SSG)
+| HTMLなどの静的なファイルを出力する。公開時は出力されたファイルをホストすれば良い。
+| 超軽量ブラウザ完結
+@card(SPA)
+| 滑らかな画面遷移が可能
+@card(SSR)
+| サーバー側がHTMLを毎回出力する
+
+@table
+|[ variant\feat   ][ SSG ][ SPA ][ SSR ][ withoutJS ]
+|[ Web Components ][   o ][   x ][   o ][         o ]
+|[ Leptos         ][   o ][   o ][   x ][         o ]
+|[ HTMX           ][   o ][   x ][   o ][         o ]
+|[ Svelte         ][     ][     ][     ][         x ]
+|[ SolidJS        ][     ][     ][     ][         x ]
+
+=[ Variants ]
+
+==[ Web Components ]
+
+- Javascriptなしでも閲覧可能である
+
+==[ Leptos ]
 
 - Rustで完結
 
-=[ Web Components ]
-
-- Javascriptなしでも閲覧可能である
+==[ HTMX ]

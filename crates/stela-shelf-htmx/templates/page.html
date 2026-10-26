@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}{{ doc_title }} — {{ book_title }}{% endblock %}
+
+{% block content %}
+  {% include "fragments/article.html" %}
+{% endblock %}
+
+{% block toc %}
+  {% include "fragments/toc.html" %}
+{% endblock %}

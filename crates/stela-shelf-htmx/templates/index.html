@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Catalog — {{ book_title }}{% endblock %}
+
+{% block content %}
+<article class="shelf-article">
+  <h1 class="shelf-article-title">Catalog: {{ book_title }}</h1>
+
+  {% if !sections.is_empty() %}
+  <div class="shelf-hero-chips">
+    {% for s in sections %}
+    <span class="shelf-chip">
+      <strong>{{ s.0 }}: </strong>{{ s.1 }} doc(s)
+    </span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <section>
+    <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Documents</h2>
+    <ul class="shelf-nav-list">
+      {% for entry in entries %}
+      <li class="shelf-nav-item" style="margin-bottom: 0.5rem;">
+        <a href="{{ entry.url }}" class="shelf-nav-link" style="font-size: 1rem; font-weight: 500;">
+          {{ entry.title }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</article>
+{% endblock %}

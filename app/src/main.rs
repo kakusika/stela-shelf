@@ -191,7 +191,7 @@ fn resolve_engine(name: Option<&str>, src_dir: &Path) -> Result<Box<dyn ShelfEng
         "htmx" => {
             #[cfg(feature = "htmx")]
             {
-                anyhow::bail!("Engine 'htmx' is not yet implemented.");
+                Ok(Box::new(stela_shelf_htmx::HtmxEngine))
             }
             #[cfg(not(feature = "htmx"))]
             {

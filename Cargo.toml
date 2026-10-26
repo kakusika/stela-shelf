@@ -1,6 +1,7 @@
 [workspace]
 resolver = "3"
 members = ["app", "crates/*"]
+exclude = ["crates/stela-shelf-icons"]
 default-members = ["app"]
 
 [workspace.package]
@@ -12,6 +13,7 @@ rust-version = "1.85"
 stela-shelf-core = { path = "crates/stela-shelf-core" }
 stela-shelf-webcomponents = { path = "crates/stela-shelf-webcomponents" }
 stela-shelf-leptos = { path = "crates/stela-shelf-leptos" }
+stela-shelf-htmx = { path = "crates/stela-shelf-htmx" }
 
 #= Tomet Shelf (Headless Engine & Template)
 tomet-shelf-headless = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
@@ -19,6 +21,7 @@ tomet-shelf-template = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
 
 #= Crates.io
 anyhow = "1.0"
+askama = "0.16"
 async-trait = "0.1"
 axum = "0.7.9"
 clap = { version = "4.5", features = ["derive"] }
