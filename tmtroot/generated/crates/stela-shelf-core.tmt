@@ -1,0 +1,21 @@
+::kind(api)
+
+::meta{crate: stela-shelf-core, dependencies: list(), dependents: list(stela-shelf-benches, stela-shelf-cli, stela-shelf-htmx, stela-shelf-leptos, stela-shelf-solid, stela-shelf-svelte, stela-shelf-webcomponents)}
+
+=[stela-shelf-core]
+
+==[Structs]
+
+===[struct BuildContext]
+
+Execution context for static site generation (SSG).
+
+===[struct ServerContext]
+
+Execution context for development server or production server hosting.
+
+==[Traits]
+
+===[trait ShelfEngine]
+
+Unified trait implemented by every stela-shelf engine variant.

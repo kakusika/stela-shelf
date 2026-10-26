@@ -1,0 +1,37 @@
+::kind(api)
+
+::meta{crate: stela-shelf-solid, dependencies: list(stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
+
+=[stela-shelf-solid]
+
+==[Structs]
+
+===[struct EntryView]
+
+===[struct PageTemplate]
+
+===[struct IndexTemplate]
+
+===[struct SolidPageRenderer]
+
+===[struct SolidRendererFactory]
+
+===[struct SolidEngine]
+
+SolidJS Islands architecture engine for stela-shelf.
+
+==[Constants]
+
+===[const SHELF_CSS]
+
+Bundled CSS stylesheet for SolidJS shelf.
+
+===[const ISLAND_CSS]
+
+Bundled CSS stylesheet for SolidJS search island.
+
+===[const ISLAND_JS]
+
+Bundled SolidJS Search Island JavaScript.
+
+===[const SOLID_STATIC_ASSETS]

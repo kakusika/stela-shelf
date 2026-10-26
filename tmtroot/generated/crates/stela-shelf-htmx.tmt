@@ -1,0 +1,41 @@
+::kind(api)
+
+::meta{crate: stela-shelf-htmx, dependencies: list(stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
+
+=[stela-shelf-htmx]
+
+==[Structs]
+
+===[struct EntryView]
+
+===[struct PageTemplate]
+
+===[struct ArticleFragmentTemplate]
+
+===[struct SearchResultsTemplate]
+
+===[struct IndexTemplate]
+
+===[struct HtmxPageRenderer]
+
+Askama + HTMX page renderer implementing `tomet_shelf_headless::PageRenderer`.
+
+===[struct HtmxRendererFactory]
+
+Renderer factory for HTMX shelf.
+
+===[struct HtmxEngine]
+
+HTML-First HTMX engine variant for stela-shelf.
+
+==[Constants]
+
+===[const SHELF_CSS]
+
+Bundled CSS stylesheet for HTMX engine.
+
+===[const HTMX_JS]
+
+Bundled HTMX JavaScript library.
+
+===[const HTMX_STATIC_ASSETS]

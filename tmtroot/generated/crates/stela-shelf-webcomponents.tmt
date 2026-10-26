@@ -1,8 +1,14 @@
 ::kind(api)
 
-::meta{crate: stela-shelf-assets, dependencies: list(), dependents: list(stela-shelf-cli)}
+::meta{crate: stela-shelf-webcomponents, dependencies: list(stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
 
-=[stela-shelf-assets]
+=[stela-shelf-webcomponents]
+
+==[Structs]
+
+===[struct WebComponentsEngine]
+
+Web Components & Tailwind CSS engine implementation for stela-shelf.
 
 ==[Functions]
 

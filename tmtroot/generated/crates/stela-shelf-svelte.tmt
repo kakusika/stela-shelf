@@ -1,0 +1,37 @@
+::kind(api)
+
+::meta{crate: stela-shelf-svelte, dependencies: list(stela-shelf-core), dependents: list(stela-shelf-benches, stela-shelf-cli)}
+
+=[stela-shelf-svelte]
+
+==[Structs]
+
+===[struct EntryView]
+
+===[struct PageTemplate]
+
+===[struct IndexTemplate]
+
+===[struct SveltePageRenderer]
+
+===[struct SvelteRendererFactory]
+
+===[struct SvelteEngine]
+
+Svelte Islands architecture engine for stela-shelf.
+
+==[Constants]
+
+===[const SHELF_CSS]
+
+Bundled CSS stylesheet for Svelte shelf.
+
+===[const ISLAND_CSS]
+
+Bundled CSS stylesheet for Svelte search island.
+
+===[const ISLAND_JS]
+
+Bundled Svelte Search Island JavaScript.
+
+===[const SVELTE_STATIC_ASSETS]
