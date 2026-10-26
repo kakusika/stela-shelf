@@ -5,22 +5,7 @@ pub use tomet_shelf_headless::assets::{StaticAsset, content_version, write_if_ch
 // Core Stela Stylesheet
 //==============================================================================
 
-pub const STELA_CSS: &str = concat!(
-    include_str!("../frontend/styles/00-base.css"),
-    include_str!("../frontend/styles/10-shell.css"),
-    include_str!("../frontend/styles/20-panes.css"),
-    include_str!("../frontend/styles/30-sticky-tabs.css"),
-    include_str!("../frontend/styles/35-sticky-tabs-vertical.css"),
-    include_str!("../frontend/styles/40-hero.css"),
-    include_str!("../frontend/styles/50-nav-infobox.css"),
-    include_str!("../frontend/styles/60-content.css"),
-    include_str!("../frontend/styles/70-widgets.css"),
-    include_str!("../frontend/styles/71-source-viewer.css"),
-    include_str!("../frontend/styles/72-center-peek.css"),
-    include_str!(concat!(env!("OUT_DIR"), "/tailwind.css")),
-    include_str!("../frontend/styles/90-responsive.css"),
-    include_str!("../frontend/styles/98-no-js.css"),
-);
+pub const STELA_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/shelf.min.css"));
 
 pub static STELA_CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(STELA_CSS));
 
@@ -32,11 +17,12 @@ pub static CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(STEL
 // Web Component Shadow DOM Stylesheets
 //==============================================================================
 
-pub const TMT_BTN_CSS: &str = include_str!("../frontend/styles/components/tmt-btn.css");
-pub const TMT_BADGE_CSS: &str = include_str!("../frontend/styles/components/tmt-badge.css");
-pub const TMT_ICON_CSS: &str = include_str!("../frontend/styles/components/tmt-icon.css");
-pub const TMT_SWATCH_CSS: &str = include_str!("../frontend/styles/components/tmt-swatch.css");
-pub const TMT_SWITCH_CSS: &str = include_str!("../frontend/styles/components/tmt-switch.css");
+pub const TMT_BTN_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-btn.min.css"));
+pub const TMT_BADGE_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-badge.min.css"));
+pub const TMT_ICON_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-icon.min.css"));
+pub const TMT_SWATCH_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-swatch.min.css"));
+pub const TMT_SWITCH_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-switch.min.css"));
+
 
 pub static TMT_BTN_CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(TMT_BTN_CSS));
 pub static TMT_BADGE_CSS_VERSION: LazyLock<String> =

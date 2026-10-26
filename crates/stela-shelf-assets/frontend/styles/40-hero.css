@@ -1,26 +1,13 @@
-/* ==================== HERO CARD ====================
-   book-hero-section / hero-banner-wrapper / hero-banner-img / hero-content /
-   hero-avatar / hero-title-area / hero-title-row / content-title / kind-tag
-   (base) / hero-meta-chips / hero-actions / edit-dropdown / edit-dropdown-item
-   (base) are styled with Tailwind utility classes directly in the templates
-   now (tailwind.config.js maps its colors to these same --text/--link/
-   --surface etc. tokens, so theming still works). The class names stay in
-   the markup -- hero-banner-wrapper/-img and hero-avatar/avatar-icon are
-   queried by JS (75-lightbox.js, 72-center-peek.js, 70-preview.js),
-   book-hero-section/hero-content are still targeted by 90-responsive.css's
-   mobile override, which must keep winning at its breakpoint -- see
-   BOOK_CSS's ordering comment in assets.rs.
 
-   avatar-text/avatar-grid/avatar-cell/avatar-initials and
-   .tm-doc-icon-img below are NOT convertible: that markup comes from
-   icon.rs (Rust-generated per-document HTML, inserted via `{{ icon | safe
-   }}`), which Tailwind's content scanner -- ui/templates/**/*.html
-   only -- never sees. Same reason .tmt-toast stays hand-written: it's
-   created by 90-edit-menu.ts via `className = 'tmt-toast'`, not present in
-   any template file either. */
+/* ==================== HERO CARD ====================
+ * Note: avatar-text/grid/cell/initials and .tm-doc-icon-img markup comes from
+ * icon.rs (Rust-generated HTML inserted via document icon template).
+ * .tmt-toast is created dynamically by 90-edit-menu.ts.
+ */
 
 /* Positioning only -- the skin is <tmt-btn> now (variant="outline" size="xs"
    shape="rect"), see macros.html's hero_banner / dsd_btn_shadow. */
+
 .hero-zoom-btn {
   position: absolute;
   top: 8px;
