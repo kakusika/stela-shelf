@@ -14,6 +14,8 @@ stela-shelf-core = { workspace = true }
 stela-shelf-webcomponents = { workspace = true, optional = true }
 stela-shelf-leptos = { workspace = true, optional = true }
 stela-shelf-htmx = { workspace = true, optional = true }
+stela-shelf-svelte = { workspace = true, optional = true }
+stela-shelf-solid = { workspace = true, optional = true }
 tomet-shelf-headless = { workspace = true }
 
 #= Crates.io
@@ -26,10 +28,12 @@ tracing-subscriber = { workspace = true }
 
 [features]
 default = ["all"]
-all = ["webcomponents", "leptos", "htmx"]
+all = ["webcomponents", "leptos", "htmx", "svelte", "solid"]
 webcomponents = ["dep:stela-shelf-webcomponents"]
 leptos = ["dep:stela-shelf-leptos"]
 htmx = ["dep:stela-shelf-htmx"]
-islands = []
+svelte = ["dep:stela-shelf-svelte"]
+solid = ["dep:stela-shelf-solid"]
+islands = ["svelte"]
 embedded-search = ["tomet-shelf-headless/embedded-search"]
 embedded-search-extended = ["tomet-shelf-headless/embedded-search-extended"]

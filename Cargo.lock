@@ -3939,6 +3939,8 @@ dependencies = [
  "stela-shelf-core",
  "stela-shelf-htmx",
  "stela-shelf-leptos",
+ "stela-shelf-solid",
+ "stela-shelf-svelte",
  "stela-shelf-webcomponents",
  "tokio",
  "tomet-shelf-headless",
@@ -3981,6 +3983,36 @@ dependencies = [
  "axum",
  "leptos",
  "leptos_axum",
+ "serde",
+ "stela-shelf-core",
+ "tokio",
+ "tomet-shelf-headless",
+ "tracing",
+]
+
+[[package]]
+name = "stela-shelf-solid"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "askama",
+ "async-trait",
+ "axum",
+ "serde",
+ "stela-shelf-core",
+ "tokio",
+ "tomet-shelf-headless",
+ "tracing",
+]
+
+[[package]]
+name = "stela-shelf-svelte"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "askama",
+ "async-trait",
+ "axum",
  "serde",
  "stela-shelf-core",
  "tokio",

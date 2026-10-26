@@ -14,6 +14,8 @@ stela-shelf-core = { path = "crates/stela-shelf-core" }
 stela-shelf-webcomponents = { path = "crates/stela-shelf-webcomponents" }
 stela-shelf-leptos = { path = "crates/stela-shelf-leptos" }
 stela-shelf-htmx = { path = "crates/stela-shelf-htmx" }
+stela-shelf-svelte = { path = "crates/stela-shelf-svelte" }
+stela-shelf-solid = { path = "crates/stela-shelf-solid" }
 
 #= Tomet Shelf (Headless Engine & Template)
 tomet-shelf-headless = { git = "https://github.com/tomet-lang/tomet-shelf.git" }

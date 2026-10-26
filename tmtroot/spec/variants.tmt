@@ -7,12 +7,12 @@
 | サーバー側がHTMLを毎回出力する
 
 @table
-|[ variant\feat   ][ SSG ][ SPA ][ SSR ][ withoutJS ]
-|[ Web Components ][   o ][   x ][   o ][         o ]
-|[ Leptos         ][   o ][   o ][   x ][         o ]
-|[ HTMX           ][   o ][   x ][   o ][         o ]
-|[ Svelte         ][     ][     ][     ][         x ]
-|[ SolidJS        ][     ][     ][     ][         x ]
+|[ variant\feat   ][ SSG ][ SPA ][ SSR ][ withoutJS ][ withWASM ]
+|[ Web Components ][   o ][   x ][   o ][         o ][        x ]
+|[ Leptos         ][   o ][   o ][   x ][         o ][        o ]
+|[ HTMX           ][   o ][   x ][   o ][         o ][        x ]
+|[ Svelte         ][     ][     ][     ][         x ][        o ]
+|[ SolidJS        ][     ][     ][     ][         x ][        o ]
 
 =[ Variants ]
 

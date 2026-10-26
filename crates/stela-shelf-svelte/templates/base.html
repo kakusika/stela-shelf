@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}{{ book_title }}{% endblock %}</title>
+  <link rel="stylesheet" href="{% if base_path.is_empty() %}/shelf.css{% else %}{{ base_path }}/shelf.css{% endif %}" />
+  <link rel="stylesheet" href="{% if base_path.is_empty() %}/island.css{% else %}{{ base_path }}/island.css{% endif %}" />
+  <style>{{ shelf_css|safe }}</style>
+  <style>{{ island_css|safe }}</style>
+  <script type="module">
+    {{ island_js|safe }}
+  </script>
+</head>
+<body>
+  <div class="shelf-container">
+    <aside class="shelf-sidebar">
+      <div class="shelf-header">
+        <a href="{% if base_path.is_empty() %}/{% else %}{{ base_path }}/{% endif %}" class="shelf-title">
+          {{ book_title }}
+        </a>
+        <div>
+          <span class="shelf-engine-badge">Svelte (Islands)</span>
+        </div>
+      </div>
+
+      <!-- Svelte Island Mount Point -->
+      <div id="search-island" data-index-url="{% if base_path.is_empty() %}/search-index.json{% else %}{{ base_path }}/search-index.json{% endif %}"></div>
+
+      <nav>
+        <ul class="shelf-nav-list">
+          {% for entry in entries %}
+          <li class="shelf-nav-item">
+            <a
+              href="{{ entry.url }}"
+              class="shelf-nav-link{% if entry.title == current_title %} active{% endif %}"
+            >
+              {{ entry.title }}
+            </a>
+          </li>
+          {% endfor %}
+          {% if entries.is_empty() %}
+          <li class="shelf-nav-item">
+            <a href="{% if base_path.is_empty() %}/{% else %}{{ base_path }}/{% endif %}" class="shelf-nav-link">
+              ← Catalog / Documents
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="shelf-main" id="main-pane">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block toc %}{% endblock %}
+  </div>
+</body>
+</html>

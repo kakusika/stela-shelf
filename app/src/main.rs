@@ -198,18 +198,38 @@ fn resolve_engine(name: Option<&str>, src_dir: &Path) -> Result<Box<dyn ShelfEng
                 anyhow::bail!("Engine 'htmx' is disabled. Rebuild with `--features htmx`.");
             }
         }
-        "islands" => {
-            #[cfg(feature = "islands")]
+        "svelte" => {
+            #[cfg(feature = "svelte")]
             {
-                anyhow::bail!("Engine 'islands' is not yet implemented.");
+                Ok(Box::new(stela_shelf_svelte::SvelteEngine))
             }
-            #[cfg(not(feature = "islands"))]
+            #[cfg(not(feature = "svelte"))]
             {
-                anyhow::bail!("Engine 'islands' is disabled. Rebuild with `--features islands`.");
+                anyhow::bail!("Engine 'svelte' is disabled. Rebuild with `--features svelte`.");
+            }
+        }
+        "solid" => {
+            #[cfg(feature = "solid")]
+            {
+                anyhow::bail!("Engine 'solid' is not yet implemented.");
+            }
+            #[cfg(not(feature = "solid"))]
+            {
+                anyhow::bail!("Engine 'solid' is disabled. Rebuild with `--features solid`.");
+            }
+        }
+        "islands" => {
+            #[cfg(feature = "svelte")]
+            {
+                Ok(Box::new(stela_shelf_svelte::SvelteEngine))
+            }
+            #[cfg(not(feature = "svelte"))]
+            {
+                anyhow::bail!("Engine 'islands' requires svelte feature.");
             }
         }
         other => anyhow::bail!(
-            "Unknown shelf engine: '{other}'. Available engines: webcomponents, leptos, htmx, islands"
+            "Unknown shelf engine: '{other}'. Available engines: webcomponents, leptos, htmx, svelte, solid, islands"
         ),
     }
 }

@@ -40,5 +40,18 @@
 - [x] 19. Integrate `stela-shelf-htmx` into `app` with `htmx` feature flag.
 - [x] 20. Verify build and dev server with `tmtroot/` using `--engine htmx` (fixed nested page swap by utilizing `hx-boost` for seamless body navigation without embedding full pages).
 
-### Phase 6: Islands Architecture Engine (`stela-shelf-islands`)
-- [ ] 21. Implement `stela-shelf-islands` (Astro / Svelte / SolidJS Islands + Pagefind).
+### Phase 6A: Svelte Islands Engine (`stela-shelf-svelte`)
+- [x] 21. Create `crates/stela-shelf-svelte` crate with Askama and core dependencies.
+- [x] 22. Implement Svelte Search Island component (`ui/SearchIsland.svelte` & `ui/main.ts`) and bundle script (`build-island.ts`).
+- [x] 23. Implement Askama templates (`base.html`, `page.html`, `index.html`) with `<div id="search-island">` slot and Stela CSS.
+- [x] 24. Implement `SvelteEngine` implementing `ShelfEngine` (SSG build + dev server).
+- [x] 25. Integrate `stela-shelf-svelte` into `app` with `svelte` feature flag.
+- [x] 26. Verify build and dev server with `tmtroot/` using `--engine svelte`.
+
+### Phase 6B: SolidJS Islands Engine (`stela-shelf-solid`)
+- [ ] 27. Create `crates/stela-shelf-solid` crate with Askama and core dependencies.
+- [ ] 28. Implement SolidJS Search Island component (`ui/SearchIsland.tsx` & `ui/main.tsx`) and bundle script.
+- [ ] 29. Implement Askama templates with island slot and Stela CSS.
+- [ ] 30. Implement `SolidEngine` implementing `ShelfEngine` (SSG build + dev server).
+- [ ] 31. Integrate `stela-shelf-solid` into `app` with `solid` feature flag.
+- [ ] 32. Verify build and dev server with `tmtroot/` using `--engine solid`.
