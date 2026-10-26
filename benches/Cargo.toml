@@ -1,0 +1,23 @@
+[package]
+name = "stela-shelf-benches"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+
+[[bench]]
+name = "engine_build"
+harness = false
+path = "engine_build.rs"
+
+[dependencies]
+stela-shelf-core = { workspace = true }
+stela-shelf-webcomponents = { workspace = true }
+stela-shelf-leptos = { workspace = true }
+stela-shelf-htmx = { workspace = true }
+stela-shelf-svelte = { workspace = true }
+stela-shelf-solid = { workspace = true }
+tomet-shelf-headless = { workspace = true }
+divan = { workspace = true }
+tempfile = { workspace = true }
+anyhow = { workspace = true }

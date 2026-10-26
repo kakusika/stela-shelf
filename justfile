@@ -27,6 +27,10 @@ package:
 test:
     cargo test --workspace
 
+# Run benchmarks using Divan (SSG build time & allocations across engines)
+bench *args:
+    cargo bench -p stela-shelf-benches -- {{ args }}
+
 # Type-check TypeScript without producing output
 check-ui:
     tsc --project crates/stela-shelf-webcomponents/frontend/tsconfig.json --noEmit

@@ -8,20 +8,25 @@
 
 @table
 |[ variant\feat   ][ SSG ][ SPA ][ SSR ][ withoutJS ][ withWASM ]
-|[ Web Components ][   o ][   x ][   o ][         o ][        x ]
-|[ Leptos         ][   o ][   o ][   x ][         o ][        o ]
-|[ HTMX           ][   o ][   x ][   o ][         o ][        x ]
-|[ Svelte         ][     ][     ][     ][         x ][        o ]
-|[ SolidJS        ][     ][     ][     ][         x ][        o ]
+|[ Web Components ][ o   ][ x   ][ o   ][ o         ][ x        ]
+|[ Leptos         ][ o   ][ o   ][ x   ][ o         ][ o        ]
+|[ HTMX           ][ o   ][ x   ][ o   ][ o         ][ x        ]
+|[ Svelte         ][     ][     ][     ][ x         ][ o        ]
+|[ SolidJS        ][     ][     ][     ][ x         ][ o        ]
 
 =[ Variants ]
 
 ==[ Web Components ]
 
 - Javascriptなしでも閲覧可能である
+- ビルド時間が長い
 
 ==[ Leptos ]
 
 - Rustで完結
 
 ==[ HTMX ]
+
+==[ Svelte ]
+
+==[ SolidJS ]
