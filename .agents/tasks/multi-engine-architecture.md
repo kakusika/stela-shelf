@@ -49,9 +49,9 @@
 - [x] 26. Verify build and dev server with `tmtroot/` using `--engine svelte`.
 
 ### Phase 6B: SolidJS Islands Engine (`stela-shelf-solid`)
-- [ ] 27. Create `crates/stela-shelf-solid` crate with Askama and core dependencies.
-- [ ] 28. Implement SolidJS Search Island component (`ui/SearchIsland.tsx` & `ui/main.tsx`) and bundle script.
-- [ ] 29. Implement Askama templates with island slot and Stela CSS.
-- [ ] 30. Implement `SolidEngine` implementing `ShelfEngine` (SSG build + dev server).
-- [ ] 31. Integrate `stela-shelf-solid` into `app` with `solid` feature flag.
-- [ ] 32. Verify build and dev server with `tmtroot/` using `--engine solid`.
+- [x] 27. Create `crates/stela-shelf-solid` crate with Askama and core dependencies.
+- [x] 28. Implement SolidJS Search Island component (`ui/SearchIsland.tsx` & `ui/main.tsx`) and bundle script (`build-island.ts`).
+- [x] 29. Implement Askama templates with island slot and Stela CSS.
+- [x] 30. Implement `SolidEngine` implementing `ShelfEngine` (SSG build + dev server).
+- [x] 31. Integrate `stela-shelf-solid` into `app` with `solid` feature flag.
+- [x] 32. Verify build and dev server with `tmtroot/` using `--engine solid`.

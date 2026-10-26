@@ -211,7 +211,7 @@ fn resolve_engine(name: Option<&str>, src_dir: &Path) -> Result<Box<dyn ShelfEng
         "solid" => {
             #[cfg(feature = "solid")]
             {
-                anyhow::bail!("Engine 'solid' is not yet implemented.");
+                Ok(Box::new(stela_shelf_solid::SolidEngine))
             }
             #[cfg(not(feature = "solid"))]
             {

@@ -1,0 +1,30 @@
+<article class="shelf-article">
+  <h1 class="shelf-article-title">{{ doc_title }}</h1>
+
+  {% if !hero_chips.is_empty() %}
+  <div class="shelf-hero-chips">
+    {% for chip in hero_chips %}
+    <span class="shelf-chip">
+      <strong>{{ chip.0 }}: </strong>{{ chip.1 }}
+    </span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="shelf-prose">
+    {{ content_html|safe }}
+  </div>
+
+  {% if !backlinks.is_empty() %}
+  <section class="shelf-backlinks">
+    <h2 class="shelf-backlinks-title">Backlinks</h2>
+    <ul class="shelf-nav-list">
+      {% for b in backlinks %}
+      <li class="shelf-nav-item">
+        <a href="{{ b.url }}" class="shelf-nav-link">{{ b.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</article>
