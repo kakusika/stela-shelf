@@ -1,0 +1,273 @@
+/* ==================== HERO CARD ====================
+   book-hero-section / hero-banner-wrapper / hero-banner-img / hero-content /
+   hero-avatar / hero-title-area / hero-title-row / content-title / kind-tag
+   (base) / hero-meta-chips / hero-actions / edit-dropdown / edit-dropdown-item
+   (base) are styled with Tailwind utility classes directly in the templates
+   now (tailwind.config.js maps its colors to these same --text/--link/
+   --surface etc. tokens, so theming still works). The class names stay in
+   the markup -- hero-banner-wrapper/-img and hero-avatar/avatar-icon are
+   queried by JS (75-lightbox.js, 72-center-peek.js, 70-preview.js),
+   book-hero-section/hero-content are still targeted by 90-responsive.css's
+   mobile override, which must keep winning at its breakpoint -- see
+   BOOK_CSS's ordering comment in assets.rs.
+
+   avatar-text/avatar-grid/avatar-cell/avatar-initials and
+   .tm-doc-icon-img below are NOT convertible: that markup comes from
+   icon.rs (Rust-generated per-document HTML, inserted via `{{ icon | safe
+   }}`), which Tailwind's content scanner -- ui/templates/**/*.html
+   only -- never sees. Same reason .tmt-toast stays hand-written: it's
+   created by 90-edit-menu.ts via `className = 'tmt-toast'`, not present in
+   any template file either. */
+
+/* Positioning only -- the skin is <tmt-btn> now (variant="outline" size="xs"
+   shape="rect"), see macros.html's hero_banner / dsd_btn_shadow. */
+.hero-zoom-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+}
+
+.hero-avatar .avatar-icon .tm-doc-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==================== AVATAR TEXT & EMOJI LAYOUTS ====================
+   Rust-generated (icon.rs) -- see file header comment. */
+.avatar-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  user-select: none;
+}
+
+/* 1 char: single large glyph */
+.avatar-text-1 {
+  font-size: 2.2rem;
+}
+
+/* 2 chars / initials: horizontally auto-scaled without wrapping */
+.avatar-text-2 {
+  font-size: 1.45rem;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  padding: 0 4px;
+}
+
+.avatar-initials {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* 3 & 4 chars: 2x2 grid */
+.avatar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  gap: 2px;
+  place-items: center;
+  font-size: 1.15rem;
+}
+
+.avatar-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1;
+}
+
+/* 2 chars: diagonal layout (top-left & bottom-right) */
+.avatar-grid-2 {
+  font-size: 1.35rem;
+  padding: 5px;
+}
+
+.avatar-grid-2 .avatar-cell:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  align-self: start;
+}
+
+.avatar-grid-2 .avatar-cell:nth-child(2) {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
+  align-self: end;
+}
+
+/* 3 chars: 3rd cell centered spanning bottom row */
+.avatar-grid-3 .avatar-cell:nth-child(3) {
+  grid-column: 1 / span 2;
+}
+
+/* kind-tag's per-kind colors: deliberately small and self-contained, not
+   worth threading through Jinja conditionals just to move 3 color pairs
+   into utility classes. */
+.kind-tag.kind-character {
+  border-color: var(--link);
+  color: var(--link);
+  background: var(--surface);
+}
+.kind-tag.kind-group {
+  border-color: var(--border);
+  color: var(--text);
+  background: var(--surface);
+}
+.kind-tag.kind-event {
+  border-color: var(--unresolved);
+  color: var(--unresolved);
+  background: var(--surface);
+}
+
+/* <tmt-badge class="hero-chip"> is a Shadow DOM component (see
+   macros.html's hero_chips): .chip-label/.chip-val are its slotted light-DOM
+   children, still reachable by descendant selectors, but everything else
+   about the *host* element's own skin (variant="subtle" shape="pill"
+   size="sm") lives inside its shadow root and can't be styled from here --
+   see 05-tmt-btn.js's siblings and the 09-18 session notes on Shadow DOM
+   encapsulation. */
+.hero-chip .chip-label {
+  color: var(--text-muted);
+}
+.hero-chip .chip-val {
+  font-weight: 500;
+}
+tmt-badge.hero-chip[href]:hover .chip-val {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+/* Unresolved links: kept at full body text color for maximum readability,
+   with a faint dotted underline so it gently signals an uncreated concept
+   without reading as strong emphasis. Rust-generated (tomet-html), not
+   template markup -- see file header comment. */
+.tm-unresolved,
+a.tm-unresolved,
+.tm-ref-unresolved,
+a.tm-ref-unresolved {
+  color: inherit;
+  text-decoration: underline dotted 1px;
+  text-underline-offset: 3.5px;
+  text-decoration-color: color-mix(in srgb, var(--text-muted) 55%, transparent);
+  cursor: default;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.tm-unresolved:hover,
+a.tm-unresolved:hover,
+.tm-ref-unresolved:hover,
+a.tm-ref-unresolved:hover {
+  text-decoration-color: var(--text-muted);
+}
+
+/* ==================== HERO ACTIONS & EDIT DROPDOWN ==================== */
+.article-header {
+  position: relative;
+}
+
+/* Same tint as the application shell (--shell-*, defined in 00-base.css),
+   plus a shadow so it reads as a raised control rather than sitting flush
+   with the page -- box-model is Tailwind utilities in the markup now, this
+   is only the grain texture / shadow skin that isn't a good utility fit. */
+.hero-action-btn {
+  color: var(--shell-text-muted);
+  background-color: var(--shell-bg);
+  background-image: var(--shell-grain);
+  background-blend-mode: var(--shell-blend-mode, soft-light);
+  background-size: var(--shell-grain-size, auto);
+  background-position: var(--shell-grain-position, 0 0);
+  background-repeat: var(--shell-grain-repeat, repeat);
+  background-attachment: var(--shell-grain-attachment, scroll);
+  border: 1px solid var(--shell-border);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-theme="dark"] .hero-action-btn {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.hero-action-btn:hover {
+  color: var(--shell-text);
+  border-color: var(--link);
+  background-color: var(--shell-border);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Same grain skin as .hero-action-btn above -- box-model is Tailwind
+   utilities in the markup now. */
+.edit-dropdown-menu {
+  background-color: var(--shell-bg);
+  background-image: var(--shell-grain);
+  background-blend-mode: var(--shell-blend-mode, soft-light);
+  background-size: var(--shell-grain-size, auto);
+  background-position: var(--shell-grain-position, 0 0);
+  background-repeat: var(--shell-grain-repeat, repeat);
+  background-attachment: var(--shell-grain-attachment, scroll);
+  border: 1px solid var(--shell-border);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Author-level reinforcement: without this, the unconditional `display:
+   flex` a plain class rule would carry beats the UA stylesheet's `[hidden]
+   { display: none }` (author origin always wins over UA origin, regardless
+   of specificity), so the menu would render open before JS ever runs. */
+.edit-dropdown-menu[hidden] {
+  display: none !important;
+}
+
+.edit-dropdown-item {
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.edit-dropdown-item:hover {
+  background-color: color-mix(in srgb, var(--shell-border), transparent 30%);
+}
+
+.edit-dropdown-item .item-svg {
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.edit-dropdown-item .item-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* Copy Toast: created by 90-edit-menu.js (`className = 'tmt-toast'`), not
+   present in any template file -- see file header comment. */
+.tmt-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--text);
+  color: var(--bg);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.tmt-toast.is-show {
+  opacity: 1;
+  transform: translateY(0);
+}

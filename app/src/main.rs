@@ -80,6 +80,21 @@ dest = "dist"
 rail_title = "{book_title}"
 default_view = "book"
 
+[[ui.hero_chips]]
+key = "parent"
+label = "所属"
+
+[[ui.hero_chips]]
+key = "type.list-a"
+label = "ファン"
+
+[[ui.hero_chips]]
+key = "type.element-a"
+
+[[ui.hero_chips]]
+key = "birth"
+format = "birthday"
+
 [build]
 exclude = [
   "00-09 System/01 Apps"

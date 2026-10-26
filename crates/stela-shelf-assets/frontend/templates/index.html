@@ -1,23 +1,59 @@
 {% extends "base.html" %}
 {% import "macros.html" as ui %}
 
+{# A written index nests; a generated one never does. One macro serves both.
+   Renders with the same book-index-* classes as the sidebar's written index
+   (see page.html) so a note reads as a book here too -- the top level just
+   fans out into a shelf row instead of piling into a stack (see .is-shelf
+   in 50-nav-infobox.css). #}
+{% macro entry_list(items, top) %}
+<ul class="book-index-items{% if top %} is-shelf{% endif %}">
+  {% for entry in items %}
+  <li class="book-index-item">
+    <a href="{{ entry.url | safe }}" class="book-index-link">
+      <span class="book-index-title">{{ entry.title }}</span>
+      {% if entry.section %}<span class="book-index-meta">{{ entry.section }}</span>{% endif %}
+    </a>
+    {% if entry.children %}{{ entry_list(entry.children, false) }}{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endmacro %}
+
 {% block content %}
-<div class="stela-tablet" data-pagefind-ignore>
-  <header style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem;">
-    <h1 style="margin: 0 0 0.5rem 0;">{{ site_title }}</h1>
-    {% if description %}
-    <p style="color: var(--text-muted); margin: 0; font-size: 1.1rem;">{{ description }}</p>
-    {% endif %}
+<div class="classic-view" style="display: block; max-width: 960px; margin: 0 auto; padding: 24px 20px;" data-pagefind-ignore>
+  <header class="site-header site-header-index" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <h1 style="font-size: 2rem; margin: 0 0 6px 0;">{{ site_title }}</h1>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">{{ description | default('Total notes: ' ~ entries | length) }}</p>
+    </div>
+    <tmt-btn variant="ghost" size="sm" shape="square" class="theme-toggle-btn" title="{{ t["theme.toggle"] }}" aria-label="{{ t["theme.toggle_label"] }}">
+      {{ ui.dsd_btn_shadow(title=t["theme.toggle"], aria_label=t["theme.toggle_label"]) }}
+      <svg class="icon-theme icon-sun" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2"></path>
+        <path d="M12 20v2"></path>
+        <path d="m4.93 4.93 1.41 1.41"></path>
+        <path d="m17.66 17.66 1.41 1.41"></path>
+        <path d="M2 12h2"></path>
+        <path d="M20 12h2"></path>
+        <path d="m6.34 17.66-1.41 1.41"></path>
+        <path d="m19.07 4.93-1.41 1.41"></path>
+      </svg>
+      <svg class="icon-theme icon-moon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+      </svg>
+    </tmt-btn>
   </header>
 
   {% if sections and sections | length > 0 %}
-  <section style="margin-bottom: 2.5rem;">
-    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Sections</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+  <section style="margin-bottom: 32px;">
+    <h2 style="font-size: 1.35rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px; margin-bottom: 16px;">{{ t["index.sections"] }}</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
       {% for sec in sections %}
-      <div style="background: var(--surface-subtle); border: 1px solid var(--border); border-radius: 4px; padding: 1rem;">
-        <div style="font-weight: 600; font-size: 1rem; color: var(--text);">{{ sec.name }}</div>
-        <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">{{ sec.count }} notes</div>
+      <div style="background: var(--surface); border: 1px solid var(--border); padding: 14px 16px;">
+        <h3 style="margin: 0 0 4px 0; font-size: 1.05rem;">{{ sec.name }}</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">{{ sec.count }} {{ t["index.note_unit"] }}</p>
       </div>
       {% endfor %}
     </div>
@@ -25,8 +61,10 @@
   {% endif %}
 
   <section>
-    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">All Documents ({{ entries | length }})</h2>
-    {{ ui.entry_list(entries) }}
+    <h2 style="font-size: 1.35rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px; margin-bottom: 16px;">{{ t["index.entries"] }}</h2>
+    <div style="background: var(--surface); border: 1px solid var(--border); padding: 16px 20px;">
+      {{ entry_list(entries, true) }}
+    </div>
   </section>
 </div>
 {% endblock %}

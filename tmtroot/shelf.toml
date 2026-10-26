@@ -5,5 +5,12 @@ dest = "dist"
 
 [build]
 base = "/stela-shelf"
-kinds = ["*", "!config", "!index"]
+kinds = ["*", "!config", "!index", "!blueprint", "!vocabulary"]
 routing = "id"
+
+[ui.markers]
+enable = true
+strikethrough = true
+
+[ui.markers.custom]
+fire = { icon = "flame", color = "#f97316" }
