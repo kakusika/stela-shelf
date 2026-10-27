@@ -1,15 +1,17 @@
 {
   craneLib,
   lib,
-  tailwindcss,
+  tailwindcss_4,
   esbuild,
+  lightningcss,
 }:
 import ./stela-shelf.nix {
   inherit
     craneLib
     lib
-    tailwindcss
+    tailwindcss_4
     esbuild
+    lightningcss
     ;
   features = [ "embedded-search" ];
 }

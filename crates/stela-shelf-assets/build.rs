@@ -1,174 +1,164 @@
 use std::env;
+use std::ffi::OsStr;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
-use lightningcss::bundler::{Bundler, FileProvider};
-use lightningcss::printer::PrinterOptions;
-use lightningcss::stylesheet::{MinifyOptions, ParserOptions, StyleSheet};
+/// Modern Baseline browser targets aligned with Tailwind CSS v4.
+const CSS_TARGETS: &str = "chrome >= 111, edge >= 111, firefox >= 115, safari >= 16.4";
 
 fn main() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set");
     let root = Path::new(&manifest_dir);
 
-    println!("cargo:rerun-if-changed={}", root.join("frontend").display());
-    println!(
-        "cargo:rerun-if-changed={}",
-        root.join("templates").display()
-    );
+    let watched_paths = [
+        "frontend",
+        "templates",
+        "../stela-shelf-webcomponents/frontend/src",
+        "../stela-shelf-webcomponents/templates",
+        "../stela-shelf-leptos/src",
+        "../stela-shelf-htmx/src",
+        "../stela-shelf-htmx/templates",
+        "../stela-shelf-svelte/src",
+        "../stela-shelf-svelte/templates",
+        "../stela-shelf-solid/src",
+        "../stela-shelf-solid/templates",
+    ];
+    for rel in watched_paths {
+        let p = root.join(rel);
+        if p.exists() {
+            println!("cargo:rerun-if-changed={}", p.display());
+        }
+    }
 
-    let out_dir = env::var("OUT_DIR").expect("OUT_DIR not set by cargo");
-    let out_path = Path::new(&out_dir);
-    let tailwind_output = out_path.join("tailwind.css");
+    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR not set by cargo"));
 
-    // 1. Run Tailwind CSS CLI
-    let status = Command::new("tailwindcss")
-        .current_dir(root)
-        .args([
-            "-c",
-            "frontend/tailwind.config.ts",
+    // Stage `frontend/styles` into `OUT_DIR/styles` so `shelf.css` acts as the
+    // single source of truth while keeping the source tree strictly read-only
+    // (required inside Nix sandbox builds).
+    let src_styles = root.join("frontend/styles");
+    let staged_styles = out_dir.join("styles");
+    stage_dir(&src_styles, &staged_styles);
+
+    // 1. Generate Tailwind CSS v4 utilities into the staged styles directory.
+    let tailwind_output = staged_styles.join("tailwind.generated.css");
+    run_tool(
+        "tailwindcss",
+        root,
+        &[
             "-i",
             "frontend/styles/tailwind-input.css",
             "-o",
-            tailwind_output
-                .to_str()
-                .expect("tailwind_output path is not valid UTF-8"),
-        ])
-        .status();
-
-    match status {
-        Ok(s) if s.success() => {}
-        Ok(s) => panic!("`tailwindcss` exited with {s}"),
-        Err(e) => panic!(
-            "failed to run `tailwindcss` ({e}). It's provided by the nix dev shell \
-             (nix/dev.nix) -- run this build from inside `nix develop` / direnv."
-        ),
-    }
-
-    // 2. Bundle core shelf CSS with Lightning CSS
-    let styles_dir = root.join("frontend").join("styles");
-    let bundle_entry = out_path.join("shelf-entry.css");
-
-    let entry_content = format!(
-        r#"
-@import "{}/00-base.css";
-@import "{}/10-shell.css";
-@import "{}/20-panes.css";
-@import "{}/30-sticky-tabs.css";
-@import "{}/35-sticky-tabs-vertical.css";
-@import "{}/40-hero.css";
-@import "{}/50-nav-infobox.css";
-@import "{}/60-content.css";
-@import "{}/70-widgets.css";
-@import "{}/71-source-viewer.css";
-@import "{}/72-center-peek.css";
-@import "{}";
-@import "{}/90-responsive.css";
-@import "{}/98-no-js.css";
-"#,
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        styles_dir.display(),
-        tailwind_output.display(),
-        styles_dir.display(),
-        styles_dir.display(),
+            path_str(&tailwind_output),
+        ],
     );
 
-    fs::write(&bundle_entry, entry_content).expect("failed to write shelf-entry.css");
-
-    let fs_provider = FileProvider::new();
-    let mut bundler = Bundler::new(&fs_provider, None, ParserOptions::default());
-    let mut stylesheet = bundler
-        .bundle(&bundle_entry)
-        .expect("failed to bundle CSS with lightningcss");
-
-    stylesheet
-        .minify(MinifyOptions::default())
-        .expect("failed to minify CSS bundle with lightningcss");
-
-    let res = stylesheet
-        .to_css(PrinterOptions {
-            minify: true,
-            ..PrinterOptions::default()
-        })
-        .expect("failed to print minified CSS");
-
-    fs::write(out_path.join("shelf.min.css"), res.code).expect("failed to write shelf.min.css");
-
-    // 3. Minify Web Component Shadow DOM styles
-    let components = [
-        "tmt-btn",
-        "tmt-badge",
-        "tmt-icon",
-        "tmt-swatch",
-        "tmt-switch",
-    ];
-
-    let components_dir = styles_dir.join("components");
-    for name in components {
-        let comp_file = components_dir.join(format!("{name}.css"));
-        let content = fs::read_to_string(&comp_file)
-            .unwrap_or_else(|e| panic!("failed to read {}: {e}", comp_file.display()));
-
-        let mut comp_sheet = StyleSheet::parse(
-            &content,
-            ParserOptions {
-                filename: format!("{name}.css"),
-                ..ParserOptions::default()
-            },
-        )
-        .unwrap_or_else(|e| panic!("failed to parse {}: {e:?}", comp_file.display()));
-
-        comp_sheet
-            .minify(MinifyOptions::default())
-            .unwrap_or_else(|e| panic!("failed to minify {}: {e:?}", comp_file.display()));
-
-        let comp_res = comp_sheet
-            .to_css(PrinterOptions {
-                minify: true,
-                ..PrinterOptions::default()
-            })
-            .unwrap_or_else(|e| {
-                panic!(
-                    "failed to serialize minified {}: {e:?}",
-                    comp_file.display()
-                )
-            });
-
-        fs::write(out_path.join(format!("{name}.min.css")), comp_res.code)
-            .unwrap_or_else(|e| panic!("failed to write {name}.min.css: {e}"));
-    }
-
-    // 4. Bundle core Stela shell JavaScript with esbuild
-    let shell_ts_path = root.join("frontend/scripts/stela-shell.ts");
-    let js_output_path = out_path.join("stela-shell.min.js");
-
-    let esbuild_status = Command::new("esbuild")
-        .current_dir(root)
-        .args([
-            shell_ts_path.to_str().expect("valid UTF-8 path"),
+    // 2. Bundle, lower, and minify core shelf CSS from `shelf.css` via `lightningcss` CLI.
+    let shelf_entry = staged_styles.join("shelf.css");
+    let shelf_output = out_dir.join("shelf.min.css");
+    run_tool(
+        "lightningcss",
+        root,
+        &[
             "--bundle",
             "--minify",
-            &format!(
-                "--outfile={}",
-                js_output_path.to_str().expect("OUT_DIR is not valid UTF-8")
-            ),
-        ])
-        .status();
+            "--targets",
+            CSS_TARGETS,
+            path_str(&shelf_entry),
+            "-o",
+            path_str(&shelf_output),
+        ],
+    );
 
-    match esbuild_status {
+    // 3. Bundle, lower, and minify all Web Component Shadow DOM stylesheets in a single pass.
+    let components_src = src_styles.join("components");
+    let components_out = out_dir.join("components");
+    fs::create_dir_all(&components_out).expect("failed to create OUT_DIR/components");
+
+    let mut component_files: Vec<PathBuf> = fs::read_dir(&components_src)
+        .unwrap_or_else(|e| panic!("failed to read {}: {e}", components_src.display()))
+        .map(|entry| entry.expect("failed to read dir entry").path())
+        .filter(|path| path.extension() == Some(OsStr::new("css")))
+        .collect();
+    component_files.sort();
+
+    if !component_files.is_empty() {
+        let mut args = vec![
+            "--bundle",
+            "--minify",
+            "--targets",
+            CSS_TARGETS,
+            "-d",
+            path_str(&components_out),
+        ];
+        for file in &component_files {
+            args.push(path_str(file));
+        }
+        run_tool("lightningcss", root, &args);
+    }
+
+    // 4. Bundle and minify core Stela shell JavaScript with `esbuild`.
+    let shell_ts_path = root.join("frontend/scripts/stela-shell.ts");
+    let js_output_path = out_dir.join("stela-shell.min.js");
+    let outfile_arg = format!("--outfile={}", path_str(&js_output_path));
+    run_tool(
+        "esbuild",
+        root,
+        &[
+            path_str(&shell_ts_path),
+            "--bundle",
+            "--minify",
+            &outfile_arg,
+        ],
+    );
+}
+
+fn path_str(path: &Path) -> &str {
+    path.to_str()
+        .unwrap_or_else(|| panic!("path is not valid UTF-8: {}", path.display()))
+}
+
+fn stage_dir(src: &Path, dst: &Path) {
+    if dst.exists() {
+        fs::remove_dir_all(dst)
+            .unwrap_or_else(|e| panic!("failed to clean {}: {e}", dst.display()));
+    }
+    copy_dir_recursive(src, dst);
+}
+
+fn copy_dir_recursive(src: &Path, dst: &Path) {
+    fs::create_dir_all(dst).unwrap_or_else(|e| panic!("failed to create {}: {e}", dst.display()));
+    for entry in
+        fs::read_dir(src).unwrap_or_else(|e| panic!("failed to read {}: {e}", src.display()))
+    {
+        let entry = entry.expect("failed to read dir entry");
+        let src_path = entry.path();
+        let dst_path = dst.join(entry.file_name());
+        if entry
+            .file_type()
+            .expect("failed to read file type")
+            .is_dir()
+        {
+            copy_dir_recursive(&src_path, &dst_path);
+        } else {
+            fs::copy(&src_path, &dst_path).unwrap_or_else(|e| {
+                panic!(
+                    "failed to copy {} to {}: {e}",
+                    src_path.display(),
+                    dst_path.display()
+                )
+            });
+        }
+    }
+}
+
+fn run_tool(program: &str, cwd: &Path, args: &[&str]) {
+    let status = Command::new(program).current_dir(cwd).args(args).status();
+    match status {
         Ok(s) if s.success() => {}
-        Ok(s) => panic!("`esbuild` exited with {s}"),
+        Ok(s) => panic!("`{program}` exited with {s}"),
         Err(e) => panic!(
-            "failed to run `esbuild` ({e}). It's provided by the nix dev shell \
+            "failed to run `{program}` ({e}). It's provided by the nix dev shell \
              (nix/dev.nix) -- run this build from inside `nix develop` / direnv."
         ),
     }

@@ -1,8 +1,9 @@
 {
   craneLib,
   lib,
-  tailwindcss,
+  tailwindcss_4,
   esbuild,
+  lightningcss,
   features ? [ ],
 }:
 let
@@ -30,8 +31,9 @@ let
     pname = "stela-shelf";
     version = "0.1.0";
     nativeBuildInputs = [
-      tailwindcss
+      tailwindcss_4
       esbuild
+      lightningcss
     ];
     cargoExtraArgs =
       "-p stela-shelf-cli"

@@ -1,3 +1,55 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+ * Tailwind CSS v4 entry point (CSS-first configuration).
+ *
+ * - Preflight is omitted (`00-base.css` carries the hand-tuned reset).
+ * - Utilities are imported unlayered so they slot cleanly into `shelf.css`'s
+ *   explicit cascade order (after base/panes/widgets, before responsive/no-js).
+ * - `.container` is excluded because `00-base.css` defines `.container` as the
+ *   fluid page-shell class (paired with `.is-fluid`).
+ */
+
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css" source(none);
+
+@source "../scripts";
+@source "../../templates";
+@source "../../../stela-shelf-webcomponents/frontend/src";
+@source "../../../stela-shelf-webcomponents/templates";
+@source "../../../stela-shelf-leptos/src";
+@source "../../../stela-shelf-htmx/src";
+@source "../../../stela-shelf-htmx/templates";
+@source "../../../stela-shelf-svelte/src";
+@source "../../../stela-shelf-svelte/templates";
+@source "../../../stela-shelf-solid/src";
+@source "../../../stela-shelf-solid/templates";
+
+@source not inline("container");
+
+/* Match the app's `<html data-theme="dark">` theme switching strategy. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Replaced, not extended (`--color-*: initial`): every color utility resolves
+ * through the app's CSS custom properties (`00-base.css`) so shell color,
+ * pattern, and contrast switching keeps working without a parallel palette.
+ */
+@theme {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-link: var(--link);
+  --color-link-visited: var(--link-visited);
+  --color-unresolved: var(--unresolved);
+  --color-shell-bg: var(--shell-bg);
+  --color-shell-border: var(--shell-border);
+  --color-shell-text: var(--shell-text);
+  --color-shell-text-muted: var(--shell-text-muted);
+  --color-stela-accent: var(--stela-accent, var(--link));
+}

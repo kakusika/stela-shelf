@@ -25,11 +25,13 @@ pub static CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(STEL
 // Web Component Shadow DOM Stylesheets
 //==============================================================================
 
-pub const TMT_BTN_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-btn.min.css"));
-pub const TMT_BADGE_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-badge.min.css"));
-pub const TMT_ICON_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-icon.min.css"));
-pub const TMT_SWATCH_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-swatch.min.css"));
-pub const TMT_SWITCH_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/tmt-switch.min.css"));
+pub const TMT_BTN_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/components/tmt-btn.css"));
+pub const TMT_BADGE_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/components/tmt-badge.css"));
+pub const TMT_ICON_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/components/tmt-icon.css"));
+pub const TMT_SWATCH_CSS: &str =
+    include_str!(concat!(env!("OUT_DIR"), "/components/tmt-swatch.css"));
+pub const TMT_SWITCH_CSS: &str =
+    include_str!(concat!(env!("OUT_DIR"), "/components/tmt-switch.css"));
 
 pub static TMT_BTN_CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(TMT_BTN_CSS));
 pub static TMT_BADGE_CSS_VERSION: LazyLock<String> =

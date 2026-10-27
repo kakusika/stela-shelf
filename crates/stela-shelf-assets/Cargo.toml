@@ -6,6 +6,3 @@ rust-version.workspace = true
 
 [dependencies]
 tomet-shelf-headless = { workspace = true }
-
-[build-dependencies]
-lightningcss = { workspace = true }
