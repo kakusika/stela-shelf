@@ -267,6 +267,28 @@
 
 {% macro costume_switcher(images, page_title, original_images) %}
 <div class="infobox-image-section">
+  {% if images.len() > 1 %}
+  <div class="infobox-costume-switcher mr-2" data-pagefind-ignore>
+    <div class="switcher-buttons flex flex-col items-center gap-1.5">
+      {% for (idx, img) in images.iter().enumerate() %}
+      <tmt-btn
+        variant="outline"
+        size="sm"
+        shape="square"
+        class="costume-btn{% if idx == 0 %} active{% endif %}"
+        {% if idx == 0 %}active{% endif %}
+        data-img-src="{{ img }}"
+        {% if let Some(orig) = original_images.get(*idx) %}data-original="{{ orig }}"{% endif %}
+        aria-label="{{ self.t("costume.image", "画像") }} {{ idx + 1 }}"
+        title="{{ self.t("costume.image", "画像") }} {{ idx + 1 }}"
+      >
+        {{ dsd_btn_shadow("", "", false, "button") }}
+        <img src="{{ img }}" alt="" class="costume-thumb w-full h-full object-cover" loading="lazy" decoding="async" />
+      </tmt-btn>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
   <div class="infobox-image-wrapper">
     {% if let Some(first_img) = images.first() %}
     <img

@@ -411,6 +411,9 @@ html[data-view="classic"] .classic-view {
   --tmt-swatch-hover-bg: var(--shell-border);
   --tmt-swatch-active-bg: var(--shell-border);
   --tmt-swatch-active-border: var(--shell-border);
+  --tmt-switch-hover-bg: var(--shell-border);
+  --tmt-switch-active-bg: var(--shell-border);
+  --tmt-switch-active-border: var(--shell-border);
 }
 
 /* Author-level reinforcement -- see edit-dropdown-menu[hidden] in

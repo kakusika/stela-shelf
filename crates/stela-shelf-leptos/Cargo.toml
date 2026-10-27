@@ -10,15 +10,12 @@ stela-shelf-core = { workspace = true }
 stela-shelf-assets = { workspace = true }
 tomet-shelf-headless = { workspace = true }
 tomet-shelf-document = { workspace = true }
+tomet-shelf-icons = { workspace = true }
+tomet-shelf-render = { workspace = true }
 
 #= Leptos
 leptos = { workspace = true }
-leptos_axum = { workspace = true }
 
 #= Crates.io
 anyhow = { workspace = true }
 async-trait = { workspace = true }
-axum = { workspace = true }
-serde = { workspace = true }
-tokio = { workspace = true }
-tracing = { workspace = true }

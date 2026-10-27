@@ -20,8 +20,10 @@
 @source "../../../stela-shelf-htmx/templates";
 @source "../../../stela-shelf-svelte/src";
 @source "../../../stela-shelf-svelte/templates";
+@source "../../../stela-shelf-svelte/ui";
 @source "../../../stela-shelf-solid/src";
 @source "../../../stela-shelf-solid/templates";
+@source "../../../stela-shelf-solid/ui";
 
 @source not inline("container");
 
@@ -51,5 +53,4 @@
   --color-shell-border: var(--shell-border);
   --color-shell-text: var(--shell-text);
   --color-shell-text-muted: var(--shell-text-muted);
-  --color-stela-accent: var(--stela-accent, var(--link));
 }

@@ -19,9 +19,13 @@
           document.documentElement.setAttribute('data-tabs', savedTabs);
         }
         const savedTheme = localStorage.getItem('shelf-theme');
-        if (savedTheme === 'dark' || savedTheme === 'light') {
-          document.documentElement.setAttribute('data-theme', savedTheme);
-        }
+        const resolvedTheme =
+          savedTheme === 'dark' || savedTheme === 'light'
+            ? savedTheme
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.setAttribute('data-theme', resolvedTheme);
         // Shell customizations (Color, Pattern, Contrast)
         let shellColor = localStorage.getItem('shelf-shell-color');
         let shellPattern = localStorage.getItem('shelf-shell-pattern');
@@ -88,6 +92,7 @@
             <input
               type="search"
               id="wiki-search-input"
+              class="wiki-search-input"
               placeholder="{{ self.t("search.placeholder", "検索 (Ctrl+K)...") }}"
               autocomplete="off"
               spellcheck="false"

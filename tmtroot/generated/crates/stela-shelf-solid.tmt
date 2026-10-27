@@ -10,10 +10,6 @@
 
 ===[struct PageTemplate]
 
-===[struct ArticleFragmentTemplate]
-
-===[struct TocFragmentTemplate]
-
 ===[struct IndexTemplate]
 
 ===[struct SolidPageRenderer]
@@ -37,5 +33,9 @@ Bundled CSS stylesheet for SolidJS search island.
 ===[const ISLAND_JS]
 
 Bundled SolidJS Search Island JavaScript.
+
+===[const ISLAND_CSS_VERSION]
+
+===[const ISLAND_JS_VERSION]
 
 ===[const SOLID_STATIC_ASSETS]

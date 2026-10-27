@@ -102,6 +102,12 @@
 /* kind-tag's per-kind colors: deliberately small and self-contained, not
    worth threading through Jinja conditionals just to move 3 color pairs
    into utility classes. */
+.kind-tag {
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: var(--surface);
+  border-radius: 3px;
+}
 .kind-tag.kind-character {
   border-color: var(--link);
   color: var(--link);
@@ -228,11 +234,6 @@ a.tm-ref-unresolved:hover {
   flex-shrink: 0;
   display: inline-block;
   vertical-align: middle;
-}
-
-.edit-dropdown-item .item-icon {
-  font-size: 0.95rem;
-  line-height: 1;
 }
 
 /* Copy Toast: created by 90-edit-menu.js (`className = 'tmt-toast'`), not

@@ -10,10 +10,6 @@
 
 ===[struct PageTemplate]
 
-===[struct ArticleFragmentTemplate]
-
-===[struct SearchResultsTemplate]
-
 ===[struct IndexTemplate]
 
 ===[struct HtmxPageRenderer]
@@ -33,5 +29,7 @@ HTML-First HTMX engine variant for stela-shelf.
 ===[const HTMX_JS]
 
 Bundled HTMX JavaScript library.
+
+===[const HTMX_JS_VERSION]
 
 ===[const HTMX_STATIC_ASSETS]

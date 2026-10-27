@@ -1,24 +1,28 @@
 use anyhow::Result;
 use askama::Template;
 use async_trait::async_trait;
+use std::collections::HashMap;
 use std::sync::{Arc, LazyLock};
 
 use stela_shelf_assets::{
-    STELA_CSS_VERSION, STELA_SHELL_JS_VERSION, TMT_BADGE_CSS_VERSION, TMT_BTN_CSS_VERSION,
-    TMT_ICON_CSS_VERSION, TMT_SWATCH_CSS_VERSION, TMT_SWITCH_CSS_VERSION, stela_static_assets,
+    STELA_CSS_VERSION, STELA_SHELL_JS_VERSION, TMT_BTN_CSS_VERSION, stela_static_assets,
 };
 use stela_shelf_core::{BuildContext, BuildReport, ServerContext, ShelfEngine};
-use tomet_shelf_document::{ProcessedDoc, SectionTab};
-use tomet_shelf_headless::assets::StaticAsset;
+use tomet_shelf_document::{DocIcon, ProcessedDoc, SectionTab};
+use tomet_shelf_headless::assets::{StaticAsset, content_version};
 use tomet_shelf_headless::{
     Backlink, BookConfig, EntrySummary, PageRenderer, RendererFactory, SectionSummary,
 };
+use tomet_shelf_icons::{IconRenderer, StandardIconRenderer};
 
 /// Bundled CSS stylesheet for Svelte search island.
 pub const ISLAND_CSS: &str = include_str!("../assets/island.css");
 
 /// Bundled Svelte Search Island JavaScript.
 pub const ISLAND_JS: &str = include_str!("../assets/island.js");
+
+pub static ISLAND_CSS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(ISLAND_CSS));
+pub static ISLAND_JS_VERSION: LazyLock<String> = LazyLock::new(|| content_version(ISLAND_JS));
 
 pub static SVELTE_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(|| {
     let mut assets = stela_static_assets();
@@ -39,6 +43,20 @@ pub static SVELTE_STATIC_ASSETS: LazyLock<Vec<StaticAsset>> = LazyLock::new(|| {
 pub struct EntryView {
     pub url: String,
     pub title: String,
+    pub depth: usize,
+}
+
+fn flatten_entries(items: &[EntrySummary], depth: usize, out: &mut Vec<EntryView>) {
+    for e in items {
+        out.push(EntryView {
+            url: e.url.clone(),
+            title: e.title.clone(),
+            depth,
+        });
+        if !e.children.is_empty() {
+            flatten_entries(&e.children, depth + 1, out);
+        }
+    }
 }
 
 #[derive(Template)]
@@ -47,46 +65,28 @@ pub struct PageTemplate<'a> {
     pub lang: &'a str,
     pub book_title: &'a str,
     pub doc_title: &'a str,
-    pub current_title: &'a str,
+    pub icon: Option<&'a str>,
     pub content_html: &'a str,
     pub base_path: &'a str,
+    pub home_url: &'a str,
+    pub page_url: &'a str,
     pub css_version: &'a str,
-    pub island_css: &'a str,
-    pub island_js: &'a str,
+    pub stela_shell_js_version: &'a str,
+    pub island_css_version: &'a str,
+    pub island_js_version: &'a str,
+    pub tmt_btn_css_version: &'a str,
     pub hero_chips: &'a [(String, String)],
-    pub toc_items: &'a [(String, String, f32)],
     pub section_tabs: &'a [SectionTab],
     pub entries: &'a [EntryView],
     pub backlinks: &'a [EntryView],
     pub rail_letters: &'a [String],
-
-    pub tmt_btn_css_version: &'a str,
-    pub tmt_badge_css_version: &'a str,
-    pub tmt_icon_css_version: &'a str,
-    pub tmt_swatch_css_version: &'a str,
-    pub tmt_switch_css_version: &'a str,
-    pub stela_shell_js_version: &'a str,
+    pub strings: &'a HashMap<String, String>,
 }
 
 impl<'a> PageTemplate<'a> {
-    pub fn t(&self, _key: &str, default: &'a str) -> &'a str {
-        default
+    pub fn t(&self, key: &str, default: &'a str) -> &'a str {
+        self.strings.get(key).map(|s| s.as_str()).unwrap_or(default)
     }
-}
-
-#[derive(Template)]
-#[template(path = "fragments/article.html")]
-pub struct ArticleFragmentTemplate<'a> {
-    pub doc_title: &'a str,
-    pub content_html: &'a str,
-    pub hero_chips: &'a [(String, String)],
-    pub backlinks: &'a [EntryView],
-}
-
-#[derive(Template)]
-#[template(path = "fragments/toc.html")]
-pub struct TocFragmentTemplate<'a> {
-    pub toc_items: &'a [(String, String, f32)],
 }
 
 #[derive(Template)]
@@ -94,33 +94,25 @@ pub struct TocFragmentTemplate<'a> {
 pub struct IndexTemplate<'a> {
     pub lang: &'a str,
     pub book_title: &'a str,
-    pub current_title: &'a str,
     pub base_path: &'a str,
+    pub home_url: &'a str,
     pub css_version: &'a str,
-    pub island_css: &'a str,
-    pub island_js: &'a str,
+    pub stela_shell_js_version: &'a str,
+    pub island_css_version: &'a str,
+    pub island_js_version: &'a str,
     pub sections: &'a [(String, usize)],
     pub entries: &'a [EntryView],
     pub rail_letters: &'a [String],
-
-    pub tmt_btn_css_version: &'a str,
-    pub tmt_badge_css_version: &'a str,
-    pub tmt_icon_css_version: &'a str,
-    pub tmt_swatch_css_version: &'a str,
-    pub tmt_switch_css_version: &'a str,
-    pub stela_shell_js_version: &'a str,
-}
-
-impl<'a> IndexTemplate<'a> {
-    pub fn t(&self, _key: &str, default: &'a str) -> &'a str {
-        default
-    }
 }
 
 /// Askama + Svelte page renderer.
 pub struct SveltePageRenderer {
     config: BookConfig,
+    base_path: String,
+    full_url_prefix: String,
+    home_url: String,
     rail_letters: Vec<String>,
+    link_icons: HashMap<String, String>,
 }
 
 impl SveltePageRenderer {
@@ -131,9 +123,25 @@ impl SveltePageRenderer {
             .as_deref()
             .unwrap_or(&config.book.title);
         let rail_letters: Vec<String> = rail_title.chars().map(|c| c.to_string()).collect();
+        let base_path = config.build.clean_base_path().to_string();
+        let full_url_prefix = config.build.full_url_prefix();
+        let home_url = if full_url_prefix.is_empty() {
+            if base_path.is_empty() {
+                "/".to_string()
+            } else {
+                format!("{base_path}/")
+            }
+        } else {
+            format!("{}/", full_url_prefix.trim_end_matches('/'))
+        };
+
         Self {
             config,
+            base_path,
+            full_url_prefix,
+            home_url,
             rail_letters,
+            link_icons: HashMap::new(),
         }
     }
 }
@@ -145,7 +153,28 @@ impl PageRenderer for SveltePageRenderer {
         backlinks: &[Backlink],
         book_index: &[EntrySummary],
     ) -> Result<String> {
-        let base_path = self.config.build.clean_base_path();
+        let page_url = format!("{}/{}", self.full_url_prefix, doc.slug);
+
+        let icon_renderer = StandardIconRenderer::new();
+        let rendered_icon = doc.icon.as_ref().map(|ic| {
+            tomet_shelf_render::render_page_icon(ic, &self.base_path, Some(&icon_renderer))
+        });
+
+        let body_html = tomet_shelf_render::enhance_body_html(
+            &doc.body_html,
+            &self.config,
+            &self.base_path,
+            Some(&icon_renderer),
+        );
+        let body_html = if self.config.ui.links.note_icons && !self.link_icons.is_empty() {
+            tomet_shelf_render::enhance_internal_links(
+                &body_html,
+                &self.link_icons,
+                &self.full_url_prefix,
+            )
+        } else {
+            body_html
+        };
 
         let hero_chips: Vec<(String, String)> = doc
             .hero_chips
@@ -153,28 +182,15 @@ impl PageRenderer for SveltePageRenderer {
             .map(|chip| (chip.label.clone().unwrap_or_default(), chip.value.clone()))
             .collect();
 
-        let toc_items: Vec<(String, String, f32)> = doc
-            .toc
-            .iter()
-            .map(|item| {
-                let indent = (item.level.saturating_sub(1) as f32) * 0.75;
-                (item.id.clone(), item.text.clone(), indent)
-            })
-            .collect();
-
-        let entries: Vec<EntryView> = book_index
-            .iter()
-            .map(|e| EntryView {
-                url: e.url.clone(),
-                title: e.title.clone(),
-            })
-            .collect();
+        let mut entries = Vec::new();
+        flatten_entries(book_index, 0, &mut entries);
 
         let bl_items: Vec<EntryView> = backlinks
             .iter()
             .map(|b| EntryView {
                 url: b.url.clone(),
                 title: b.title.clone(),
+                depth: 0,
             })
             .collect();
 
@@ -182,25 +198,22 @@ impl PageRenderer for SveltePageRenderer {
             lang: &self.config.book.lang,
             book_title: &self.config.book.title,
             doc_title: &doc.title,
-            current_title: &doc.title,
-            content_html: &doc.body_html,
-            base_path,
+            icon: rendered_icon.as_deref(),
+            content_html: &body_html,
+            base_path: &self.base_path,
+            home_url: &self.home_url,
+            page_url: &page_url,
             css_version: &STELA_CSS_VERSION,
-            island_css: ISLAND_CSS,
-            island_js: ISLAND_JS,
+            stela_shell_js_version: &STELA_SHELL_JS_VERSION,
+            island_css_version: &ISLAND_CSS_VERSION,
+            island_js_version: &ISLAND_JS_VERSION,
+            tmt_btn_css_version: &TMT_BTN_CSS_VERSION,
             hero_chips: &hero_chips,
-            toc_items: &toc_items,
             section_tabs: &doc.section_tabs,
             entries: &entries,
             backlinks: &bl_items,
             rail_letters: &self.rail_letters,
-
-            tmt_btn_css_version: &TMT_BTN_CSS_VERSION,
-            tmt_badge_css_version: &TMT_BADGE_CSS_VERSION,
-            tmt_icon_css_version: &TMT_ICON_CSS_VERSION,
-            tmt_swatch_css_version: &TMT_SWATCH_CSS_VERSION,
-            tmt_switch_css_version: &TMT_SWITCH_CSS_VERSION,
-            stela_shell_js_version: &STELA_SHELL_JS_VERSION,
+            strings: &self.config.ui.strings,
         };
 
         template.render().map_err(Into::into)
@@ -211,37 +224,24 @@ impl PageRenderer for SveltePageRenderer {
         sections: &[SectionSummary],
         entries: &[EntrySummary],
     ) -> Result<String> {
-        let base_path = self.config.build.clean_base_path();
-
         let sec_items: Vec<(String, usize)> =
             sections.iter().map(|s| (s.name.clone(), s.count)).collect();
 
-        let ent_items: Vec<EntryView> = entries
-            .iter()
-            .map(|e| EntryView {
-                url: e.url.clone(),
-                title: e.title.clone(),
-            })
-            .collect();
+        let mut ent_items = Vec::new();
+        flatten_entries(entries, 0, &mut ent_items);
 
         let template = IndexTemplate {
             lang: &self.config.book.lang,
             book_title: &self.config.book.title,
-            current_title: "",
-            base_path,
+            base_path: &self.base_path,
+            home_url: &self.home_url,
             css_version: &STELA_CSS_VERSION,
-            island_css: ISLAND_CSS,
-            island_js: ISLAND_JS,
+            stela_shell_js_version: &STELA_SHELL_JS_VERSION,
+            island_css_version: &ISLAND_CSS_VERSION,
+            island_js_version: &ISLAND_JS_VERSION,
             sections: &sec_items,
             entries: &ent_items,
             rail_letters: &self.rail_letters,
-
-            tmt_btn_css_version: &TMT_BTN_CSS_VERSION,
-            tmt_badge_css_version: &TMT_BADGE_CSS_VERSION,
-            tmt_icon_css_version: &TMT_ICON_CSS_VERSION,
-            tmt_swatch_css_version: &TMT_SWATCH_CSS_VERSION,
-            tmt_switch_css_version: &TMT_SWITCH_CSS_VERSION,
-            stela_shell_js_version: &STELA_SHELL_JS_VERSION,
         };
 
         template.render().map_err(Into::into)
@@ -249,6 +249,25 @@ impl PageRenderer for SveltePageRenderer {
 
     fn static_assets(&self) -> &[StaticAsset] {
         &SVELTE_STATIC_ASSETS
+    }
+
+    fn icon_renderer(&self) -> Option<Arc<dyn IconRenderer>> {
+        Some(Arc::new(StandardIconRenderer::new()))
+    }
+
+    fn set_doc_icons(&mut self, icons: &HashMap<String, DocIcon>) {
+        let icon_renderer = StandardIconRenderer::new();
+        self.link_icons = icons
+            .iter()
+            .map(|(slug, icon)| {
+                let html = tomet_shelf_render::render_page_link_icon(
+                    icon,
+                    &self.base_path,
+                    Some(&icon_renderer),
+                );
+                (slug.clone(), html)
+            })
+            .collect();
     }
 }
 
@@ -259,6 +278,10 @@ pub struct SvelteRendererFactory;
 impl RendererFactory for SvelteRendererFactory {
     fn create(&self, config: &BookConfig, _is_dev: bool) -> Result<Box<dyn PageRenderer>> {
         Ok(Box::new(SveltePageRenderer::new(config.clone())))
+    }
+
+    fn icon_renderer(&self) -> Option<Arc<dyn IconRenderer>> {
+        Some(Arc::new(StandardIconRenderer::new()))
     }
 }
 

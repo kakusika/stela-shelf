@@ -26,11 +26,6 @@
   color: var(--text-muted);
   text-align: center;
 }
-.recent-items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
 .book-toc-link:hover {
   color: var(--link);
   background: var(--surface-subtle);
@@ -40,10 +35,6 @@
   font-weight: 600;
   border-left-color: var(--link);
   background: var(--surface-subtle);
-}
-
-.pane-graph-box .placeholder-icon {
-  font-size: 1.1rem;
 }
 
 /* Pinned below .pane-scroll (see page.html) rather than living inside one
@@ -87,20 +78,16 @@
    their heights (from title length, in JS) vary above that edge the way
    real book spines do. */
 .recent-items {
+  list-style: none;
+  margin: 0;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
   direction: rtl;
-  gap: 1px; /* whole pixel: a fractional value here rounds inconsistently
-               between gaps once laid out at different cumulative offsets
-               and painted to the physical pixel grid */
+  gap: 1px;
   overflow-x: hidden;
   overflow-y: hidden;
   padding: 10px 8px 0;
-  /* Same tone and flat, shadow-less treatment as the sticky-tabs bar
-     (.pane-content-header) and its heading above -- the shelf reads as
-     more of that same furniture, not a separate surface with its own
-     simulated depth. */
   background: #dfe3e8;
 }
 [data-theme="dark"] .recent-items {
@@ -280,18 +267,6 @@
   --tmt-btn-color: #10b981;
 }
 
-.infobox-header-cell {
-  background-color: var(--surface-subtle);
-  padding: 6px 10px;
-  font-weight: bold;
-  text-align: center;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-}
-
 .infobox-image-section {
   padding: 8px 12px;
   border-bottom: 1px solid var(--border-subtle);
@@ -330,19 +305,14 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.45);
-  color: #ffffff;
-  border: none;
-  width: 28px;
-  height: 28px;
+  --tmt-btn-bg: rgba(0, 0, 0, 0.45);
+  --tmt-btn-hover-bg: rgba(0, 0, 0, 0.75);
+  --tmt-btn-color: #ffffff;
+  --tmt-btn-hover-color: #ffffff;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, background-color 0.15s ease;
+  transition: opacity 0.2s ease;
   z-index: 2;
   backdrop-filter: blur(4px);
 }
@@ -362,7 +332,6 @@
 
 .costume-arrow:hover {
   opacity: 1 !important;
-  background: rgba(0, 0, 0, 0.75);
 }
 
 .infobox-costume-switcher {
@@ -681,22 +650,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
 }
 
-/* A letter/kana heading over each run of the A-Z index -- the shelf-edge
-   ledge from the pane header, scaled down to mark a run rather than a pane. */
-.lookup-group-heading {
-  font-size: 0.72rem;
-  font-weight: bold;
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
-  margin-top: 14px;
-  padding: 8px 4px 5px;
-  border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 2px 3px -2px rgba(0, 0, 0, 0.1);
-  margin-bottom: 8px;
-}
-.lookup-group-heading:first-child {
-  margin-top: 0;
-}
 
 .lookup-pagination {
   display: flex;

@@ -8,7 +8,7 @@
 
 ===[fn stela_static_assets]
 
-Get all core static assets for Stela Shelf (CSS, JS, and components).
+Get all core static assets for Stela Shelf (CSS, JS, components, and icon sprites).
 
 ==[Constants]
 
@@ -45,3 +45,5 @@ Get all core static assets for Stela Shelf (CSS, JS, and components).
 ===[const TMT_SWITCH_CSS_VERSION]
 
 ===[const COMPONENT_ASSETS]
+
+===[const ICON_ASSETS]

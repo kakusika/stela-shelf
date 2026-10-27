@@ -15,7 +15,7 @@ tmt-badge.search-shortcut-badge {
    (--shell-*) instead of the page's own surface color -- this field gets
    a background one step off the bar's own, so it still reads as a
    distinct field rather than just more bar. */
-#wiki-search-input {
+.wiki-search-input {
   width: 180px;
   height: 28px;
   padding: 0 38px 0 26px;
@@ -26,12 +26,12 @@ tmt-badge.search-shortcut-badge {
   box-sizing: border-box;
   transition: border-color 0.15s ease;
 }
-#wiki-search-input:focus {
+.wiki-search-input:focus {
   outline: none;
   border-color: var(--link);
   background: var(--bg);
 }
-#wiki-search-input::placeholder {
+.wiki-search-input::placeholder {
   color: var(--text-muted);
 }
 .search-results[hidden] {

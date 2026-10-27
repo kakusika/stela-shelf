@@ -289,7 +289,7 @@ svg.tm-link-icon,
 
 /* Internal links: clean offset underline for color-independent accessibility.
    Maintains seamless Japanese typography without inserting awkward gaps between words and particles. */
-article a:not([href^="http://"]):not([href^="https://"]):not(.tm-url):not(.tm-ref-unresolved):not(:has(img:not(.tm-link-icon))) {
+article a:where(:not([href^="http://"]):not([href^="https://"]):not(.tm-url):not(.tm-unresolved):not(.tm-ref-unresolved):not(:has(img:not(.tm-link-icon)))) {
   color: var(--link);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
@@ -298,8 +298,13 @@ article a:not([href^="http://"]):not([href^="https://"]):not(.tm-url):not(.tm-re
   transition: text-decoration-color 0.15s ease;
 }
 
-article a:not([href^="http://"]):not([href^="https://"]):not(.tm-url):not(.tm-ref-unresolved):not(:has(img:not(.tm-link-icon))):hover {
+article a:where(:not([href^="http://"]):not([href^="https://"]):not(.tm-url):not(.tm-unresolved):not(.tm-ref-unresolved):not(:has(img:not(.tm-link-icon)))):hover {
   text-decoration-color: currentColor;
+}
+
+/* Visited link color scoped strictly to prose links so UI chrome never turns purple */
+article a:where(:not(.tm-unresolved):not(.tm-ref-unresolved):not(.footnote-backref):not(:has(img:not(.tm-link-icon)))):visited {
+  color: var(--link-visited);
 }
 
 article p { margin: 12px 0; }

@@ -70,9 +70,22 @@ pub const COMPONENT_ASSETS: &[StaticAsset] = &[
     },
 ];
 
-/// Get all core static assets for Stela Shelf (CSS, JS, and components).
+pub const ICON_ASSETS: &[StaticAsset] = &[
+    StaticAsset {
+        path: "icons/lucide.svg",
+        mime: "image/svg+xml",
+        content: tomet_shelf_icons::LUCIDE_SPRITE,
+    },
+    StaticAsset {
+        path: "icons/simple.svg",
+        mime: "image/svg+xml",
+        content: tomet_shelf_icons::SIMPLE_SPRITE,
+    },
+];
+
+/// Get all core static assets for Stela Shelf (CSS, JS, components, and icon sprites).
 pub fn stela_static_assets() -> Vec<StaticAsset> {
-    let mut assets = Vec::with_capacity(2 + COMPONENT_ASSETS.len());
+    let mut assets = Vec::with_capacity(2 + COMPONENT_ASSETS.len() + ICON_ASSETS.len());
     assets.push(StaticAsset {
         path: "shelf.css",
         mime: "text/css; charset=utf-8",
@@ -84,5 +97,6 @@ pub fn stela_static_assets() -> Vec<StaticAsset> {
         content: STELA_SHELL_JS,
     });
     assets.extend_from_slice(COMPONENT_ASSETS);
+    assets.extend_from_slice(ICON_ASSETS);
     assets
 }

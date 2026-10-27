@@ -8,6 +8,10 @@
 
 ===[Module document]
 
+====[Structs]
+
+=====[struct CatalogEntry]
+
 ====[Functions]
 
 =====[fn DocumentView]
@@ -23,14 +27,6 @@
 ====[Functions]
 
 =====[fn HtmlDocument]
-
-==[Module styles]
-
-===[Constants]
-
-====[const LEPTOS_SHELF_CSS]
-
-Stela unified stylesheet for stela-shelf-leptos.
 
 ==[Structs]
 

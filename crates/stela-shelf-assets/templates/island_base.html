@@ -1,8 +1,6 @@
 {% extends "shell_base.html" %}
 
 {% block head_engine %}
-<link rel="stylesheet" href="{% if base_path.is_empty() %}/island.css{% else %}{{ base_path }}/island.css{% endif %}" />
-<script type="module">
-  {{ island_js|safe }}
-</script>
+<link rel="stylesheet" href="{% if base_path.is_empty() %}/island.css{% else %}{{ base_path }}/island.css{% endif %}?v={{ island_css_version }}" />
+<script type="module" src="{% if base_path.is_empty() %}/island.js{% else %}{{ base_path }}/island.js{% endif %}?v={{ island_js_version }}"></script>
 {% endblock %}

@@ -1,13 +1,12 @@
 {% extends "base.html" %}
-{% import "macros.html" as ui %}
 
 {% block title %}{{ book_title }}{% endblock %}
 
 {% block content %}
 <div class="book-shell flex flex-row h-screen w-screen overflow-hidden bg-surface-subtle">
-  <nav class="book-rail-nav w-[38px] min-w-[38px] max-w-[38px] h-screen flex flex-col items-center shrink-0 box-border p-0 z-50 select-none" id="book-rail-nav" aria-label="ナビゲーション">
+  <nav class="book-rail-nav w-[38px] min-w-[38px] max-w-[38px] h-full flex flex-col items-center shrink-0 box-border p-0 z-50 select-none" id="book-rail-nav" aria-label="ナビゲーション">
     <div class="rail-brand w-full flex flex-col items-center border-b border-shell-border box-border">
-      <a href="{% if base_path.is_empty() %}/{% else %}{{ base_path }}/{% endif %}" class="rail-tab rail-tab-title flex flex-col items-center justify-center w-full py-3.5 bg-transparent border-0 box-border text-shell-text font-bold no-underline! cursor-pointer" title="{{ book_title }}">
+      <a href="{{ home_url }}" class="rail-tab rail-tab-title flex flex-col items-center justify-center w-full py-3.5 bg-transparent border-0 box-border text-shell-text font-bold no-underline! cursor-pointer" title="{{ book_title }}">
         <span class="rail-letters rail-letters-brand flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em] font-bold lowercase">
           {% for ch in rail_letters %}
           <span>{{ ch }}</span>
@@ -17,79 +16,105 @@
     </div>
 
     <div class="rail-tools w-full flex flex-col items-center box-border">
-      <a href="{% if base_path.is_empty() %}/{% else %}{{ base_path }}/{% endif %}" class="rail-tab rail-tab-nav is-active flex flex-col items-center py-2.5 text-shell-text no-underline!" title="目次">
+      <button type="button" id="btn-rail-menu" class="rail-tab rail-tab-nav is-active flex flex-col items-center justify-center w-full py-3 bg-transparent border-0 text-shell-text hover:bg-shell-border cursor-pointer" title="目次" aria-label="目次">
         <span class="rail-letters flex flex-col items-center text-[0.72rem] leading-[1.15] tracking-[0.08em]">
           <span>目</span><span>次</span>
         </span>
-      </a>
+      </button>
+    </div>
+
+    <div class="rail-footer mt-auto w-full flex flex-col items-center border-t border-shell-border box-border">
+      <button type="button" class="rail-tab rail-tab-theme theme-toggle-btn grid place-items-center w-full py-3 bg-transparent border-0 text-shell-text hover:bg-shell-border cursor-pointer" title="テーマ切替" aria-label="テーマ切替">
+        <svg class="icon-theme icon-sun" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+        <svg class="icon-theme icon-moon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+      </button>
     </div>
   </nav>
 
-  <aside class="book-pane pane-nav" id="pane-nav">
-    <div class="pane-header">
-      <span class="pane-title text-[0.75rem] font-bold tracking-wider uppercase text-text-muted">Document Catalog</span>
-      <span class="text-[0.65rem] font-semibold px-1.5 py-0.5 rounded bg-surface border border-border text-text-muted">{% block engine_badge %}{% endblock %}</span>
-    </div>
+  <div class="book-view flex-1 min-w-0 flex flex-row h-full overflow-x-auto overflow-y-hidden bg-surface-subtle" id="wiki-book-view">
+    <div class="pane-backdrop" id="pane-nav-backdrop" aria-hidden="true"></div>
 
-    <div class="p-3 pb-0">
-      <div id="search-island" data-index-url="{% if base_path.is_empty() %}/search-index.json{% else %}{{ base_path }}/search-index.json{% endif %}"></div>
-    </div>
+    <aside class="book-pane pane-nav" id="pane-nav">
+      <div class="pane-header pane-header-collapsible" id="header-collapse-nav" title="折りたたむ" role="button" tabindex="0">
+        <span class="pane-title text-[0.75rem] font-bold tracking-wider uppercase text-text-muted">Document Catalog</span>
+        <div class="flex items-center gap-2">
+          <span class="text-[0.65rem] font-semibold px-1.5 py-0.5 rounded bg-surface border border-border text-text-muted">{% block engine_badge %}{% endblock %}</span>
+          <span class="pane-collapse-arrow">◀</span>
+        </div>
+      </div>
 
-    <div class="pane-scroll flex-1 overflow-y-auto p-3 pt-2">
-      <ul class="flex flex-col gap-1 list-none p-0 m-0">
-        {% for entry in entries %}
-        <li>
-          <a
-            href="{{ entry.url }}"
-            class="flex items-center px-2.5 py-1.5 text-sm rounded no-underline text-text hover:bg-surface-subtle transition-colors"
-          >
-            {{ entry.title }}
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </aside>
+      <div class="p-3 pb-0 shrink-0">
+        <div id="search-island" data-index-url="{% if base_path.is_empty() %}/search-index.json{% else %}{{ base_path }}/search-index.json{% endif %}"></div>
+      </div>
 
-  <main class="book-pane pane-content flex-1 flex flex-col h-full bg-bg overflow-hidden" id="pane-content">
-    <header class="pane-header pane-content-header" id="pane-content-header">
-      <span class="text-xs font-semibold uppercase tracking-wider text-text-muted">Index</span>
-    </header>
-
-    <div class="pane-scroll flex-1 overflow-y-auto px-8 py-6">
-      <article class="prose max-w-4xl mx-auto">
-        <h1 class="text-3xl font-extrabold mb-4 pb-2 border-b border-border-subtle">{{ book_title }}</h1>
-        <p class="text-text-muted mb-8">Select a document from the catalog to start reading.</p>
-
-        {% if !sections.is_empty() %}
-        <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 text-text">Sections</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {% for sec in sections %}
-            <div class="p-4 rounded-lg bg-surface border border-border">
-              <h3 class="font-bold text-base mb-1">{{ sec.0 }}</h3>
-              <p class="text-xs text-text-muted">{{ sec.1 }} documents</p>
-            </div>
-            {% endfor %}
-          </div>
-        </section>
-        {% endif %}
-
-        <section>
-          <h2 class="text-xl font-bold mb-4 text-text">All Documents</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {% for entry in entries %}
+      <div class="pane-scroll flex-1 overflow-y-auto p-3 pt-2">
+        <ul class="flex flex-col gap-1 list-none p-0 m-0">
+          {% for entry in entries %}
+          <li{% if entry.depth > 0 %} style="margin-left: {{ entry.depth * 12 }}px"{% endif %}>
             <a
               href="{{ entry.url }}"
-              class="p-3 rounded bg-surface hover:bg-surface-subtle border border-border no-underline text-text transition-colors"
+              class="flex items-center px-2.5 py-1.5 text-sm rounded no-underline! text-text hover:bg-surface-subtle transition-colors"
             >
-              <span class="font-medium text-sm">{{ entry.title }}</span>
+              {{ entry.title }}
             </a>
-            {% endfor %}
-          </div>
-        </section>
-      </article>
-    </div>
-  </main>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </aside>
+
+    <main class="book-pane pane-content flex-1 flex flex-col h-full bg-bg overflow-hidden" id="pane-content">
+      <header class="pane-header pane-content-header" id="pane-content-header">
+        <span class="text-xs font-semibold uppercase tracking-wider text-text-muted py-2">Index</span>
+      </header>
+
+      <div class="pane-scroll pane-scroll-content flex-1 overflow-y-auto px-8 py-6" id="pane-article-scroll">
+        <article class="max-w-4xl mx-auto">
+          <h1 class="text-3xl font-extrabold mt-0 mb-4 pb-2 border-b border-border-subtle">{{ book_title }}</h1>
+          <p class="text-text-muted mb-8">Select a document from the catalog to start reading.</p>
+
+          {% if !sections.is_empty() %}
+          <section class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-text border-0 p-0">Sections</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {% for sec in sections %}
+              <div class="p-4 rounded-lg bg-surface border border-border">
+                <h3 class="font-bold text-base mt-0 mb-1">{{ sec.0 }}</h3>
+                <p class="text-xs text-text-muted m-0">{{ sec.1 }} documents</p>
+              </div>
+              {% endfor %}
+            </div>
+          </section>
+          {% endif %}
+
+          <section>
+            <h2 class="text-xl font-bold mb-4 text-text border-0 p-0">All Documents</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {% for entry in entries %}
+              <a
+                href="{{ entry.url }}"
+                class="p-3 rounded bg-surface hover:bg-surface-subtle border border-border no-underline! text-text transition-colors"
+              >
+                <span class="font-medium text-sm">{{ entry.title }}</span>
+              </a>
+              {% endfor %}
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+  </div>
 </div>
 {% endblock %}

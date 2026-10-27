@@ -6,3 +6,4 @@
 :host([size="lg"]){--tmt-icon-size:var(--tmt-icon-lg,20px);width:var(--tmt-icon-lg,20px);height:var(--tmt-icon-lg,20px)}
 :host([size="xl"]){--tmt-icon-size:var(--tmt-icon-xl,24px);width:var(--tmt-icon-xl,24px);height:var(--tmt-icon-xl,24px)}
 svg{display:block;width:100%;height:100%;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;pointer-events:none}
+:host([pkg="simple"]) svg{fill:currentColor;stroke:none}

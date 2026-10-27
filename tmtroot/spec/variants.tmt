@@ -9,24 +9,35 @@
 @table
 |[ variant\feat   ][ SSG ][ SPA ][ SSR ][ withoutJS ][ withWASM ]
 |[ Web Components ][ o   ][ x   ][ o   ][ o         ][ x        ]
-|[ Leptos         ][ o   ][ o   ][ x   ][ o         ][ o        ]
+|[ Leptos         ][ o   ][ x   ][ o   ][ o         ][ x        ]
 |[ HTMX           ][ o   ][ x   ][ o   ][ o         ][ x        ]
-|[ Svelte         ][     ][     ][     ][ x         ][ o        ]
-|[ SolidJS        ][     ][     ][     ][ x         ][ o        ]
+|[ Svelte         ][ o   ][ x   ][ o   ][ o         ][ x        ]
+|[ SolidJS        ][ o   ][ x   ][ o   ][ o         ][ x        ]
 
 =[ Variants ]
 
 ==[ Web Components ]
 
-- Javascriptなしでも閲覧可能である
-- ビルド時間が長い
+- Declarative Shadow DOM と Web Components によるスタイル完全カプセル化
+- JavaScript なしでも静的コンテンツを完全表示可能
+- ブックビューとクラシックビューの双方向切り替えに対応
 
 ==[ Leptos ]
 
-- Rustで完結
+- Full-Rust Leptos コンポーネントによる型安全な SSR / SSG レンダリング
+- 外部テンプレートエンジンに依存しない統一実装
 
 ==[ HTMX ]
 
+- HTML-First 思想による軽量な部分スワップ
+- 最小限のクライアントスクリプトとサーバー主導の高速な画面遷移
+
 ==[ Svelte ]
 
+- アイランドアーキテクチャ（Islands Architecture）を採用
+- 静的 HTML ドキュメント + クライアントサイド検索モーダルアイランド
+
 ==[ SolidJS ]
+
+- アイランドアーキテクチャ（Islands Architecture）を採用
+- 細粒度リアクティビティによるゼロオーバーヘッド検索アイランド

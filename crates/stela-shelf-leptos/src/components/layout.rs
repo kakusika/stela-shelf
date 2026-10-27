@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use stela_shelf_assets::{STELA_CSS_VERSION, STELA_SHELL_JS_VERSION};
 
 #[component]
 pub fn HtmlDocument(
@@ -7,16 +8,9 @@ pub fn HtmlDocument(
     base_path: String,
     children: Children,
 ) -> impl IntoView {
-    let css_path = if base_path.is_empty() {
-        "/shelf.css".to_string()
-    } else {
-        format!("{}/shelf.css", base_path.trim_end_matches('/'))
-    };
-    let js_path = if base_path.is_empty() {
-        "/stela-shell.js".to_string()
-    } else {
-        format!("{}/stela-shell.js", base_path.trim_end_matches('/'))
-    };
+    let prefix = base_path.trim_end_matches('/');
+    let css_path = format!("{prefix}/shelf.css?v={}", *STELA_CSS_VERSION);
+    let js_path = format!("{prefix}/stela-shell.js?v={}", *STELA_SHELL_JS_VERSION);
 
     view! {
         <!DOCTYPE html>
@@ -29,12 +23,17 @@ pub fn HtmlDocument(
                   document.documentElement.classList.replace('no-js', 'js');
                   try {
                     const savedTheme = localStorage.getItem('shelf-theme');
-                    if (savedTheme === 'dark' || savedTheme === 'light') {
-                      document.documentElement.setAttribute('data-theme', savedTheme);
-                    }
-                    let shellColor = localStorage.getItem('shelf-shell-color');
-                    let shellPattern = localStorage.getItem('shelf-shell-pattern');
-                    let shellContrast = localStorage.getItem('shelf-shell-contrast');
+                    const resolvedTheme =
+                      savedTheme === 'dark' || savedTheme === 'light'
+                        ? savedTheme
+                        : window.matchMedia('(prefers-color-scheme: dark)').matches
+                          ? 'dark'
+                          : 'light';
+                    document.documentElement.setAttribute('data-theme', resolvedTheme);
+
+                    const shellColor = localStorage.getItem('shelf-shell-color');
+                    const shellPattern = localStorage.getItem('shelf-shell-pattern');
+                    const shellContrast = localStorage.getItem('shelf-shell-contrast');
                     if (shellColor && shellColor !== 'slate') {
                       document.documentElement.setAttribute('data-shell-color', shellColor);
                     }
@@ -43,6 +42,11 @@ pub fn HtmlDocument(
                     }
                     if (shellContrast === 'high') {
                       document.documentElement.setAttribute('data-shell-contrast', 'high');
+                    }
+
+                    const savedNav = localStorage.getItem('wiki-pane-nav-collapsed');
+                    if (savedNav !== null ? savedNav === 'true' : window.innerWidth <= 768) {
+                      document.documentElement.setAttribute('data-nav-collapsed', 'true');
                     }
                   } catch {}
                 "/>

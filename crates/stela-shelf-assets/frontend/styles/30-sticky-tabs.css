@@ -1041,7 +1041,8 @@ html[data-view="classic"] .classic-sticky-tabs .sticky-tab-node:not(.is-active):
   border-bottom: none;
 }
 :root[data-shell-contrast="high"] .sticky-edge-btn {
-  border: 1px solid var(--border);
-  border-bottom: none;
+  --tmt-btn-border-width: 1px 1px 0 1px;
+  --tmt-btn-border: var(--border);
+  --tmt-btn-hover-border: var(--link);
 }
 

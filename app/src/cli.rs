@@ -26,7 +26,7 @@ pub enum Commands {
         #[arg(long)]
         strict: bool,
 
-        /// Shelf engine to use (e.g. "webcomponents", "leptos", "htmx", "islands")
+        /// Shelf engine to use (e.g. "webcomponents", "leptos", "htmx", "svelte", "solid")
         #[arg(short = 'e', long)]
         engine: Option<String>,
     },
@@ -50,7 +50,7 @@ pub enum Commands {
         #[arg(short, long, default_value_t = 3000)]
         port: u16,
 
-        /// Shelf engine to use (e.g. "webcomponents", "leptos", "htmx", "islands")
+        /// Shelf engine to use (e.g. "webcomponents", "leptos", "htmx", "svelte", "solid")
         #[arg(short = 'e', long)]
         engine: Option<String>,
     },

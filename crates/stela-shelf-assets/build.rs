@@ -21,8 +21,10 @@ fn main() {
         "../stela-shelf-htmx/templates",
         "../stela-shelf-svelte/src",
         "../stela-shelf-svelte/templates",
+        "../stela-shelf-svelte/ui",
         "../stela-shelf-solid/src",
         "../stela-shelf-solid/templates",
+        "../stela-shelf-solid/ui",
     ];
     for rel in watched_paths {
         let p = root.join(rel);

@@ -10,10 +10,6 @@
 
 ===[struct PageTemplate]
 
-===[struct ArticleFragmentTemplate]
-
-===[struct TocFragmentTemplate]
-
 ===[struct IndexTemplate]
 
 ===[struct SveltePageRenderer]
@@ -37,5 +33,9 @@ Bundled CSS stylesheet for Svelte search island.
 ===[const ISLAND_JS]
 
 Bundled Svelte Search Island JavaScript.
+
+===[const ISLAND_CSS_VERSION]
+
+===[const ISLAND_JS_VERSION]
 
 ===[const SVELTE_STATIC_ASSETS]

@@ -21,8 +21,10 @@ let
       (root + "/crates/stela-shelf-htmx/templates")
       (root + "/crates/stela-shelf-svelte/assets")
       (root + "/crates/stela-shelf-svelte/templates")
+      (root + "/crates/stela-shelf-svelte/ui")
       (root + "/crates/stela-shelf-solid/assets")
       (root + "/crates/stela-shelf-solid/templates")
+      (root + "/crates/stela-shelf-solid/ui")
     ];
   };
 

@@ -94,7 +94,7 @@
     width: 100%;
   }
   /* Prevent iOS Safari 16px input zoom */
-  #wiki-search-input,
+  .wiki-search-input,
   .lookup-filter-input,
   input[type="search"],
   input[type="text"] {
@@ -170,15 +170,6 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Floating controls (search + view switchers) float in the content
-     column's right-hand margin on desktop; at this width the content
-     column fills the screen, so a fixed-position float would sit on top
-     of whatever's underneath it -- the sticky-tabs bar included -- for as
-     long as the reader stays on the page. Docked to the bottom edge
-     instead, full width, it never overlaps page content. Dragging it
-     out of the way no longer makes sense once it's docked, so the handle
-     (and any position a desktop drag saved earlier -- see
-     30-floating-controls.js's isNarrowViewport check) is dropped too. */
   .floating-controls {
     top: auto !important;
     left: 0 !important;
@@ -202,7 +193,7 @@
     min-width: 0;
   }
   .search-input-wrapper,
-  #wiki-search-input {
+  .wiki-search-input {
     width: 100%;
   }
   /* Mobile search overlay: full-width sheet anchored above the bottom dock */
@@ -294,6 +285,7 @@
     transform: scaleY(1.129032); /* 35 / 31 */
   }
   .sticky-edge-btn {
+    --tmt-control-sm: 40px;
     width: 40px;
     height: 40px;
   }
