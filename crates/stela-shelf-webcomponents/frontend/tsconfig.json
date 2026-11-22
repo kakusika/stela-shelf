@@ -9,8 +9,5 @@
     "skipLibCheck": true,
     "isolatedModules": true
   },
-  "include": [
-    "src/**/*",
-    "../../stela-shelf-assets/frontend/scripts/**/*.ts"
-  ]
+  "include": ["src/**/*", "../../stela-shelf-assets/frontend/scripts/**/*.ts"]
 }

@@ -1,4 +1,11 @@
-import { createSignal, createMemo, onMount, onCleanup, For, Show } from "solid-js";
+import {
+  createSignal,
+  createMemo,
+  onMount,
+  onCleanup,
+  For,
+  Show,
+} from "solid-js";
 import { Portal } from "solid-js/web";
 import {
   filterAndRankDocs,
@@ -158,7 +165,11 @@ export function SearchIsland(props: { indexUrl?: string }) {
                   onInput={(e) => handleInput(e.currentTarget.value)}
                   autocomplete="off"
                 />
-                <button type="button" class="island-modal-close" onClick={closeSearch}>
+                <button
+                  type="button"
+                  class="island-modal-close"
+                  onClick={closeSearch}
+                >
                   Esc
                 </button>
               </div>
@@ -170,11 +181,14 @@ export function SearchIsland(props: { indexUrl?: string }) {
                     when={query().trim() !== ""}
                     fallback={
                       <div class="island-hint-state">
-                        Quick navigation: Type a keyword, use ↑↓ to navigate, Enter to select
+                        Quick navigation: Type a keyword, use ↑↓ to navigate,
+                        Enter to select
                       </div>
                     }
                   >
-                    <div class="island-empty-state">No matching documents found</div>
+                    <div class="island-empty-state">
+                      No matching documents found
+                    </div>
                   </Show>
                 }
               >
@@ -190,11 +204,15 @@ export function SearchIsland(props: { indexUrl?: string }) {
                           <div class="island-result-header">
                             <span class="island-result-title">{doc.title}</span>
                             <Show when={doc.section}>
-                              <span class="island-result-section">{doc.section}</span>
+                              <span class="island-result-section">
+                                {doc.section}
+                              </span>
                             </Show>
                           </div>
                           <Show when={doc.headings && doc.headings.length > 0}>
-                            <div class="island-result-sub">{doc.headings!.slice(0, 3).join(" · ")}</div>
+                            <div class="island-result-sub">
+                              {doc.headings!.slice(0, 3).join(" · ")}
+                            </div>
                           </Show>
                         </a>
                       </li>

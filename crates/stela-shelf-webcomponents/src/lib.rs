@@ -320,8 +320,11 @@ impl WebComponentsRenderer {
             content: BOOK_JS,
         });
 
+        let mut config = config.clone();
+        stela_shelf_assets::i18n::apply_ui_defaults(&mut config.ui.strings, &config.book.lang);
+
         Ok(Self {
-            config: config.clone(),
+            config,
             clean_url_prefix: full_url_prefix.clone(),
             full_url_prefix,
             home_url,
@@ -601,5 +604,34 @@ mod tests {
         let renderer = WebComponentsRenderer::new(&config, false).unwrap();
         let index_html = PageRenderer::render_index(&renderer, &[], &[]).unwrap();
         assert!(index_html.contains("href=\"/sub/shelf.css?v="));
+    }
+
+    #[test]
+    fn renderer_applies_ui_i18n_defaults_and_preserves_overrides() {
+        let mut config = BookConfig::default();
+        config.book.lang = "en".into();
+        config
+            .ui
+            .strings
+            .insert("pane.toc".into(), "Custom Outline".into());
+        let renderer = WebComponentsRenderer::new(&config, false).unwrap();
+        assert_eq!(
+            renderer
+                .config
+                .ui
+                .strings
+                .get("pane.toc")
+                .map(String::as_str),
+            Some("Custom Outline")
+        );
+        assert_eq!(
+            renderer
+                .config
+                .ui
+                .strings
+                .get("index.sections")
+                .map(String::as_str),
+            Some("Sections")
+        );
     }
 }

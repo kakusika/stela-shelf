@@ -1,41 +1,40 @@
 [workspace]
-resolver = "3"
-members = ["app", "benches", "crates/*"]
+resolver        = "3"
+members         = ["app", "benches", "crates/*"]
 default-members = ["app"]
 
 [workspace.package]
-version = "0.1.0"
-edition = "2024"
+version      = "0.1.0"
+edition      = "2024"
 rust-version = "1.85"
 
 [workspace.dependencies]
-stela-shelf-core = { path = "crates/stela-shelf-core" }
-stela-shelf-assets = { path = "crates/stela-shelf-assets" }
+stela-shelf-assets        = { path = "crates/stela-shelf-assets" }
+stela-shelf-core          = { path = "crates/stela-shelf-core" }
+stela-shelf-htmx          = { path = "crates/stela-shelf-htmx" }
+stela-shelf-leptos        = { path = "crates/stela-shelf-leptos" }
+stela-shelf-solid         = { path = "crates/stela-shelf-solid" }
+stela-shelf-svelte        = { path = "crates/stela-shelf-svelte" }
 stela-shelf-webcomponents = { path = "crates/stela-shelf-webcomponents" }
-stela-shelf-leptos = { path = "crates/stela-shelf-leptos" }
-stela-shelf-htmx = { path = "crates/stela-shelf-htmx" }
-stela-shelf-svelte = { path = "crates/stela-shelf-svelte" }
-stela-shelf-solid = { path = "crates/stela-shelf-solid" }
 
 #= Tomet Shelf (Headless Engine & Subcrates)
-tomet-shelf-headless = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
 tomet-shelf-document = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
-tomet-shelf-icons = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
-tomet-shelf-render = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
-tomet-shelf-config = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
+tomet-shelf-headless = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
+tomet-shelf-icons    = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
+tomet-shelf-render   = { git = "https://github.com/tomet-lang/tomet-shelf.git" }
 
 #= Crates.io
-anyhow = "1.0"
-askama = "0.16"
-async-trait = "0.1"
-clap = { version = "4.5", features = ["derive"] }
-divan = "0.1"
-leptos = { version = "0.7.8", default-features = false, features = ["ssr"] }
-serde_json = { version = "1.0", features = ["preserve_order"] }
-tempfile = "3"
-tokio = { version = "1.42", features = ["full"] }
-toml = "0.8"
-tracing = "0.1"
+anyhow             = "1.0"
+askama             = "0.16"
+async-trait        = "0.1"
+clap               = { version = "4.5", features = ["derive"] }
+divan              = "0.1"
+leptos             = { version = "0.7.8", default-features = false, features = ["ssr"] }
+serde_json         = { version = "1.0", features = ["preserve_order"] }
+tempfile           = "3"
+tokio              = { version = "1.42", features = ["full"] }
+toml               = "0.8"
+tracing            = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 [profile.dev.package."*"]

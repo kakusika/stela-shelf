@@ -1,6 +1,6 @@
 ::kind(api)
 
-::meta{crate: stela-shelf-core, dependencies: list(), dependents: list(stela-shelf-benches, stela-shelf-cli, stela-shelf-htmx, stela-shelf-leptos, stela-shelf-solid, stela-shelf-svelte, stela-shelf-webcomponents)}
+::meta(crate: stela-shelf-core, dependencies: (), dependents: (stela-shelf-benches, stela-shelf-cli, stela-shelf-htmx, stela-shelf-leptos, stela-shelf-solid, stela-shelf-svelte, stela-shelf-webcomponents))
 
 =[stela-shelf-core]
 

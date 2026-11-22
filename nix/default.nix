@@ -53,8 +53,23 @@ flake-parts.lib.mkFlake { inherit inputs; } {
         ];
       };
 
-      treefmt = import ./formatter.nix {
-        inherit (sisho) tomet;
-      };
+      treefmt =
+        let
+          base = import ./formatter.nix {
+            inherit (sisho) tomet;
+          };
+        in
+        base
+        // {
+          settings = base.settings // {
+            global = base.settings.global // {
+              excludes = base.settings.global.excludes ++ [
+                "crates/stela-shelf-htmx/assets/htmx.min.js"
+                "crates/stela-shelf-solid/assets/island.js"
+                "crates/stela-shelf-svelte/assets/island.js"
+              ];
+            };
+          };
+        };
     };
 }

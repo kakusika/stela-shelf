@@ -2,7 +2,7 @@
  * Shared DOM, storage, hash, scroll-spy, clipboard, and document-cache utilities.
  */
 
-import { normalizePath } from './env';
+import { normalizePath } from "./env";
 
 export interface TmtStorage {
   get(key: string): string | null;
@@ -64,9 +64,12 @@ export const session: TmtStorage = {
  */
 export function ensureShadowRoot(el: HTMLElement): void {
   if (el.shadowRoot) return;
-  const tpl = el.querySelector<HTMLTemplateElement>(':scope > template[shadowrootmode]');
+  const tpl = el.querySelector<HTMLTemplateElement>(
+    ":scope > template[shadowrootmode]",
+  );
   if (!tpl) return;
-  const mode = tpl.getAttribute('shadowrootmode') === 'closed' ? 'closed' : 'open';
+  const mode =
+    tpl.getAttribute("shadowrootmode") === "closed" ? "closed" : "open";
   const shadow = el.attachShadow({ mode });
   shadow.appendChild(tpl.content.cloneNode(true));
   tpl.remove();
@@ -77,7 +80,9 @@ export interface ThrottledFn<T extends (...args: never[]) => void> {
   cancel(): void;
 }
 
-export function rafThrottle<T extends (...args: never[]) => void>(fn: T): ThrottledFn<T> {
+export function rafThrottle<T extends (...args: never[]) => void>(
+  fn: T,
+): ThrottledFn<T> {
   let frame: number | null = null;
   const throttled = ((...args: Parameters<T>) => {
     if (frame !== null) return;
@@ -97,8 +102,8 @@ export function rafThrottle<T extends (...args: never[]) => void>(fn: T): Thrott
 }
 
 export function readHash(): string {
-  const raw = (window.location.hash || '').slice(1);
-  if (!raw) return '';
+  const raw = (window.location.hash || "").slice(1);
+  if (!raw) return "";
   try {
     return decodeURIComponent(raw);
   } catch {
@@ -109,7 +114,7 @@ export function readHash(): string {
 export function syncHeadingHash(id: string): void {
   if (!id || readHash() === id) return;
   try {
-    history.replaceState(null, '', `#${encodeURIComponent(id)}`);
+    history.replaceState(null, "", `#${encodeURIComponent(id)}`);
   } catch {
     // Ignore file:// or sandboxed iframe history restrictions
   }
@@ -123,13 +128,17 @@ export function syncHeadingHash(id: string): void {
 export function computeScrollOffset(
   container: HTMLElement | Window,
   target: Element,
-  padding = 16
+  padding = 16,
 ): number {
   if (container === window || container === document.documentElement) {
-    return Math.max(0, target.getBoundingClientRect().top + window.scrollY - padding);
+    return Math.max(
+      0,
+      target.getBoundingClientRect().top + window.scrollY - padding,
+    );
   }
   const el = container as HTMLElement;
-  const delta = target.getBoundingClientRect().top - el.getBoundingClientRect().top;
+  const delta =
+    target.getBoundingClientRect().top - el.getBoundingClientRect().top;
   return Math.max(0, el.scrollTop + delta - padding);
 }
 
@@ -138,14 +147,22 @@ export function computeScrollOffset(
  * (`#wiki-classic-view` vs `#wiki-book-view`), preventing duplicate IDs in the
  * hidden view from returning `0` bounding coordinates.
  */
-export function findHeadingInView(id: string, classicMode?: boolean): HTMLElement | null {
+export function findHeadingInView(
+  id: string,
+  classicMode?: boolean,
+): HTMLElement | null {
   if (!id) return null;
   const isClassic =
-    classicMode ?? document.documentElement.getAttribute('data-view') === 'classic';
-  const root = document.getElementById(isClassic ? 'wiki-classic-view' : 'wiki-book-view');
+    classicMode ??
+    document.documentElement.getAttribute("data-view") === "classic";
+  const root = document.getElementById(
+    isClassic ? "wiki-classic-view" : "wiki-book-view",
+  );
   if (root) {
     try {
-      const scoped = root.querySelector<HTMLElement>(`[id="${CSS.escape(id)}"]`);
+      const scoped = root.querySelector<HTMLElement>(
+        `[id="${CSS.escape(id)}"]`,
+      );
       if (scoped) return scoped;
     } catch {
       // Fall back to document.getElementById
@@ -157,9 +174,9 @@ export function findHeadingInView(id: string, classicMode?: boolean): HTMLElemen
 export function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   return (
-    target.tagName === 'INPUT' ||
-    target.tagName === 'TEXTAREA' ||
-    target.tagName === 'SELECT' ||
+    target.tagName === "INPUT" ||
+    target.tagName === "TEXTAREA" ||
+    target.tagName === "SELECT" ||
     target.isContentEditable
   );
 }
@@ -169,21 +186,23 @@ export async function copyTextToClipboard(text: string): Promise<void> {
     await navigator.clipboard.writeText(text);
     return;
   }
-  const textarea = document.createElement('textarea');
+  const textarea = document.createElement("textarea");
   textarea.value = text;
-  textarea.style.position = 'fixed';
-  textarea.style.opacity = '0';
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
   document.body.appendChild(textarea);
   textarea.select();
-  document.execCommand('copy');
+  document.execCommand("copy");
   textarea.remove();
 }
 
 const docCache = new Map<string, Document>();
 
-export async function fetchDocument(url: string | null | undefined): Promise<Document | null> {
+export async function fetchDocument(
+  url: string | null | undefined,
+): Promise<Document | null> {
   if (!url) return null;
-  const cleanUrl = url.split('#')[0];
+  const cleanUrl = url.split("#")[0];
   const key = normalizePath(cleanUrl) || cleanUrl;
   const cached = docCache.get(key);
   if (cached) return cached;
@@ -192,7 +211,7 @@ export async function fetchDocument(url: string | null | undefined): Promise<Doc
     const res = await fetch(cleanUrl);
     if (!res.ok) return null;
     const html = await res.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const doc = new DOMParser().parseFromString(html, "text/html");
     docCache.set(key, doc);
     return doc;
   } catch {
@@ -263,7 +282,9 @@ export function createScrollSpy({
     if (n === 0) return null;
 
     const containerTop =
-      container !== window ? (container as HTMLElement).getBoundingClientRect().top : 0;
+      container !== window
+        ? (container as HTMLElement).getBoundingClientRect().top
+        : 0;
     const line = containerTop + headingLine;
 
     if (headingCursor >= n) headingCursor = n - 1;
@@ -291,10 +312,10 @@ export function createScrollSpy({
     if (!currentId) return;
 
     const active = headingTargets.find((item) => item.id === currentId);
-    if (active?.link && !active.link.classList.contains('is-active')) {
-      tocLinks.forEach((l) => l.classList.remove('is-active'));
-      active.link.classList.add('is-active');
-      active.link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (active?.link && !active.link.classList.contains("is-active")) {
+      tocLinks.forEach((l) => l.classList.remove("is-active"));
+      active.link.classList.add("is-active");
+      active.link.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
 
     onActiveChange?.(currentId, active);
@@ -308,11 +329,11 @@ export function createScrollSpy({
 
   const prevHandler = activeScrollHandlers.get(scrollTarget);
   if (prevHandler) {
-    scrollTarget.removeEventListener('scroll', prevHandler);
+    scrollTarget.removeEventListener("scroll", prevHandler);
   }
   const listener: EventListener = () => throttledUpdate();
   activeScrollHandlers.set(scrollTarget, listener);
-  scrollTarget.addEventListener('scroll', listener, { passive: true });
+  scrollTarget.addEventListener("scroll", listener, { passive: true });
 
   return {
     update,
@@ -321,7 +342,7 @@ export function createScrollSpy({
     destroy: () => {
       throttledUpdate.cancel();
       if (activeScrollHandlers.get(scrollTarget) === listener) {
-        scrollTarget.removeEventListener('scroll', listener);
+        scrollTarget.removeEventListener("scroll", listener);
         activeScrollHandlers.delete(scrollTarget);
       }
       if (clickTimer !== null) {

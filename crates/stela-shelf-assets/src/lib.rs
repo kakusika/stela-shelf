@@ -1,6 +1,8 @@
 use std::sync::LazyLock;
 pub use tomet_shelf_headless::assets::{StaticAsset, content_version, write_if_changed};
 
+pub mod i18n;
+
 //==============================================================================
 // Core Stela Stylesheet
 //==============================================================================

@@ -2,9 +2,9 @@
  * Hover Page Preview card (`#wiki-page-preview`) with Center Peek launch trigger.
  */
 
-import { openCenterPeek } from './center-peek';
-import { fetchDocument } from './dom';
-import { isHomePath, isInAppHref, normalizePath } from './env';
+import { openCenterPeek } from "./center-peek";
+import { fetchDocument } from "./dom";
+import { isHomePath, isInAppHref, normalizePath } from "./env";
 
 interface PreviewData {
   title: string;
@@ -29,25 +29,25 @@ export function invalidatePreviewCache(url?: string): void {
 }
 
 export function hidePreviewCard(): void {
-  const card = document.getElementById('wiki-page-preview');
+  const card = document.getElementById("wiki-page-preview");
   if (card) card.hidden = true;
 }
 
 export function initPagePreview(): void {
-  const previewCardEl = document.getElementById('wiki-page-preview');
+  const previewCardEl = document.getElementById("wiki-page-preview");
   if (previewCardEl && !boundPreviewCards.has(previewCardEl)) {
     boundPreviewCards.add(previewCardEl);
-    previewCardEl.addEventListener('click', () => {
+    previewCardEl.addEventListener("click", () => {
       const href = previewCardEl.dataset.href;
       if (href) {
         hidePreviewCard();
         void openCenterPeek(href);
       }
     });
-    previewCardEl.addEventListener('mouseleave', () => {
+    previewCardEl.addEventListener("mouseleave", () => {
       if (hoverTimer !== null) window.clearTimeout(hoverTimer);
       hoverTimer = window.setTimeout(() => {
-        if (!previewCardEl.matches(':hover')) {
+        if (!previewCardEl.matches(":hover")) {
           hidePreviewCard();
         }
       }, 150);
@@ -57,29 +57,32 @@ export function initPagePreview(): void {
   if (previewGlobalInitialized) return;
   previewGlobalInitialized = true;
 
-  window.addEventListener('scroll', hidePreviewCard, { capture: true, passive: true });
-  document.addEventListener('click', (e) => {
-    const card = document.getElementById('wiki-page-preview');
+  window.addEventListener("scroll", hidePreviewCard, {
+    capture: true,
+    passive: true,
+  });
+  document.addEventListener("click", (e) => {
+    const card = document.getElementById("wiki-page-preview");
     const targetNode = e.target instanceof Node ? e.target : null;
     if (card && !card.contains(targetNode)) {
       hidePreviewCard();
     }
   });
 
-  document.addEventListener('mouseover', (e) => {
-    const card = document.getElementById('wiki-page-preview');
+  document.addEventListener("mouseover", (e) => {
+    const card = document.getElementById("wiki-page-preview");
     if (!card) return;
 
     const eventEl = e.target instanceof Element ? e.target : null;
-    const link = eventEl?.closest('a') ?? null;
+    const link = eventEl?.closest("a") ?? null;
     if (!link) return;
 
     const validContainer = link.closest(
-      'article, #pane-panel-lookup, #wiki-search-results, #pane-recent-section, .backlink-items, #pane-panel-index'
+      "article, #pane-panel-lookup, #wiki-search-results, #pane-recent-section, .backlink-items, #pane-panel-index",
     );
     if (!validContainer) return;
 
-    const href = link.getAttribute('href');
+    const href = link.getAttribute("href");
     if (!href || !isInAppHref(href) || isHomePath(href)) return;
 
     activeLink = link;
@@ -95,19 +98,21 @@ export function initPagePreview(): void {
         if (!doc) return;
 
         const title =
-          doc.querySelector('.content-title')?.textContent?.trim() ||
-          doc.querySelector('h1')?.textContent?.trim() ||
-          '';
+          doc.querySelector(".content-title")?.textContent?.trim() ||
+          doc.querySelector("h1")?.textContent?.trim() ||
+          "";
         const section =
-          doc.querySelector('.crumb-val')?.textContent?.trim() ||
-          doc.querySelector('.breadcrumb-section')?.textContent?.trim() ||
-          '';
+          doc.querySelector(".crumb-val")?.textContent?.trim() ||
+          doc.querySelector(".breadcrumb-section")?.textContent?.trim() ||
+          "";
         const excerpt =
-          doc.querySelector('article p, article li, article blockquote')?.textContent?.trim() || '';
+          doc
+            .querySelector("article p, article li, article blockquote")
+            ?.textContent?.trim() || "";
         const imgEl = doc.querySelector(
-          '.hero-banner-img, .infobox-main-img, .hero-avatar img, article img:not(.tm-link-icon):not(.tm-doc-icon-img)'
+          ".hero-banner-img, .infobox-main-img, .hero-avatar img, article img:not(.tm-link-icon):not(.tm-doc-icon-img)",
         );
-        const image = imgEl?.getAttribute('src') || '';
+        const image = imgEl?.getAttribute("src") || "";
 
         data = { title, section, excerpt, image };
         previewCache.set(cacheKey, data);
@@ -116,13 +121,14 @@ export function initPagePreview(): void {
       if (activeLink !== link) return;
       if (!data.excerpt && !data.title) return;
 
-      const titleEl = card.querySelector('.preview-title');
-      const sectionEl = card.querySelector('.preview-section');
-      const bodyEl = card.querySelector('.preview-body');
-      const thumbEl = card.querySelector<HTMLImageElement>('.preview-thumb');
+      const titleEl = card.querySelector(".preview-title");
+      const sectionEl = card.querySelector(".preview-section");
+      const bodyEl = card.querySelector(".preview-body");
+      const thumbEl = card.querySelector<HTMLImageElement>(".preview-thumb");
 
       if (titleEl) titleEl.textContent = data.title;
-      if (sectionEl) sectionEl.textContent = data.section ? `(${data.section})` : '';
+      if (sectionEl)
+        sectionEl.textContent = data.section ? `(${data.section})` : "";
       if (bodyEl) bodyEl.textContent = data.excerpt;
 
       if (thumbEl) {
@@ -130,7 +136,7 @@ export function initPagePreview(): void {
           thumbEl.src = data.image;
           thumbEl.hidden = false;
         } else {
-          thumbEl.src = '';
+          thumbEl.src = "";
           thumbEl.hidden = true;
         }
       }
@@ -141,7 +147,9 @@ export function initPagePreview(): void {
       let top = rect.bottom + 8;
 
       const isSidebar = Boolean(
-        link.closest('#pane-panel-lookup, #pane-recent-section, #pane-panel-links, #pane-panel-index')
+        link.closest(
+          "#pane-panel-lookup, #pane-recent-section, #pane-panel-links, #pane-panel-index",
+        ),
       );
       if (isSidebar && rect.right + cardWidth + 24 <= window.innerWidth) {
         left = rect.right + 12;
@@ -163,17 +171,17 @@ export function initPagePreview(): void {
     }, 250);
   });
 
-  document.addEventListener('mouseout', (e) => {
-    const card = document.getElementById('wiki-page-preview');
+  document.addEventListener("mouseout", (e) => {
+    const card = document.getElementById("wiki-page-preview");
     if (!card) return;
 
     const eventEl = e.target instanceof Element ? e.target : null;
-    const link = eventEl?.closest('a') ?? null;
+    const link = eventEl?.closest("a") ?? null;
     if (link && link === activeLink) {
       activeLink = null;
       if (hoverTimer !== null) window.clearTimeout(hoverTimer);
       hoverTimer = window.setTimeout(() => {
-        if (!card.matches(':hover')) {
+        if (!card.matches(":hover")) {
           hidePreviewCard();
         }
       }, 150);

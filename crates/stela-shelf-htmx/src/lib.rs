@@ -105,7 +105,8 @@ pub struct HtmxPageRenderer {
 }
 
 impl HtmxPageRenderer {
-    pub fn new(config: BookConfig) -> Self {
+    pub fn new(mut config: BookConfig) -> Self {
+        stela_shelf_assets::i18n::apply_ui_defaults(&mut config.ui.strings, &config.book.lang);
         let rail_title = config
             .ui
             .rail_title

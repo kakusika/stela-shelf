@@ -3,10 +3,10 @@
  * Clean, strictly-typed ES modules with zero `window.TMT` global namespace pollution.
  */
 
-import { registerCustomElements } from './components';
-import { initPage } from './init';
-import { setupDevServerLiveReload } from './live-reload';
-import { navigateTo, setupClientRouter } from './router';
+import { registerCustomElements } from "./components";
+import { initPage } from "./init";
+import { setupDevServerLiveReload } from "./live-reload";
+import { navigateTo, setupClientRouter } from "./router";
 
 registerCustomElements();
 
@@ -19,8 +19,8 @@ function bootstrap(): void {
   setupDevServerLiveReload(() => initPage(handleNavigate));
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bootstrap);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootstrap);
 } else {
   bootstrap();
 }

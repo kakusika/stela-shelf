@@ -1,39 +1,39 @@
 [package]
-name = "stela-shelf-cli"
-version.workspace = true
-edition.workspace = true
+name                   = "stela-shelf-cli"
+version.workspace      = true
+edition.workspace      = true
 rust-version.workspace = true
-description = "A stone-inspired book & wiki generator for Tomet"
+description            = "A stone-inspired book & wiki generator for Tomet"
 
 [[bin]]
 name = "stela-shelf"
 path = "src/main.rs"
 
 [dependencies]
-stela-shelf-core = { workspace = true }
+stela-shelf-core          = { workspace = true }
+stela-shelf-htmx          = { workspace = true, optional = true }
+stela-shelf-leptos        = { workspace = true, optional = true }
+stela-shelf-solid         = { workspace = true, optional = true }
+stela-shelf-svelte        = { workspace = true, optional = true }
 stela-shelf-webcomponents = { workspace = true, optional = true }
-stela-shelf-leptos = { workspace = true, optional = true }
-stela-shelf-htmx = { workspace = true, optional = true }
-stela-shelf-svelte = { workspace = true, optional = true }
-stela-shelf-solid = { workspace = true, optional = true }
-tomet-shelf-headless = { workspace = true }
+tomet-shelf-headless      = { workspace = true }
 
 #= Crates.io
-anyhow = { workspace = true }
-clap = { workspace = true }
-tokio = { workspace = true }
-toml = { workspace = true }
-tracing = { workspace = true }
+anyhow             = { workspace = true }
+clap               = { workspace = true }
+tokio              = { workspace = true }
+toml               = { workspace = true }
+tracing            = { workspace = true }
 tracing-subscriber = { workspace = true }
 
 [features]
-default = ["all"]
-all = ["webcomponents", "leptos", "htmx", "svelte", "solid"]
-webcomponents = ["dep:stela-shelf-webcomponents"]
-leptos = ["dep:stela-shelf-leptos"]
-htmx = ["dep:stela-shelf-htmx"]
-svelte = ["dep:stela-shelf-svelte"]
-solid = ["dep:stela-shelf-solid"]
-islands = ["svelte"]
-embedded-search = ["tomet-shelf-headless/embedded-search"]
+default                  = ["all"]
+all                      = ["webcomponents", "leptos", "htmx", "svelte", "solid"]
+webcomponents            = ["dep:stela-shelf-webcomponents"]
+leptos                   = ["dep:stela-shelf-leptos"]
+htmx                     = ["dep:stela-shelf-htmx"]
+svelte                   = ["dep:stela-shelf-svelte"]
+solid                    = ["dep:stela-shelf-solid"]
+islands                  = ["svelte"]
+embedded-search          = ["tomet-shelf-headless/embedded-search"]
 embedded-search-extended = ["tomet-shelf-headless/embedded-search-extended"]

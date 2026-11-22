@@ -34,4 +34,6 @@ await build({
   },
 });
 
-console.log("Done! Output generated at crates/stela-shelf-solid/assets/island.js");
+console.log(
+  "Done! Output generated at crates/stela-shelf-solid/assets/island.js",
+);

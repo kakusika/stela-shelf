@@ -25,11 +25,16 @@ function tokenizeQuery(query: string): string[] {
   if (!q) return [];
 
   const SegmenterCtor = (
-    Intl as unknown as { Segmenter?: new (locales?: string, options?: { granularity: string }) => SegmenterLike }
+    Intl as unknown as {
+      Segmenter?: new (
+        locales?: string,
+        options?: { granularity: string },
+      ) => SegmenterLike;
+    }
   ).Segmenter;
 
-  if (typeof SegmenterCtor === 'function') {
-    const segmenter = new SegmenterCtor(undefined, { granularity: 'word' });
+  if (typeof SegmenterCtor === "function") {
+    const segmenter = new SegmenterCtor(undefined, { granularity: "word" });
     const tokens: string[] = [];
     for (const { segment, isWordLike } of segmenter.segment(q)) {
       if (isWordLike) tokens.push(segment.toLowerCase());
@@ -45,11 +50,11 @@ function tokenizeQuery(query: string): string[] {
 
 function scoreDoc(doc: SearchDoc, qLower: string, tokens: string[]): number {
   const title = doc.title.toLowerCase();
-  const slug = (doc.slug ?? '').toLowerCase();
-  const path = (doc.path ?? '').toLowerCase();
+  const slug = (doc.slug ?? "").toLowerCase();
+  const path = (doc.path ?? "").toLowerCase();
   const aliases = (doc.aliases ?? []).map((a) => a.toLowerCase());
   const headings = (doc.headings ?? []).map((h) => h.toLowerCase());
-  const body = (doc.text ?? '').toLowerCase();
+  const body = (doc.text ?? "").toLowerCase();
 
   // Require every query token to appear in at least one searchable field
   for (const tok of tokens) {
@@ -81,7 +86,11 @@ function scoreDoc(doc: SearchDoc, qLower: string, tokens: string[]): number {
   return score;
 }
 
-export function filterAndRankDocs(docs: SearchDoc[], rawQuery: string, limit = 10): SearchDoc[] {
+export function filterAndRankDocs(
+  docs: SearchDoc[],
+  rawQuery: string,
+  limit = 10,
+): SearchDoc[] {
   const qLower = rawQuery.trim().toLowerCase();
   if (!qLower) return [];
 
@@ -96,16 +105,18 @@ export function filterAndRankDocs(docs: SearchDoc[], rawQuery: string, limit = 1
     }
   }
 
-  scored.sort((a, b) => b.score - a.score || a.doc.title.localeCompare(b.doc.title));
+  scored.sort(
+    (a, b) => b.score - a.score || a.doc.title.localeCompare(b.doc.title),
+  );
   return scored.slice(0, limit).map((entry) => entry.doc);
 }
 
 export function isEditableElement(el: Element | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
   return (
-    el.tagName === 'INPUT' ||
-    el.tagName === 'TEXTAREA' ||
-    el.tagName === 'SELECT' ||
+    el.tagName === "INPUT" ||
+    el.tagName === "TEXTAREA" ||
+    el.tagName === "SELECT" ||
     el.isContentEditable
   );
 }

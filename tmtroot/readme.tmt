@@ -1,15 +1,13 @@
-::config(
-  export: {
-    type: commonmark,
-    path: "README.md"
-  }
+::id(doc-readme)
+::export(
+  type: commonmark
+  path: "README.md"
 )
-::meta{
-  id: doc-readme,
+::meta(
   lang: en
-}
+)
 
-${macro.generated_by(self.path)}
+$macro.generated_by(self::path)
 
 =[ Stela Shelf ]
 
